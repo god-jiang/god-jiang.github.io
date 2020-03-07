@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="学习经历,">
+  <meta name="keywords" content="基础排序,">
 
 
 
@@ -79,18 +79,23 @@
 
 
 
-<meta name="description" content="今天刚开始学习mybatis，听了mybatis和hibernate之间的比较，大致是这样的：一、灵活性：mybatis可以直接使用SQL语句，灵活性较高二、效率性：mybatis直接用SQL，效率高（hibernate使用hql语句，底层需要转换成SQL来操作数据库，时间上有消耗）">
-<meta name="keywords" content="学习经历">
+<meta name="description" content="桶排序（百度百科） 桶排序 (Bucket sort)或所谓的箱排序，是一个排序算法，工作的原理是将数组分到有限数量的桶子里。每个桶子再个别排序（有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一种归纳结果。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（Θ（n））。但桶排序并不是 比较排序，他不受到 O(n*log n) 下限的影响。">
+<meta name="keywords" content="基础排序">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习mybatis的记录初体验">
-<meta property="og:url" content="https://god-jiang.github.io/2019/01/22/学习mybatis的记录01/index.html">
+<meta property="og:title" content="桶排序">
+<meta property="og:url" content="https://god-jiang.github.io/2020/03/07/桶排序/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="今天刚开始学习mybatis，听了mybatis和hibernate之间的比较，大致是这样的：一、灵活性：mybatis可以直接使用SQL语句，灵活性较高二、效率性：mybatis直接用SQL，效率高（hibernate使用hql语句，底层需要转换成SQL来操作数据库，时间上有消耗）">
+<meta property="og:description" content="桶排序（百度百科） 桶排序 (Bucket sort)或所谓的箱排序，是一个排序算法，工作的原理是将数组分到有限数量的桶子里。每个桶子再个别排序（有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一种归纳结果。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（Θ（n））。但桶排序并不是 比较排序，他不受到 O(n*log n) 下限的影响。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-03T14:39:21.856Z">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-6cb81bf81992229d25c70293260b68b1_b.png">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-1001a68ce35c57d3cb34aab6be128a47_b.png">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-d55444f6d924d1772a614e66199e8bc1_b.png">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-57ad2676a56f7e4aad1acf752a54f99b_b.png">
+<meta property="og:updated_time" content="2020-03-07T06:28:28.885Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习mybatis的记录初体验">
-<meta name="twitter:description" content="今天刚开始学习mybatis，听了mybatis和hibernate之间的比较，大致是这样的：一、灵活性：mybatis可以直接使用SQL语句，灵活性较高二、效率性：mybatis直接用SQL，效率高（hibernate使用hql语句，底层需要转换成SQL来操作数据库，时间上有消耗）">
+<meta name="twitter:title" content="桶排序">
+<meta name="twitter:description" content="桶排序（百度百科） 桶排序 (Bucket sort)或所谓的箱排序，是一个排序算法，工作的原理是将数组分到有限数量的桶子里。每个桶子再个别排序（有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序）。桶排序是鸽巢排序的一种归纳结果。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（Θ（n））。但桶排序并不是 比较排序，他不受到 O(n*log n) 下限的影响。">
+<meta name="twitter:image" content="https://pic2.zhimg.com/v2-6cb81bf81992229d25c70293260b68b1_b.png">
 
 
 
@@ -120,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/2019/01/22/学习mybatis的记录01/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/03/07/桶排序/">
 
 
 
 
 
-  <title>学习mybatis的记录初体验 | god-jiang的git个人博客</title>
+  <title>桶排序 | god-jiang的git个人博客</title>
   
 
 
@@ -295,7 +300,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2019/01/22/学习mybatis的记录01/">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/03/07/桶排序/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="god-jiang">
@@ -312,7 +317,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">学习mybatis的记录初体验</h1>
+          <h1 class="post-title" itemprop="name headline">桶排序</h1>
         
 
         <div class="post-meta">
@@ -324,8 +329,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-22T17:39:26+08:00">
-                2019-01-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-07T14:04:29+08:00">
+                2020-03-07
               </time>
             
 
@@ -347,8 +352,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/SSM学习ing/" itemprop="url" rel="index">
-                    <span itemprop="name">SSM学习ing</span>
+                  <a href="/categories/算法积累ing/" itemprop="url" rel="index">
+                    <span itemprop="name">算法积累ing</span>
                   </a>
                 </span>
 
@@ -383,7 +388,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  286 字
+                  646 字
                 </span>
               
 
@@ -399,7 +404,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -420,11 +425,22 @@
       
 
       
-        <p>今天刚开始学习mybatis，听了mybatis和hibernate之间的比较，大致是这样的：<br>一、灵活性：mybatis可以直接使用SQL语句，灵活性较高<br>二、效率性：mybatis直接用SQL，效率高（hibernate使用hql语句，底层需要转换成<br>SQL来操作数据库，时间上有消耗）</p>
+        <h2 id="桶排序（百度百科）"><a href="#桶排序（百度百科）" class="headerlink" title="桶排序（百度百科）"></a>桶排序（百度百科）</h2><blockquote>
+<p><strong>桶排序 (Bucket sort)</strong>或所谓的<strong>箱排序</strong>，是一个<a href="https://baike.baidu.com/item/排序算法/5399605" target="_blank" rel="noopener">排序算法</a>，工作的原理是将数组分到有限数量的桶子里。每个桶子再个别排序（有可能再使用别的<a href="https://baike.baidu.com/item/排序算法/5399605" target="_blank" rel="noopener">排序算法</a>或是以递归方式继续使用桶排序进行排序）。桶排序是<a href="https://baike.baidu.com/item/鸽巢排序/8010555" target="_blank" rel="noopener">鸽巢排序</a>的一种<a href="https://baike.baidu.com/item/归纳/7118703" target="_blank" rel="noopener">归纳</a>结果。当要被排序的数组内的数值是均匀分配的时候，桶排序使用线性时间（<a href="https://baike.baidu.com/item/Θ" target="_blank" rel="noopener">Θ</a>（<em>n</em>））。但桶排序并不是 比较排序，他不受到 O(n*log n) <a href="https://baike.baidu.com/item/下限/10215216" target="_blank" rel="noopener">下限</a>的影响。</p>
+</blockquote>
 <a id="more"></a>
-<p>三、移植性：hibernate更好，因为hibernate用配置文件关联数据库，用hql语句与<br>数据库无直接关系</p>
-<p>听完课学了大概一个小时，弄懂了mybatis开发的大致流程，但是轮到我自己动手操<br>作的时候，一直保空指针异常，初学者总是遇到这个问题，弄了我将近2个多小时，<br>最后才知道原来要使用SQL语句的时候，SqlSession.insert(1,2)传的参数弄错了，<br>第一个参数要传的是mapper.xml的命名空间加定义的id来定位，第二个参数就是你<br>要传的值。</p>
-<p>总的来说，我还是觉得学习编程，理论固然重要，但是动手能力也很重要，编码能力<br>也很重要，这就是我学习mybatis的初次体验。</p>
+<h2 id="排序思路（图片来自小灰）"><a href="#排序思路（图片来自小灰）" class="headerlink" title="排序思路（图片来自小灰）"></a>排序思路（图片来自小灰）</h2><p>桶排序是计数排序的升级版，可以不用局限于整数。思路大致相似。首先要确定桶的区间范围。计算方式是（Max - Min）/ （length -1）。length表示桶的数量，然后最后一个桶表示最大值，其他的桶就分范围来存储数据。</p>
+<p><img src="https://pic2.zhimg.com/v2-6cb81bf81992229d25c70293260b68b1_b.png" alt="img"></p>
+<p>然后遍历数据把数据填入桶中。</p>
+<p><img src="https://pic4.zhimg.com/v2-1001a68ce35c57d3cb34aab6be128a47_b.png" alt="img"></p>
+<p>桶内进行排序。</p>
+<p><img src="https://pic2.zhimg.com/v2-d55444f6d924d1772a614e66199e8bc1_b.png" alt="img"></p>
+<p>最后遍历所有桶，把数据以此输出0.5、0.84、2.18、3.25、4.5。然后排序结束。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> sort;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/3/7  13:38</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BucketSort</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span>[] bucketSort(<span class="keyword">double</span>[] array) &#123;</span><br><span class="line">        <span class="keyword">double</span> max = Double.MIN_VALUE;</span><br><span class="line">        <span class="keyword">double</span> min = Double.MAX_EXPONENT;</span><br><span class="line">        <span class="comment">//求出array数组的最大值和最小值</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (array[i] &gt; max) &#123;</span><br><span class="line">                max = array[i];</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (array[i] &lt; min) &#123;</span><br><span class="line">                min = array[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//计算出差值</span></span><br><span class="line">        <span class="keyword">double</span> d = max - min;</span><br><span class="line">        <span class="comment">//初始化桶</span></span><br><span class="line">        <span class="keyword">int</span> bucketNum = array.length;</span><br><span class="line">        ArrayList&lt;LinkedList&lt;Double&gt;&gt; bucketList = <span class="keyword">new</span> ArrayList&lt;&gt;(bucketNum);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bucketNum; i++) &#123;</span><br><span class="line">            bucketList.add(<span class="keyword">new</span> LinkedList&lt;&gt;());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> num = (<span class="keyword">int</span>) ((array[i] - min) * (bucketNum - <span class="number">1</span>) / d);</span><br><span class="line">            bucketList.get(num).add(array[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//JDK底层采用了归并排序或归并的优化版本进行排序</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bucketList.size(); i++) &#123;</span><br><span class="line">            Collections.sort(bucketList.get(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//输出结果</span></span><br><span class="line">        <span class="keyword">double</span>[] sortedArray = <span class="keyword">new</span> <span class="keyword">double</span>[array.length];</span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (LinkedList&lt;Double&gt; list : bucketList) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">double</span> element : list) &#123;</span><br><span class="line">                sortedArray[index++] = element;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sortedArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//主函数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span>[] array = <span class="keyword">new</span> <span class="keyword">double</span>[]&#123;<span class="number">3.14</span>, <span class="number">0.002</span>, <span class="number">6.6</span>, <span class="number">3.0</span>, <span class="number">10.01</span>, <span class="number">8.8</span>, <span class="number">4.55</span>, <span class="number">7.89</span>&#125;;</span><br><span class="line">        <span class="keyword">double</span>[] sortedArray = bucketSort(array);</span><br><span class="line">        System.out.println(Arrays.toString(sortedArray));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><p><img src="https://pic4.zhimg.com/v2-57ad2676a56f7e4aad1acf752a54f99b_b.png" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>这个桶排序也是一种线性时间的排序算法。因为它不是通过比较来进行排序，而是通过桶来排序。理论上时间复杂度为O(N)。对桶排序感兴趣的可以深入学习一下。</p>
+</blockquote>
 
       
     </div>
@@ -444,6 +460,38 @@
 <div>
     
         
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>桶排序</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2020年03月07日 - 14:04:29</p>
+  <p><span>最后更新:</span>2020年03月07日 - 14:28:28</p>
+  <p><span>原始链接:</span><a href="/2020/03/07/桶排序/" title="桶排序">https://god-jiang.github.io/2020/03/07/桶排序/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/03/07/桶排序/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
 
     
 </div>
@@ -483,7 +531,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/学习经历/" <i="" class="fa fa-tag"> 学习经历</a>
+            <a href="/tags/基础排序/" <i="" class="fa fa-tag"> 基础排序</a>
           
         </div>
       
@@ -496,8 +544,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/17/god-jiang-title/" rel="next" title="god_jiang的第一篇博客">
-                <i class="fa fa-chevron-left"></i> god_jiang的第一篇博客
+              <a href="/2020/03/06/计数排序/" rel="next" title="计数排序">
+                <i class="fa fa-chevron-left"></i> 计数排序
               </a>
             
           </div>
@@ -505,10 +553,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/02/16/MyBatis开发流程/" rel="prev" title="MyBatis开发流程">
-                MyBatis开发流程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -563,8 +607,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -642,6 +695,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#桶排序（百度百科）"><span class="nav-number">1.</span> <span class="nav-text">桶排序（百度百科）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序思路（图片来自小灰）"><span class="nav-number">2.</span> <span class="nav-text">排序思路（图片来自小灰）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行结果"><span class="nav-number">4.</span> <span class="nav-text">运行结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

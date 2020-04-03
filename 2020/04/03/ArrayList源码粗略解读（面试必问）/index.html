@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="ArrayList源码,">
 
 
 
@@ -79,16 +79,25 @@
 
 
 
-<meta name="description" content="一名热爱编程和算法的在校大学生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="god-jiang的git个人博客">
-<meta property="og:url" content="https://god-jiang.github.io/tags/爬虫/index.html">
+<meta name="description" content="前言 现如今的Java程序员越来越多，学习者也越来越多。基本上使用Java的都会使用过HashSet、HashMap、ArrayList、LinkedList等集合，今天god-jiang就从源码层面上粗略解读一下ArrayList这个常用集合。">
+<meta name="keywords" content="ArrayList源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ArrayList源码粗略解读（面试必问）">
+<meta property="og:url" content="https://god-jiang.github.io/2020/04/03/ArrayList源码粗略解读（面试必问）/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="一名热爱编程和算法的在校大学生">
+<meta property="og:description" content="前言 现如今的Java程序员越来越多，学习者也越来越多。基本上使用Java的都会使用过HashSet、HashMap、ArrayList、LinkedList等集合，今天god-jiang就从源码层面上粗略解读一下ArrayList这个常用集合。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-cd48d01d46cf3a8ce129171ee05b00aa_720w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-42b7ac5482c43ead09737c876d7734d0_720w.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-34ef99c6f234e0110c254409a8382fd9_720w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-c961c7f58cf634a486a60381836a241c_720w.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-b0a808405c6ac2a81171ddc0aed854ab_720w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-ae2bc676b0d1b2eadaa08c8bb9082128_720w.jpg">
+<meta property="og:updated_time" content="2020-04-03T07:33:21.021Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="god-jiang的git个人博客">
-<meta name="twitter:description" content="一名热爱编程和算法的在校大学生">
+<meta name="twitter:title" content="ArrayList源码粗略解读（面试必问）">
+<meta name="twitter:description" content="前言 现如今的Java程序员越来越多，学习者也越来越多。基本上使用Java的都会使用过HashSet、HashMap、ArrayList、LinkedList等集合，今天god-jiang就从源码层面上粗略解读一下ArrayList这个常用集合。">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-cd48d01d46cf3a8ce129171ee05b00aa_720w.jpg">
 
 
 
@@ -118,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/tags/爬虫/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/04/03/ArrayList源码粗略解读（面试必问）/">
 
 
 
 
 
-  <title>标签: 爬虫 | god-jiang的git个人博客</title>
+  <title>ArrayList源码粗略解读（面试必问） | god-jiang的git个人博客</title>
   
 
 
@@ -143,7 +152,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -279,52 +288,314 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>爬虫<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/04/03/ArrayList源码粗略解读（面试必问）/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="god-jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="god-jiang的git个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/01/22/python爬虫入门笔记/" itemprop="url">
-              
-                <span itemprop="name">python爬虫入门笔记</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">ArrayList源码粗略解读（面试必问）</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-22T12:09:27+08:00" content="2020-01-22">
-          01-22
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-03T15:05:53+08:00">
+                2020-04-03
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码解读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码解读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  893 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>现如今的Java程序员越来越多，学习者也越来越多。基本上使用Java的都会使用过HashSet、HashMap、ArrayList、LinkedList等集合，今天god-jiang就从源码层面上粗略解读一下ArrayList这个常用集合。</p>
+</blockquote>
+<a id="more"></a>
+<p><strong>若是有写得不好的地方或者有错误，请读者提出，毕竟我也是一名菜鸡。</strong></p>
+<h2 id="1、ArrayList的介绍"><a href="#1、ArrayList的介绍" class="headerlink" title="1、ArrayList的介绍"></a><strong>1、ArrayList的介绍</strong></h2><blockquote>
+<p>ArrayList是一个容量能够动态增长的动态数组。但是它和数组又不一样，它继承了AbstractList，实现了List、RandomAccess（随机访问）、Cloneable、Serializable接口。</p>
+</blockquote>
+<h2 id="2、ArrayList的构造函数"><a href="#2、ArrayList的构造函数" class="headerlink" title="2、ArrayList的构造函数"></a><strong>2、ArrayList的构造函数</strong></h2><p>在JDK1.8的版本下，ArrayList有三个构造函数。分别是：</p>
+<ul>
+<li><strong>ArrayList()：构造一个初始容量为10的空数组列表</strong></li>
+<li><strong>ArrayList(int initialCapacity)：构造一个具有初始容量值的空数组列表</strong></li>
+<li><strong>ArrayList(Collection c)：构造一个包含指定元素的数组列表</strong></li>
+</ul>
+<p>源码如下：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-cd48d01d46cf3a8ce129171ee05b00aa_720w.jpg" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-42b7ac5482c43ead09737c876d7734d0_720w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-34ef99c6f234e0110c254409a8382fd9_720w.jpg" alt="img"></p>
+<h2 id="3、ArrayList的add操作"><a href="#3、ArrayList的add操作" class="headerlink" title="3、ArrayList的add操作"></a>3、ArrayList的add操作</h2><p>在JDK1.8的版本里，add操作有两种，一种是按顺序一直添加，另一种是给定一个位置再添加。源码如下：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-c961c7f58cf634a486a60381836a241c_720w.jpg" alt="img"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-b0a808405c6ac2a81171ddc0aed854ab_720w.jpg" alt="img"></p>
+<p><strong>就是进行add操作的时候，需要先进行ensureCapacityInternal操作，就是size+1判断是否需要扩容了，如果不需要，则直接插入，然后size++。如果需要扩容，就会扩容到原来的1.5倍，源码如下：</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-ae2bc676b0d1b2eadaa08c8bb9082128_720w.jpg" alt="img"></p>
+<h2 id="4、ArrayList的遍历方式"><a href="#4、ArrayList的遍历方式" class="headerlink" title="4、ArrayList的遍历方式"></a>4、ArrayList的遍历方式</h2><p>给出ArrayList遍历常用的三种方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/4/3  14:22</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList_Resource</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">"李白"</span>);</span><br><span class="line">        list.add(<span class="string">"露娜"</span>);</span><br><span class="line">        list.add(<span class="string">"韩信"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1、迭代器</span></span><br><span class="line">        Iterator&lt;String&gt; it = list.iterator();</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">            System.out.println(it.next());</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"================"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2、for</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">            System.out.println(list.get(i));</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"================"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3、for-each</span></span><br><span class="line">        <span class="keyword">for</span> (String str : list) &#123;</span><br><span class="line">            System.out.println(str);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>肯定会有人问用哪个比较好，这里我只能说<strong>博主经常使用的是第二种遍历方式，因为效率最高</strong>。为啥效率最高，可以自己加入系统时间算时间差来比较得出。</p>
+<h2 id="5、ArrayList和LinkedList的区别（面试常问）"><a href="#5、ArrayList和LinkedList的区别（面试常问）" class="headerlink" title="5、ArrayList和LinkedList的区别（面试常问）"></a>5、ArrayList和LinkedList的区别（面试常问）</h2><ol>
+<li><strong>是否保证线程安全</strong>：ArrayList和LinkedList都是不同步的，也就是不保证线程安全；</li>
+<li><strong>底层数据结构</strong>：ArrayList底层使用的是Object数组；LinkedList底层使用的是双向链表；</li>
+<li><strong>插入和删除是否受元素位置影响</strong>：ArrayList采用数组存储，所以插入和删除元素的时间复杂度受元素的位置影响，为O(N)。LinkedList采用链表存储，所以插入和删除元素的时间复杂度不受元素位置的影响，为O(1)；</li>
+<li><strong>是否支持快速随机访问</strong>：LinkedList不支持高速的随机元素访问，而ArrayList支持；</li>
+<li><strong>内存空间占用</strong>：ArrayList的空间浪费主要体现在List列表的结尾会预留一定的容量空间，而LinkedList得空间花费体现在它得每一个元素都需要消耗比ArrayList更多的空间（因为要存放直接前驱和后继以及数据等）。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>今天的ArrayList源码就讲这么多，还有一些remove操作和contains操作我就没有写出来，不是说它们不重要，而是我把相对重要和常问的点拿出来讲一下。对ArrayList其他操作感兴趣可以自己看看源码，这个东西对你只会有好处而不会有坏处。</p>
+</blockquote>
+<p><strong>谢谢大家，有错误或者写得不好的欢迎评论区评论或者私聊。</strong></p>
 
       
     </div>
+    
+    
+    
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
 
+  
+</div>
+<div>
+    
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>ArrayList源码粗略解读（面试必问）</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2020年04月03日 - 15:05:53</p>
+  <p><span>最后更新:</span>2020年04月03日 - 15:33:21</p>
+  <p><span>原始链接:</span><a href="/2020/04/03/ArrayList源码粗略解读（面试必问）/" title="ArrayList源码粗略解读（面试必问）">https://god-jiang.github.io/2020/04/03/ArrayList源码粗略解读（面试必问）/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/04/03/ArrayList源码粗略解读（面试必问）/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+
+    
+</div>
+
+    
+
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div><font color="red"><b>创作不易，您的支持就是我坚持的动力，谢谢大家！</b></font></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="god-jiang 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ArrayList源码/" <i="" class="fa fa-tag"> ArrayList源码</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/23/排列组合的模板算法/" rel="next" title="排列组合的模板算法">
+                <i class="fa fa-chevron-left"></i> 排列组合的模板算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -332,6 +603,13 @@
 
 
           
+
+  
+   <div id="gitalk-container"></div>
+ 
+  
+
+
 
         </div>
         
@@ -352,8 +630,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -431,6 +718,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1、ArrayList的介绍"><span class="nav-number">2.</span> <span class="nav-text">1、ArrayList的介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、ArrayList的构造函数"><span class="nav-number">3.</span> <span class="nav-text">2、ArrayList的构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、ArrayList的add操作"><span class="nav-number">4.</span> <span class="nav-text">3、ArrayList的add操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、ArrayList的遍历方式"><span class="nav-number">5.</span> <span class="nav-text">4、ArrayList的遍历方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、ArrayList和LinkedList的区别（面试常问）"><span class="nav-number">6.</span> <span class="nav-text">5、ArrayList和LinkedList的区别（面试常问）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -598,6 +901,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -638,6 +945,21 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'deedada779a5390ef257',
+          clientSecret: 'e4038303bdb44d9de883f9e3a5940223b19a02d2',
+          repo: 'god-jiang.github.io',
+          owner: 'god-jiang',
+          admin: ['god-jiang'],
+          id: decodeURI(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
   
 

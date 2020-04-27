@@ -89,12 +89,12 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://pic1.zhimg.com/80/v2-c4d5017b5eeeda1d234b33e3da017b04_720w.jpg">
 <meta property="og:image" content="https://pic4.zhimg.com/80/v2-9f45b43bb6fd1e60e16ee6fb6d27c0db_720w.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-5d66762b148bb1439243be8b7f72998e_720w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-5d66762b148bb1439243be8b7f72998e_r.jpg">
 <meta property="og:image" content="https://pic2.zhimg.com/80/v2-2feee68934700e449dbb4ca937f344d1_720w.jpg">
 <meta property="og:image" content="https://pic1.zhimg.com/80/v2-79f25f4860dfea33718aace9245b04c4_720w.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-0de4c1c509999dbe8fcdc415187164ea_720w.png">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-0de4c1c509999dbe8fcdc415187164ea_r.jpg">
 <meta property="og:image" content="https://pic1.zhimg.com/80/v2-7706884725439c846330a7f0e9203b84_720w.jpg">
-<meta property="og:updated_time" content="2020-04-15T07:13:29.975Z">
+<meta property="og:updated_time" content="2020-04-27T08:46:46.236Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="String源码粗略解读">
 <meta name="twitter:description" content="前言 基本上只要是Java程序员，就肯定会接触过String类。博主我是大三参加蓝桥杯比赛才学会用String类的charAt（），length（），toString（）等等常用函数。所以今天有时间来看看String的源码，分析一下我们常用的方法在源码层面是什么样子的。">
@@ -446,12 +446,12 @@
 <li><strong>hash表示变量的hash值，用hash来记录下来。</strong></li>
 <li><strong>serialVersionUID表示序列化机制，用来验证版本的一致性。</strong></li>
 </ol>
-<h2 id="equal（Object）方法"><a href="#equal（Object）方法" class="headerlink" title="equal（Object）方法"></a>equal（Object）方法</h2><p><img src="https://pic3.zhimg.com/80/v2-5d66762b148bb1439243be8b7f72998e_720w.jpg" alt="img"></p>
+<h2 id="equal（Object）方法"><a href="#equal（Object）方法" class="headerlink" title="equal（Object）方法"></a>equal（Object）方法</h2><p><img src="https://pic3.zhimg.com/v2-5d66762b148bb1439243be8b7f72998e_r.jpg" alt="preview"></p>
 <p>String类重写了equal（）方法，因为Object类原始的equal（）方法是“==”。String类的equal（）方法就是判断是不是同一个类型，如果是，则对比它们的长度，如果相等，则对比它们的字符。<strong>简单来说，就是判断两个字符串的值是否一样。</strong></p>
 <h2 id="hashCode（）方法"><a href="#hashCode（）方法" class="headerlink" title="hashCode（）方法"></a>hashCode（）方法</h2><p><img src="https://pic2.zhimg.com/80/v2-2feee68934700e449dbb4ca937f344d1_720w.jpg" alt="img"></p>
 <p>String类的hashCode（）方法就是hash值乘以31然后加每位的值。然而即使你的hash函数设计得再好，也是会产生hash碰撞。<strong>所以一般两个字符串的hashcode相等并不代表它们相等，还需要判断它们是否equal（）相等才可以。</strong></p>
 <h2 id="toString（）方法"><a href="#toString（）方法" class="headerlink" title="toString（）方法"></a>toString（）方法</h2><p><img src="https://pic1.zhimg.com/80/v2-79f25f4860dfea33718aace9245b04c4_720w.jpg" alt="img"></p>
-<p><img src="https://pic3.zhimg.com/80/v2-0de4c1c509999dbe8fcdc415187164ea_720w.png" alt="img"></p>
+<p><img src="https://pic3.zhimg.com/v2-0de4c1c509999dbe8fcdc415187164ea_r.jpg" alt="preview"></p>
 <p>toString（）用的就是Object类的toString（）方法。<strong>就是返回一个类名+@+hashCode的16进制的数字的字符串。</strong></p>
 <h2 id="intern（）方法"><a href="#intern（）方法" class="headerlink" title="intern（）方法"></a>intern（）方法</h2><p><img src="https://pic1.zhimg.com/80/v2-7706884725439c846330a7f0e9203b84_720w.jpg" alt="img"></p>
 <p>String类的intern（）方法是native的。就是本地方法，<strong>该方法的实现由非Java语言实现，比如C、C++。这个特征并非Java所持有，很多其它的编程语言都有这一个机制。</strong></p>
@@ -490,7 +490,7 @@
   <p><span>本文标题:</span>String源码粗略解读</p>
   <p><span>文章作者:</span>god-jiang</p>
   <p><span>发布时间:</span>2020年04月15日 - 14:30:20</p>
-  <p><span>最后更新:</span>2020年04月15日 - 15:13:29</p>
+  <p><span>最后更新:</span>2020年04月27日 - 16:46:46</p>
   <p><span>原始链接:</span><a href="/2020/04/15/String源码粗略解读/" title="String源码粗略解读">https://god-jiang.github.io/2020/04/15/String源码粗略解读/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/04/15/String源码粗略解读/" aria-label="复制成功！"></i></span>
   </p>
@@ -573,6 +573,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2020/04/27/Spring（一）/" rel="prev" title="Spring（一）">
+                Spring（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -653,7 +657,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -675,7 +679,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -769,7 +773,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共 37.8k 字</span>
+  <span class="post-count">全站共 38.8k 字</span>
 </div>
 
         

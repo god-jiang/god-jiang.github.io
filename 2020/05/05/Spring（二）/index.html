@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="运算,">
+  <meta name="keywords" content="Spring,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="位运算概述从现代计算机中所有的数据都以二进制的形式存储在设备中。即0、1两种状态，计算机对二进制进行的运算（+、-、*、/）都叫位运算。示例：">
-<meta name="keywords" content="运算">
+<meta name="description" content="前言 我相信只要是学Java的，都有接触到Spring框架。然后Spring框架最核心的就是IOC（控制反转）和AOP（面向切面编程）。出去找工作，面试官看到你简历上写着熟悉Spring，基本都会问IOC和AOP，今天就来记录一下这两个东西吧。">
+<meta name="keywords" content="Spring">
 <meta property="og:type" content="article">
-<meta property="og:title" content="有趣的位运算">
-<meta property="og:url" content="https://god-jiang.github.io/2019/12/20/有趣的位运算/index.html">
+<meta property="og:title" content="Spring（二）">
+<meta property="og:url" content="https://god-jiang.github.io/2020/05/05/Spring（二）/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="位运算概述从现代计算机中所有的数据都以二进制的形式存储在设备中。即0、1两种状态，计算机对二进制进行的运算（+、-、*、/）都叫位运算。示例：">
+<meta property="og:description" content="前言 我相信只要是学Java的，都有接触到Spring框架。然后Spring框架最核心的就是IOC（控制反转）和AOP（面向切面编程）。出去找工作，面试官看到你简历上写着熟悉Spring，基本都会问IOC和AOP，今天就来记录一下这两个东西吧。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-03T14:39:25.557Z">
+<meta property="og:updated_time" content="2020-05-05T11:17:41.924Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="有趣的位运算">
-<meta name="twitter:description" content="位运算概述从现代计算机中所有的数据都以二进制的形式存储在设备中。即0、1两种状态，计算机对二进制进行的运算（+、-、*、/）都叫位运算。示例：">
+<meta name="twitter:title" content="Spring（二）">
+<meta name="twitter:description" content="前言 我相信只要是学Java的，都有接触到Spring框架。然后Spring框架最核心的就是IOC（控制反转）和AOP（面向切面编程）。出去找工作，面试官看到你简历上写着熟悉Spring，基本都会问IOC和AOP，今天就来记录一下这两个东西吧。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/2019/12/20/有趣的位运算/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/05/05/Spring（二）/">
 
 
 
 
 
-  <title>有趣的位运算 | god-jiang的git个人博客</title>
+  <title>Spring（二） | god-jiang的git个人博客</title>
   
 
 
@@ -295,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2019/12/20/有趣的位运算/">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/05/05/Spring（二）/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="god-jiang">
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">有趣的位运算</h1>
+          <h1 class="post-title" itemprop="name headline">Spring（二）</h1>
         
 
         <div class="post-meta">
@@ -324,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-20T16:06:19+08:00">
-                2019-12-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-05T19:02:03+08:00">
+                2020-05-05
               </time>
             
 
@@ -347,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法积累ing/" itemprop="url" rel="index">
-                    <span itemprop="name">算法积累ing</span>
+                  <a href="/categories/源码解读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码解读</span>
                   </a>
                 </span>
 
@@ -383,7 +383,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  663 字
+                  813 字
                 </span>
               
 
@@ -420,70 +420,27 @@
       
 
       
-        <h2 id="位运算概述"><a href="#位运算概述" class="headerlink" title="位运算概述"></a>位运算概述</h2><p>从现代计算机中所有的数据都以二进制的形式存储在设备中。即0、1两种状态，计算机对二进制进行的运算（+、-、*、/）都叫位运算。示例：</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>我相信只要是学Java的，都有接触到Spring框架。然后Spring框架最核心的就是IOC（控制反转）和AOP（面向切面编程）。出去找工作，面试官看到你简历上写着熟悉Spring，基本都会问IOC和AOP，今天就来记录一下这两个东西吧。</p>
+</blockquote>
 <a id="more"></a>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">35</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">47</span>;</span><br><span class="line"><span class="keyword">int</span> c = a + b;</span><br></pre></td></tr></table></figure>
-<p>计算a+b的值，在计算机中就是以二进制进行运算的。所以上面我们所给的int变量会在机器内部先转换为二进制在进行相加：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">35:  0 0 1 0 0 0 1 1</span><br><span class="line">47:  0 0 1 0 1 1 1 1</span><br><span class="line">————————————————————</span><br><span class="line">82:  0 1 0 1 0 0 1 0</span><br></pre></td></tr></table></figure>
-<p><strong>所以，合理的运用位运算更能显著提高代码在机器上的运行效率。</strong></p>
-<h2 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h2><table>
-<thead>
-<tr>
-<th style="text-align:center">含义</th>
-<th style="text-align:center">运算符</th>
-<th style="text-align:left">例子</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">左移</td>
-<td style="text-align:center">&lt;&lt;</td>
-<td style="text-align:left">0011  =&gt;  0110</td>
-</tr>
-<tr>
-<td style="text-align:center">右移</td>
-<td style="text-align:center">&gt;&gt;</td>
-<td style="text-align:left">0110  =&gt;  0011</td>
-</tr>
-<tr>
-<td style="text-align:center">按位或</td>
-<td style="text-align:center">︳</td>
-<td style="text-align:left">0011 <br> ——-  =&gt;1011<br>1011</td>
-</tr>
-<tr>
-<td style="text-align:center">按位与</td>
-<td style="text-align:center">&amp;</td>
-<td style="text-align:left">0011 <br> ——-  =&gt;0011<br>1011</td>
-</tr>
-<tr>
-<td style="text-align:center">按位取反</td>
-<td style="text-align:center">~</td>
-<td style="text-align:left">0011  =&gt;1100</td>
-</tr>
-<tr>
-<td style="text-align:center">按位异或 (相同为零不同为一)</td>
-<td style="text-align:center">^</td>
-<td style="text-align:left">0011 <br> ——-  =&gt;1000<br>1011</td>
-</tr>
-</tbody>
-</table>
-<h2 id="经典运用"><a href="#经典运用" class="headerlink" title="经典运用"></a>经典运用</h2><h3 id="不用加减乘除做加法"><a href="#不用加减乘除做加法" class="headerlink" title="不用加减乘除做加法"></a>不用加减乘除做加法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//step1:异或查看两个数进行加法操作后的结果</span></span><br><span class="line"><span class="comment">//step2:与运算计算出想对应的位置的进位结果，然后左移一位</span></span><br><span class="line"><span class="comment">//b代表的是两数相加是否有进位，有的话就继续，没有的话就结束得出相加后的答案</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(b != <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">int</span> temp = a ^ b;<span class="comment">//计算出相对应的位置相加后的结果</span></span><br><span class="line">            b = (a &amp; b) &lt;&lt; <span class="number">1</span>;<span class="comment">//计算出想对应的位置的进位，然后左移一位</span></span><br><span class="line">            a = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这个其实可以简写成return (a^b)+((a&amp;b)&lt;&lt;1);</span></span><br></pre></td></tr></table></figure>
-<h3 id="二进制中1的个数"><a href="#二进制中1的个数" class="headerlink" title="二进制中1的个数"></a>二进制中1的个数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">NumberOf1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(a == <span class="number">0</span>||a == <span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> a;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(a != <span class="number">0</span>)&#123;</span><br><span class="line">            count++;</span><br><span class="line">            a = a &amp; (a-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="不使用第三个变量的情况下交换两个变量的值"><a href="#不使用第三个变量的情况下交换两个变量的值" class="headerlink" title="不使用第三个变量的情况下交换两个变量的值"></a>不使用第三个变量的情况下交换两个变量的值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//原理：运用异或的特性</span></span><br><span class="line"><span class="comment">//A ^ B = C --&gt; C ^ A = B --&gt; C ^ B = A</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exchange</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    x = x ^ y;</span><br><span class="line">    y = x ^ y;</span><br><span class="line">    x = x ^ y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="其他运用"><a href="#其他运用" class="headerlink" title="其他运用"></a>其他运用</h2><ul>
-<li>判断一个数的奇偶性</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Test</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>((a &amp; <span class="number">1</span>)==<span class="number">0</span>)&#123;</span><br><span class="line">        System.out.println(<span class="string">"a是偶数"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"a是奇数"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>两数的中位数</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Test</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="comment">//通过位运算不会造成溢出</span></span><br><span class="line">	<span class="keyword">int</span> mid = a + (a - b) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>两数的平均数</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">average</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (a &amp; b)+((x ^ y) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>以上就是我今天分享的常见位运算的经典问题，其实位运算的应用远远不止这些，在算法方面适当的使用还是很有帮助的。</p>
+<h2 id="IOC介绍"><a href="#IOC介绍" class="headerlink" title="IOC介绍"></a>IOC介绍</h2><p><strong>IOC容器：</strong>它是一个具有依赖注入功能的容器，可以创建对象。IOC容器负责在应用程序中实例化、定位和配置对象，并在这些对象之间建立依赖关系。通常，new实例的控制由程序员控制，“控制反转”意味着new实例的工作不是由程序员完成的，而是由spring容器完成的。在Spring中，beanfactory是IOC容器的实际代表。</p>
+<p><strong>DI（依赖注入Dependency injection）：</strong>依赖注入和控制反转是同一个概念，具体的讲：当某个角色需要另一个角色协助的时候，在传统的程序设计过程中，通常由调用者来创建被调用者的实例。但在spring中创建被调用者得工作不再由调用者来完成，因此称为控制翻转。创建被调用者的工作由spring来完成，然后注入调用者。</p>
+<p><strong>依赖注入的四种方式：</strong></p>
+<ol>
+<li>接口注入</li>
+<li>setter注入</li>
+<li>构造方法注入</li>
+<li>注解注入</li>
+</ol>
+<p><strong>ps：有兴趣可以自己学习一下，这里就一笔带过了。</strong></p>
+<h2 id="AOP介绍"><a href="#AOP介绍" class="headerlink" title="AOP介绍"></a>AOP介绍</h2><p>​    面向切面编程（AOP）是对面向对象编程（OOP）的补充，面向对象编程将程序分解成各个层次的对象，面向切面编程将程序运行过程分解成各个切面。AOP从程序运行角度考虑程序的结构，提取业务处理过程的切面，OOP是静态的抽象，AOP是动态的抽象，是对应用执行过程中的步骤进行抽象，从而获得步骤之间的逻辑划分。</p>
+<p>​    Spring框架的AOP机制可以让开发者把业务流程中的通用功能抽取出来，单独编写功能代码。在业务流程执行过程中，Spring框架会根据业务流程要求，自动把独立编写的功能代码切入到流程的合适位置。</p>
+<h2 id="AOP底层实现"><a href="#AOP底层实现" class="headerlink" title="AOP底层实现"></a>AOP底层实现</h2><p>​    首先，我们知道Spring AOP的底层实现有两种方式：一种是JDK动态代理，另一种是CGLib的方式。</p>
+<p>​    JDK动态代理主要涉及到java.lang.reflect包下边的两个类：Proxy和InvocationHandler。其中，InvocationHandler是一个接口，可以通过实现该接口定义横切逻辑，并通过反射机制条用目标类的代码，动态地将横切逻辑和业务逻辑连接在一起。</p>
+<p>​    CGLib采用底层的字节码技术，全称是：Code Generation Libarary，CGLib可以为一个类创建一个子类，在子类中采用方法拦截的技术拦截所有父类方法的调用并顺势织入横切逻辑。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>IOC就是控制反转，把new对象的控制权交给了Spring容器。而AOP就是把通用的业务逻辑抽取出来，然后根据业务流程动态插入到流程的合适位置。</p>
 </blockquote>
 
       
@@ -504,6 +461,38 @@
 <div>
     
         
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>Spring（二）</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2020年05月05日 - 19:02:03</p>
+  <p><span>最后更新:</span>2020年05月05日 - 19:17:41</p>
+  <p><span>原始链接:</span><a href="/2020/05/05/Spring（二）/" title="Spring（二）">https://god-jiang.github.io/2020/05/05/Spring（二）/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/05/05/Spring（二）/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
 
     
 </div>
@@ -543,7 +532,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/运算/" <i="" class="fa fa-tag"> 运算</a>
+            <a href="/tags/Spring/" <i="" class="fa fa-tag"> Spring</a>
           
         </div>
       
@@ -556,8 +545,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/17/三大高效排序之堆排序-Java实现/" rel="next" title="三大高效排序之堆排序(Java实现)">
-                <i class="fa fa-chevron-left"></i> 三大高效排序之堆排序(Java实现)
+              <a href="/2020/04/27/Spring（一）/" rel="next" title="Spring（一）">
+                <i class="fa fa-chevron-left"></i> Spring（一）
               </a>
             
           </div>
@@ -565,10 +554,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/12/26/荷兰国旗问题-快排-BFPRT算法/" rel="prev" title="荷兰国旗问题&快排&BFPRT算法">
-                荷兰国旗问题&快排&BFPRT算法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -721,7 +706,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算概述"><span class="nav-number">1.</span> <span class="nav-text">位运算概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算符"><span class="nav-number">2.</span> <span class="nav-text">位运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#经典运用"><span class="nav-number">3.</span> <span class="nav-text">经典运用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不用加减乘除做加法"><span class="nav-number">3.1.</span> <span class="nav-text">不用加减乘除做加法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制中1的个数"><span class="nav-number">3.2.</span> <span class="nav-text">二进制中1的个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不使用第三个变量的情况下交换两个变量的值"><span class="nav-number">3.3.</span> <span class="nav-text">不使用第三个变量的情况下交换两个变量的值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他运用"><span class="nav-number">4.</span> <span class="nav-text">其他运用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC介绍"><span class="nav-number">2.</span> <span class="nav-text">IOC介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP介绍"><span class="nav-number">3.</span> <span class="nav-text">AOP介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP底层实现"><span class="nav-number">4.</span> <span class="nav-text">AOP底层实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

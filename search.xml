@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Spring（二）</title>
+    <url>/2020/05/05/Spring%EF%BC%88%E4%BA%8C%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>我相信只要是学Java的，都有接触到Spring框架。然后Spring框架最核心的就是IOC（控制反转）和AOP（面向切面编程）。出去找工作，面试官看到你简历上写着熟悉Spring，基本都会问IOC和AOP，今天就来记录一下这两个东西吧。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="IOC介绍"><a href="#IOC介绍" class="headerlink" title="IOC介绍"></a>IOC介绍</h2><p><strong>IOC容器：</strong>它是一个具有依赖注入功能的容器，可以创建对象。IOC容器负责在应用程序中实例化、定位和配置对象，并在这些对象之间建立依赖关系。通常，new实例的控制由程序员控制，“控制反转”意味着new实例的工作不是由程序员完成的，而是由spring容器完成的。在Spring中，beanfactory是IOC容器的实际代表。</p>
+<p><strong>DI（依赖注入Dependency injection）：</strong>依赖注入和控制反转是同一个概念，具体的讲：当某个角色需要另一个角色协助的时候，在传统的程序设计过程中，通常由调用者来创建被调用者的实例。但在spring中创建被调用者得工作不再由调用者来完成，因此称为控制翻转。创建被调用者的工作由spring来完成，然后注入调用者。</p>
+<p><strong>依赖注入的四种方式：</strong></p>
+<ol>
+<li>接口注入</li>
+<li>setter注入</li>
+<li>构造方法注入</li>
+<li>注解注入</li>
+</ol>
+<p><strong>ps：有兴趣可以自己学习一下，这里就一笔带过了。</strong></p>
+<h2 id="AOP介绍"><a href="#AOP介绍" class="headerlink" title="AOP介绍"></a>AOP介绍</h2><p>​    面向切面编程（AOP）是对面向对象编程（OOP）的补充，面向对象编程将程序分解成各个层次的对象，面向切面编程将程序运行过程分解成各个切面。AOP从程序运行角度考虑程序的结构，提取业务处理过程的切面，OOP是静态的抽象，AOP是动态的抽象，是对应用执行过程中的步骤进行抽象，从而获得步骤之间的逻辑划分。</p>
+<p>​    Spring框架的AOP机制可以让开发者把业务流程中的通用功能抽取出来，单独编写功能代码。在业务流程执行过程中，Spring框架会根据业务流程要求，自动把独立编写的功能代码切入到流程的合适位置。</p>
+<h2 id="AOP底层实现"><a href="#AOP底层实现" class="headerlink" title="AOP底层实现"></a>AOP底层实现</h2><p>​    首先，我们知道Spring AOP的底层实现有两种方式：一种是JDK动态代理，另一种是CGLib的方式。</p>
+<p>​    JDK动态代理主要涉及到java.lang.reflect包下边的两个类：Proxy和InvocationHandler。其中，InvocationHandler是一个接口，可以通过实现该接口定义横切逻辑，并通过反射机制条用目标类的代码，动态地将横切逻辑和业务逻辑连接在一起。</p>
+<p>​    CGLib采用底层的字节码技术，全称是：Code Generation Libarary，CGLib可以为一个类创建一个子类，在子类中采用方法拦截的技术拦截所有父类方法的调用并顺势织入横切逻辑。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>IOC就是控制反转，把new对象的控制权交给了Spring容器。而AOP就是把通用的业务逻辑抽取出来，然后根据业务流程动态插入到流程的合适位置。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>源码解读</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring（一）</title>
     <url>/2020/04/27/Spring%EF%BC%88%E4%B8%80%EF%BC%89/</url>
     <content><![CDATA[<h2 id="1、Spring的历史简介"><a href="#1、Spring的历史简介" class="headerlink" title="1、Spring的历史简介"></a>1、Spring的历史简介</h2><ul>

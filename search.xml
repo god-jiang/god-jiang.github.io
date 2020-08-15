@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL的隔离级别</title>
+    <url>/2020/08/15/MySQL%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>从校园到企业工作也有一个多月的时间了，经常也是跟MySQL打交道，正好梳理一下MySQL的隔离级别。这个也是面试的时候经常问到的一个知识点，我就来分享一下我的理解。</p>
+</blockquote>
+<p><strong>PS：MySQL事务都是指在InnoDB引擎下，MyISAM引擎不支持事务。</strong></p>
+<a id="more"></a>
+<h2 id="事务的ACID特性"><a href="#事务的ACID特性" class="headerlink" title="事务的ACID特性"></a>事务的ACID特性</h2><p>事务都会具有这四种特性：原子性（Atomicity），一致性（Consistency），隔离性（Isolation），持久性（Durability）。简称为ACID特性。</p>
+<ol>
+<li>原子性。事务是数据库的逻辑工作单位，事务的各操作要么都完成，要么都不完成。</li>
+<li>一致性。事务执行的结果必须是使数据库从一个一致性状态变成另一个一致性状态。</li>
+<li>隔离性。一个事务的执行不能被其他事务干扰，并发执行的各个事务之间不能互相干扰。</li>
+<li>持久性。指一个事务一旦提交，它对数据库中的数据的改变是永久性的。即使机器故障也不会对其执行结果有任何影响。</li>
+</ol>
+<h2 id="MySQL的四种隔离级别"><a href="#MySQL的四种隔离级别" class="headerlink" title="MySQL的四种隔离级别"></a>MySQL的四种隔离级别</h2><p>SQL标准定义了4种隔离级别，包括了一些具体规则， 用来限定事务内外的哪些改变是可见的，哪些是不可见的。隔离级别低的一般支持更高的并发处理，并且拥有更低的系统开销。</p>
+<ol>
+<li>读未提交（READ UNCOMMITTED）。在该隔离级别种，所有的事务都可以看到其他未提交事务的执行结果。本隔离级别很少用于实际应用，容易产生脏读。</li>
+<li>读已提交（READ COMMITTED）。这是Oracle数据库默认的隔离级别。它满足了隔离的简单定义：一个事务只能看见已经提交事务所做的改变。这种隔离级别容易产生不可重复读。</li>
+<li>不可重复读（REPEATABLE READ）。这是MySQL的默认隔离级别。它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行。但是该隔离级别会产生幻读。</li>
+<li>可串行化（SERIALIZABLE）。这是最高的隔离级别，它通过强制事务排序，使之不可能发生冲突，从而解决幻读问题。简言之，它是在每个读的数据行上加上共享锁。在这个级别，可能导致大量的超时现象。</li>
+</ol>
+<h2 id="隔离级别产生的问题"><a href="#隔离级别产生的问题" class="headerlink" title="隔离级别产生的问题"></a>隔离级别产生的问题</h2><ul>
+<li>脏读。就是某个事务更新了一份数据，但是没有提交事务，在另一个事务就已经看到更新的结果了。比如A事务新增了一条数据没有提交事务，B事务就已经看到A事务新增的数据了。</li>
+<li>不可重复读。在一个事务的两次查询中数据不一致。比如A事务新增了一条数据并且提交事务，B事务看到了，然后A事务修改了这条数据，B事务再次查询就看到不一样的结果。</li>
+<li>幻读。在一个事务两次查询中数据量不一致。A事务新增了两条数据并且提交事务，B事务查询到两条，这个时候A事务再次新增一条数据并且提交事务，B事务就会看到三条数据。</li>
+</ul>
+<p><strong>MySQL不同隔离级别有可能产生的问题：</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-2b657f1362149d0572a2a0730ecc0aa8_720w.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
+<p>不同的场景有不同的选择，在选择事务隔离级别上要在效率和问题之间做一个有效的平衡，这一步是要有舍有得。希望这篇事务隔离级别对你们有所帮助。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL隔离级别</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java程序员校招面试——操作系统</title>
     <url>/2020/07/22/Java%E7%A8%8B%E5%BA%8F%E5%91%98%E6%A0%A1%E6%8B%9B%E9%9D%A2%E8%AF%95%E2%80%94%E2%80%94%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>

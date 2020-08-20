@@ -1,0 +1,24 @@
+---
+title: 样式test
+date: 2019-02-08 15:32:45
+tags: 测试样式
+---
+
+# 一级标题
+## 二级标题
+
+---
+
+<!-- More -->
+**粗体**
+*斜体*
+
+
+## 代码块
+`#include <stdio.h>
+void main(){
+	printf("Hello World!");
+}`
+
+## 图片显示
+![test](http://img1.3lian.com/img013/v2/81/d/93.jpg)

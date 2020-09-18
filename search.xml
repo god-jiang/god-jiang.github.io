@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Redis必会知识点总结</title>
+    <url>/2020/09/18/Redis%E5%BF%85%E4%BC%9A%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a>Redis简介</h2><blockquote>
+<p>Redis是完全开源的，遵守BSD协议，是一个高性能的key-value数据库。</p>
+</blockquote>
+<p>Redis与其他key-value缓存产品有以下三个特点：</p>
+<ul>
+<li>Redis支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载进行使用。</li>
+<li>Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储。</li>
+<li>Redis支持数据的备份，即master-slave模式的数据备份。</li>
+</ul>
+<a id="more"></a>
+<h2 id="Redis优势"><a href="#Redis优势" class="headerlink" title="Redis优势"></a>Redis优势</h2><ul>
+<li>性能极高。Redis读的速度是110000次/s，写的速度是81000次 /s。</li>
+<li>丰富的数据类型。Redis支持二进制案例的Strings，Lists，Hashes，Sets及Ordered Sets数据类型操作。</li>
+<li>原子。Redis的所有操作都是原子性，意思就是要么成功执行要么失败完成不执行。单个操作是原子性。多个操作也支持事务，即原子性。</li>
+<li>丰富的特性。Redis还支持phblish/subscribe，通知，key过期等等特性。</li>
+</ul>
+<h2 id="Redis与其他key-value存储有什么不同"><a href="#Redis与其他key-value存储有什么不同" class="headerlink" title="Redis与其他key-value存储有什么不同"></a>Redis与其他key-value存储有什么不同</h2><ul>
+<li>Redis有着更为复杂的数据结构并且提供对他们的原子性操作，这是一个不同于其他数据库的进化路径。Redis的数据类型都是基于基本数据结构的同时对程序员透明，无需进行额外的抽象。</li>
+<li>Redis运行在内存中但是可以持久化到磁盘，所以在对不同数据集进行高速读写时需要权衡内存，因为数据量不能大于硬件内存。在内存数据库方面的另一个优点是，相比在磁盘上相同的复杂的数据结构，在内存中操作起来非常简单，这样Redis可以做很多内部复杂性很强的事情。同时，在磁盘格式方面他们是紧凑的以追加的方式产生的，因为他们并不需要进行随机访问。</li>
+</ul>
+<h2 id="Redis常问面试题"><a href="#Redis常问面试题" class="headerlink" title="Redis常问面试题"></a>Redis常问面试题</h2><ol>
+<li>Redis支持的数据类型？</li>
+<li>什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？</li>
+<li>Redis有哪些架构模式？讲讲各自的特点</li>
+<li>使用过Redis分布式锁吗？它是怎么实现的？</li>
+<li>使用过Redis做异步队列吗，你是怎么用的？有什么缺点？</li>
+<li>什么是缓存穿透？如何避免？什么是缓存雪崩？如何避免？</li>
+<li>Redis常用命令？</li>
+<li>为什么Redis单线程却能支撑高并发？</li>
+<li>说说Redis的内存淘汰策略？</li>
+<li>Redis的并发竞争问题如何解决？</li>
+</ol>
+<h2 id="答案总结"><a href="#答案总结" class="headerlink" title="答案总结"></a>答案总结</h2><p>答案我做成了xmind图，你们可以保存然后慢慢看。（里面有两个面试题我没有写答案，你们可以多多查阅资料然后补充上去～～～）</p>
+<p><a href="https://link.zhihu.com/?target=http%3A//note.youdao.com/s/9fgK9q6X" target="_blank" rel="noopener">有道云笔记note.youdao.com</a></p>
+<p>如果阅读完对你有所帮助，给个赞 ～～～</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>Redis知识点</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL的隔离级别</title>
     <url>/2020/08/15/MySQL%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>

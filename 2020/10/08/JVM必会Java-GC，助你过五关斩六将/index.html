@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="抢红包,">
+  <meta name="keywords" content="JVM,">
 
 
 
@@ -79,21 +79,27 @@
 
 
 
-<meta name="description" content="前言 昨天是大年初一，怎么说呢，因为在读大学， 没有出来工作，所以昨晚也是陆陆续续有收到一些红包。然后想起自己对算法感兴趣，以前也看过一些公众号有讲过抢红包算法，今天就更新一遍关于抢红包的算法，对学过数据结构或者对抢红包感兴趣的可以看一看。本文就讲两个抢红包算法。">
-<meta name="keywords" content="抢红包">
+<meta name="description" content="前言 都知道《深入理解Java虚拟机》这本书对Java开发是非常重要的，几乎达到了一个必读的重要性。但是在校期间一直看不深入，就停留在最表面的意思，无法深入理解。经历了几个月的码农生活，再次回过头来看这本书的时候，我发现了许多以前不懂的东西都慢慢看懂了，所以借此机会写下这一篇Java GC。">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="过年之抢红包算法">
-<meta property="og:url" content="https://god-jiang.github.io/2020/01/26/过年之抢红包算法/index.html">
+<meta property="og:title" content="JVM必会Java GC，助你过五关斩六将">
+<meta property="og:url" content="https://god-jiang.github.io/2020/10/08/JVM必会Java-GC，助你过五关斩六将/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="前言 昨天是大年初一，怎么说呢，因为在读大学， 没有出来工作，所以昨晚也是陆陆续续有收到一些红包。然后想起自己对算法感兴趣，以前也看过一些公众号有讲过抢红包算法，今天就更新一遍关于抢红包的算法，对学过数据结构或者对抢红包感兴趣的可以看一看。本文就讲两个抢红包算法。">
+<meta property="og:description" content="前言 都知道《深入理解Java虚拟机》这本书对Java开发是非常重要的，几乎达到了一个必读的重要性。但是在校期间一直看不深入，就停留在最表面的意思，无法深入理解。经历了几个月的码农生活，再次回过头来看这本书的时候，我发现了许多以前不懂的东西都慢慢看懂了，所以借此机会写下这一篇Java GC。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-15d72ce41de42df15c8f392da0c7921d_hd.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-865c5937786868dcd6f08730a594c898_hd.jpg">
-<meta property="og:updated_time" content="2020-01-26T14:50:44.000Z">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-eda47b7727cb3673ccc56328054bad2e_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-070134e55b0b4f1820242d0d771ad4b8_1440w.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-b0f1299987720661b75b9265619660dd_1440w.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-272ab960faa3b13c6b7dc62629610f1f_1440w.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-f3cad74204ef5ee5ceb48edb728bc4e7_1440w.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-36d9ed369a726adc55365323c476bc0f_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-e6b42dcb7a40cd18b378cb1e2529376e_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-3c4c01aa0fa88b64d5dd6b81c07c0c98_1440w.jpg">
+<meta property="og:updated_time" content="2020-10-08T14:55:57.388Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="过年之抢红包算法">
-<meta name="twitter:description" content="前言 昨天是大年初一，怎么说呢，因为在读大学， 没有出来工作，所以昨晚也是陆陆续续有收到一些红包。然后想起自己对算法感兴趣，以前也看过一些公众号有讲过抢红包算法，今天就更新一遍关于抢红包的算法，对学过数据结构或者对抢红包感兴趣的可以看一看。本文就讲两个抢红包算法。">
-<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-15d72ce41de42df15c8f392da0c7921d_hd.jpg">
+<meta name="twitter:title" content="JVM必会Java GC，助你过五关斩六将">
+<meta name="twitter:description" content="前言 都知道《深入理解Java虚拟机》这本书对Java开发是非常重要的，几乎达到了一个必读的重要性。但是在校期间一直看不深入，就停留在最表面的意思，无法深入理解。经历了几个月的码农生活，再次回过头来看这本书的时候，我发现了许多以前不懂的东西都慢慢看懂了，所以借此机会写下这一篇Java GC。">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-eda47b7727cb3673ccc56328054bad2e_1440w.jpg">
 
 
 
@@ -123,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/2020/01/26/过年之抢红包算法/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/10/08/JVM必会Java-GC，助你过五关斩六将/">
 
 
 
 
 
-  <title>过年之抢红包算法 | god-jiang的git个人博客</title>
+  <title>JVM必会Java GC，助你过五关斩六将 | god-jiang的git个人博客</title>
   
 
 
@@ -298,7 +304,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/01/26/过年之抢红包算法/">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/10/08/JVM必会Java-GC，助你过五关斩六将/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="god-jiang">
@@ -315,7 +321,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">过年之抢红包算法</h1>
+          <h1 class="post-title" itemprop="name headline">JVM必会Java GC，助你过五关斩六将</h1>
         
 
         <div class="post-meta">
@@ -327,8 +333,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-26T18:24:17+08:00">
-                2020-01-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-08T22:51:28+08:00">
+                2020-10-08
               </time>
             
 
@@ -350,8 +356,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法积累ing/" itemprop="url" rel="index">
-                    <span itemprop="name">算法积累ing</span>
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
                   </a>
                 </span>
 
@@ -386,7 +392,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.2k 字
+                  2.6k 字
                 </span>
               
 
@@ -402,7 +408,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  4 分钟
+                  8 分钟
                 </span>
               
             </div>
@@ -424,49 +430,61 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
-<p>昨天是大年初一，怎么说呢，因为在读大学， 没有出来工作，所以昨晚也是陆陆续续有收到一些红包。然后想起自己对算法感兴趣，以前也看过一些公众号有讲过<strong>抢红包算法，</strong>今天就更新一遍关于<strong>抢红包的算法</strong>，对学过数据结构或者对抢红包感兴趣的可以看一看。本文就讲两个抢红包算法。</p>
+<p>都知道《深入理解Java虚拟机》这本书对Java开发是非常重要的，几乎达到了一个必读的重要性。但是在校期间一直看不深入，就停留在最表面的意思，无法深入理解。经历了几个月的码农生活，再次回过头来看这本书的时候，我发现了许多以前不懂的东西都慢慢看懂了，所以借此机会写下这一篇Java GC。</p>
 </blockquote>
 <a id="more"></a>
-<p><strong>PS：关于抢红包算法我是参看公众号“程序员小灰”。这个公众号是引领我学数据结构的公众号，通过漫画的形式讲得很通俗易懂。</strong></p>
-<hr>
-<h2 id="抢红包算法的要求"><a href="#抢红包算法的要求" class="headerlink" title="抢红包算法的要求"></a><strong>抢红包算法的要求</strong></h2><p>假设有10元钱，10个人分：</p>
+<h2 id="Java-GC的目标"><a href="#Java-GC的目标" class="headerlink" title="Java GC的目标"></a>Java GC的目标</h2><p>遇到一个问题或者一个知识点，我们首先要理解和思考为什么要解决这个问题。说到GC的目的是什么呢？显然是回收JVM的内存，因为JVM分配的内存是有限的，随着程序创建的对象越来越多，如果不进行GC的话就会导致内存垃圾越来越多，最后程序崩溃。既然目的是回收垃圾内存，那么新的问题就是，哪些对象可以被回收？什么时候进行回收？怎么回收？</p>
+<h2 id="哪些对象可以被回收？"><a href="#哪些对象可以被回收？" class="headerlink" title="哪些对象可以被回收？"></a>哪些对象可以被回收？</h2><p>简单的说就是没有用的对象就可以被回收。那么什么是没有用的对象呢？《深入理解Java虚拟机》给出了两种方法，一种叫引用计数法，一种叫可达性分析法。</p>
+<h2 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h2><p>《深入理解Java虚拟机》中是这样讲的：在对象中添加一个引用计数器，每当有一个地方引用它的时候，计数器值就加一；当引用失效的时候，计数器值就减一；在任何时刻计数器为零的对象就是不可能再被使用的，这个时候会被GC回收。但是这个方法会出现一个问题，就是循环引用问题。比如对象A引用了对象B，但是对象B也引用了对象A，那么这个时候对象A和对象B的引用计数器都不会为0，但是这两个对象都没有被其他对象引用，理论上说是要被GC回收的。</p>
+<h2 id="可达性分析法"><a href="#可达性分析法" class="headerlink" title="可达性分析法"></a>可达性分析法</h2><p>可达性分析（Reachability Analysis）算法的基本思路就是通过一系列称为“GC Roots”的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路径称为“引用链”（Reference Chain），如果某个对象到GC Roots间没有任何引用链相连，或者用图论的话来说就是从GC Roots到这个对象不可达时，则证明此对象是不可能再被使用的，这个时候会被GC回收。</p>
+<p>一般作为GC Roots的对象包括以下几种：</p>
 <ul>
-<li><strong>每个人至少分到0.01元，不可以分到0元</strong></li>
-<li><strong>每个人分到的金额加起来要等于10元，不可以多于10元，也不可以少于10元</strong></li>
-<li><strong>每个人分的金额要尽可能随机，不能差距太大</strong></li>
+<li>Java栈中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI引用的对象</li>
 </ul>
-<h2 id="抢红包一"><a href="#抢红包一" class="headerlink" title="抢红包一"></a><strong>抢红包一</strong></h2><blockquote>
-<p>当初大二学习数据结构的时候老师就有布置一道作业题说叫我们回去写一个类似于微信的抢红包算法，然后下个星期看哪位同学写得好。所以第一个抢红包算法应该大家很容易理解。</p>
-</blockquote>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><strong>每个人每次抢到的金额范围是：（0，剩余金额）。</strong></p>
-<p>不过这个算法思路会违背“<strong>每个人分的金额随机，不能差距太大</strong>”。</p>
-<p>为什么会这样，举个例子：</p>
-<p>假设有10元钱，10个人分。</p>
-<p>第一个人的随机范围是（0，10），平均分到5元。</p>
-<p>假设第一个人随机分到5元，剩余金额为10-5=5元。</p>
-<p>第二个人的随机范围是（0，5），平均分到2.5元。</p>
-<p>假设第二个人随机分到2.5元，剩余金额为5-2.5=2.5元。</p>
-<p>第三个人的随机范围是（0，2.5），平均分到1.25元</p>
-<p>以此类推，每一次随机范围越来越小，违背了“<strong>每个人分的金额随机，不能差距太大</strong>”。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> zhihu;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/1/26  16:49</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Algorithm</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Integer&gt; <span class="title">divideRedPackage</span><span class="params">(Integer totalAmount, Integer totalPeopleNum)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; amountList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        Integer restAmount = totalAmount;</span><br><span class="line">        Integer restPeopleNum = totalPeopleNum;</span><br><span class="line">        Random random = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; totalPeopleNum - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> amount = random.nextInt(restAmount - restPeopleNum - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">            restAmount -= amount;</span><br><span class="line">            restPeopleNum--;</span><br><span class="line">            amountList.add(amount);</span><br><span class="line">        &#125;</span><br><span class="line">        amountList.add(restAmount);</span><br><span class="line">        <span class="keyword">return</span> amountList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; amountList = divideRedPackage(<span class="number">1000</span>, <span class="number">10</span>);</span><br><span class="line">        <span class="keyword">for</span> (Integer amount : amountList</span><br><span class="line">        ) &#123;</span><br><span class="line">            System.out.println(<span class="string">"抢到金额"</span> + <span class="keyword">new</span> BigDecimal(amount).divide(<span class="keyword">new</span> BigDecimal(<span class="number">100</span>)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p><img src="https://pic2.zhimg.com/80/v2-15d72ce41de42df15c8f392da0c7921d_hd.jpg" alt="img"></p>
-<hr>
-<h2 id="抢红包二"><a href="#抢红包二" class="headerlink" title="抢红包二"></a>抢红包二</h2><h2 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h2><p><strong>每次抢到的金额=随机范围（0，M/N *2）</strong></p>
-<p><strong>M表示剩余红包金额，N表示剩余人数。这个公式保证了每次随机金额的平均值是相等的。</strong></p>
-<p>举个例子：</p>
-<p>假设有10元钱，10个人分：</p>
-<p>10/10 *2=2，所以第一个人分到的范围是（0，2），平均可以分到1元。</p>
-<p>假设第一个人随机分到1元，那么剩余金额是10-1=9元。</p>
-<p>9/9 *2=2，所以第二个人分到的范围是（0，2），平均可以分到1元。</p>
-<p>假设第二个人随机分到1元，那么剩余金额是9-1=8元。</p>
-<p>8/8 *2=2，所以第三个人的随机范围也是（0，2），平均可以分到1元。</p>
-<p>以此类推，每一次随机范围都是相等的。</p>
-<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> zhihu;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/1/26  15:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Algorithm</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Integer&gt; <span class="title">divideRedPackage</span><span class="params">(Integer totalAmount, Integer totalPeopleNum)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; amountList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        Integer restAmount = totalAmount;</span><br><span class="line">        Integer restPeopleNum = totalPeopleNum;</span><br><span class="line">        Random random = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; totalPeopleNum - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="comment">//保证金额范围是[1，剩余金额2倍），左闭右开</span></span><br><span class="line">            <span class="keyword">int</span> amount = random.nextInt(restAmount / restPeopleNum * <span class="number">2</span> - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">            restAmount -= amount;</span><br><span class="line">            restPeopleNum--;</span><br><span class="line">            amountList.add(amount);</span><br><span class="line">        &#125;</span><br><span class="line">        amountList.add(restAmount);</span><br><span class="line">        <span class="keyword">return</span> amountList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; amountList = divideRedPackage(<span class="number">1000</span>, <span class="number">10</span>);</span><br><span class="line">        <span class="keyword">for</span> (Integer amount : amountList</span><br><span class="line">        ) &#123;</span><br><span class="line">            System.out.println(<span class="string">"抢到金额"</span> + <span class="keyword">new</span> BigDecimal(amount).divide(<span class="keyword">new</span> BigDecimal(<span class="number">100</span>)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="结果-1"><a href="#结果-1" class="headerlink" title="结果"></a>结果</h2><p><img src="https://pic1.zhimg.com/80/v2-865c5937786868dcd6f08730a594c898_hd.jpg" alt="img"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
-<p>抢红包算法就只写了两个，第一个就是以前大二学习数据结构的时候老师布置作业，我的想法就是大概这样，分的不均。第二个算法就是看公众号“程序员小灰”学习到的，很厉害，挺佩服这些大佬的，哈哈。</p>
-</blockquote>
-<p><strong>PS：本文提供的代码红包金额都是以分为单位，因为抢红包最低都是0.01元。</strong></p>
+<p>如下图所示，因为从CGRoots作为起点可以找到对象1和对象2，所以对象1和对象2是有用的。对象3和对象4和对象5都没有在GCRoots的链下面，所以此时的对象3，对象4和对象5都是没有用的，会被GC回收。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-eda47b7727cb3673ccc56328054bad2e_1440w.jpg" alt="img"></p>
+<h2 id="谈谈引用"><a href="#谈谈引用" class="headerlink" title="谈谈引用"></a>谈谈引用</h2><p>无论是通过引用计数算法判断对象的引用数量，还是通过可达性分析算法判断对象是否引用链可 达，判定对象是否存活都和“引用”离不开关系。在JDK 1.2版之前，Java里面的引用是很传统的定义： 如果reference类型的数据中存储的数值代表的是另外一块内存的起始地址，就称该reference数据是代表 某块内存、某个对象的引用。这种定义并没有什么不对，只是现在看来有些过于狭隘了，一个对象在 这种定义下只有“被引用”或者“未被引用”两种状态，对于描述一些“食之无味，弃之可惜”的对象就显 得无能为力。譬如我们希望能描述一类对象：当内存空间还足够时，能保留在内存之中，如果内存空 间在进行垃圾收集后仍然非常紧张，那就可以抛弃这些对象——很多系统的缓存功能都符合这样的应 用场景。</p>
+<p>在JDK 1.2版之后，Java对引用的概念进行了扩充，将引用分为强引用（Strongly Re-ference）、软 引用（Soft Reference）、弱引用（Weak Reference）和虚引用（Phantom Reference）4种，这4种引用强 度依次逐渐减弱。</p>
+<ul>
+<li>强引用是最传统的“引用”的定义，是指在程序代码之中普遍存在的引用赋值，即类似“Object obj=new Object()”这种引用关系。无论任何情况下，只要强引用关系还存在，垃圾收集器就永远不会回 收掉被引用的对象。</li>
+<li>软引用是用来描述一些还有用，但非必须的对象。只被软引用关联着的对象，在系统将要发生内 存溢出异常前，会把这些对象列进回收范围之中进行第二次回收，如果这次回收还没有足够的内存， 才会抛出内存溢出异常。在JDK 1.2版之后提供了SoftReference类来实现软引用。</li>
+<li>弱引用也是用来描述那些非必须对象，但是它的强度比软引用更弱一些，被弱引用关联的对象只 能生存到下一次垃圾收集发生为止。当垃圾收集器开始工作，无论当前内存是否足够，都会回收掉只 被弱引用关联的对象。在JDK 1.2版之后提供了WeakReference类来实现弱引用。</li>
+<li>虚引用也称为“幽灵引用”或者“幻影引用”，它是最弱的一种引用关系。一个对象是否有虚引用的 存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚 引用关联的唯一目的只是为了能在这个对象被收集器回收时收到一个系统通知。在JDK 1.2版之后提供 了PhantomReference类来实现虚引用。</li>
+</ul>
+<h2 id="什么时候回收？"><a href="#什么时候回收？" class="headerlink" title="什么时候回收？"></a>什么时候回收？</h2><p>上面讲了哪些对象会被回收，接下来就来讲什么时候进行垃圾回收呢？在排除人为的调用，垃圾回收都是发现在对新生对象进行内存分配的时候，这个时候如果JVM内存空间不足就会触发GC进行垃圾回收。</p>
+<h2 id="怎么回收？"><a href="#怎么回收？" class="headerlink" title="怎么回收？"></a>怎么回收？</h2><p>现在知道了哪些对象可以被回收，什么时候进行回收，现在要解决的就是怎么进行回收了。垃圾回收根据实现的方式不同有多种不同的算法实现。《深入理解Java虚拟机》讲了标记清除算法，复制算法，标记整理算法，分代回收算法等，下面分别一一介绍一下。</p>
+<h2 id="标记清除算法"><a href="#标记清除算法" class="headerlink" title="标记清除算法"></a>标记清除算法</h2><p>标记清除算法主要分为两步，一步是标记出哪些是垃圾对象，另一步是清除这些被标记的对象。这个算法会出现一个问题就是内存碎片化严重。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-070134e55b0b4f1820242d0d771ad4b8_1440w.jpg" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-b0f1299987720661b75b9265619660dd_1440w.jpg" alt="img"></p>
+<p>由上图可以看出来，标记清除算法会导致内存碎片化，可利用率不高。</p>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>复制算法就是把内存分为两部分，在平时使用的时候只用其中的固定一部分，在当需要进行GC的时候，把存活的对象复制到另一部分中，然后将已经使用的内存全部清理掉。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-272ab960faa3b13c6b7dc62629610f1f_1440w.jpg" alt="img"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-f3cad74204ef5ee5ceb48edb728bc4e7_1440w.jpg" alt="img"></p>
+<p>复制算法解决了标记清除的碎片化问题，但是很明显的一个问题就是内存使用率大大降低，能使用的内存只有原来的一半。</p>
+<h2 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h2><p>标记整理算法是结合了标记清除算法和复制算法。标记阶段和标记清除算法一样，先标记出需要回收的部分，然后把存活的对象往内存的一端进行移动，然后清除剩下的部分。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-36d9ed369a726adc55365323c476bc0f_1440w.jpg" alt="img"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-e6b42dcb7a40cd18b378cb1e2529376e_1440w.jpg" alt="img"></p>
+<p>标记整理算法可以解决上面两个算法的问题，一般应用在老年代，但是整体的效率偏低。</p>
+<h2 id="分代回收算法"><a href="#分代回收算法" class="headerlink" title="分代回收算法"></a>分代回收算法</h2><p>分代回收算法是目前使用较多的一种算法，这个不是一个新的算法，而是将内存进行划分，不同区域的内存使用不同的算法。根据对象的存活时间将内存的划分为新生代和老年代，其中新生代分为Eden区和From Survivor区，To Survivor区。在新生代使用的是复制算法，在进行对象内存分配的时候只会使用Eden区和From Survivor区，当发生GC的时候，会将存活的对象复制到To Survivor区，然后循环进行复制。当某个对象进行了15次GC后依旧存活，那么这个对象就会进入老年代。老年代因为每次回收的对象都会特别少，因此使用的是标记整理算法。</p>
+<h2 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2><p>讲完了垃圾回收算法，我们再熟悉一下垃圾回收器，这些垃圾回收器都不必全部弄懂，只需要重点关注CMS和G1就可以了。</p>
+<ul>
+<li>Serial垃圾收集器（单线程，复制算法）</li>
+<li>ParNew垃圾收集器（Serial+多线程）</li>
+<li>Parallel Scavenge收集器（多线程复制算法，高效）</li>
+<li>SerialOld收集器（单线程标记整理算法）</li>
+<li>ParallelOld收集器（多线程标记整理算法）</li>
+<li>CMS收集器（多线程标记清除算法）</li>
+<li>G1收集器</li>
+</ul>
+<p><img src="https://pic1.zhimg.com/80/v2-3c4c01aa0fa88b64d5dd6b81c07c0c98_1440w.jpg" alt="img"></p>
+<p>上图展示了七种作用于不同分代的收集器，如果两个收集器之间存在连线，就说明它们可以搭配使用。上面的垃圾收集器我们只需要重点学习CMS和G1这两款相对复杂而广泛使用的收集器，深入了解它们的部分运作细节即可，感兴趣的可以自行学习。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>《深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）》</li>
+<li><a href="https://link.zhihu.com/?target=https%3A//www.cnblogs.com/jobbible/p/9800222.html" target="_blank" rel="noopener">Java GC机制详解</a></li>
+</ol>
 
       
     </div>
@@ -494,12 +512,12 @@
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
 
-  <p><span>本文标题:</span>过年之抢红包算法</p>
+  <p><span>本文标题:</span>JVM必会Java GC，助你过五关斩六将</p>
   <p><span>文章作者:</span>god-jiang</p>
-  <p><span>发布时间:</span>2020年01月26日 - 18:24:17</p>
-  <p><span>最后更新:</span>2020年01月26日 - 22:50:44</p>
-  <p><span>原始链接:</span><a href="/2020/01/26/过年之抢红包算法/" title="过年之抢红包算法">https://god-jiang.github.io/2020/01/26/过年之抢红包算法/</a>
-    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/01/26/过年之抢红包算法/" aria-label="复制成功！"></i></span>
+  <p><span>发布时间:</span>2020年10月08日 - 22:51:28</p>
+  <p><span>最后更新:</span>2020年10月08日 - 22:55:57</p>
+  <p><span>原始链接:</span><a href="/2020/10/08/JVM必会Java-GC，助你过五关斩六将/" title="JVM必会Java GC，助你过五关斩六将">https://god-jiang.github.io/2020/10/08/JVM必会Java-GC，助你过五关斩六将/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/10/08/JVM必会Java-GC，助你过五关斩六将/" aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -557,7 +575,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/抢红包/" <i="" class="fa fa-tag"> 抢红包</a>
+            <a href="/tags/JVM/" <i="" class="fa fa-tag"> JVM</a>
           
         </div>
       
@@ -570,8 +588,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/25/2019-3-1IntelliJ-IDEA永久破解/" rel="next" title="2019.3.1IntelliJ IDEA永久破解">
-                <i class="fa fa-chevron-left"></i> 2019.3.1IntelliJ IDEA永久破解
+              <a href="/2020/10/04/Redis分布式锁背后的原理/" rel="next" title="Redis分布式锁背后的原理">
+                <i class="fa fa-chevron-left"></i> Redis分布式锁背后的原理
               </a>
             
           </div>
@@ -579,10 +597,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/01/29/数组中只出现一次的数字/" rel="prev" title="数组中只出现一次的数字">
-                数组中只出现一次的数字 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -735,7 +749,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抢红包算法的要求"><span class="nav-number">2.</span> <span class="nav-text">抢红包算法的要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抢红包一"><span class="nav-number">3.</span> <span class="nav-text">抢红包一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">4.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">5.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果"><span class="nav-number">6.</span> <span class="nav-text">结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抢红包二"><span class="nav-number">7.</span> <span class="nav-text">抢红包二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路-1"><span class="nav-number">8.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码-1"><span class="nav-number">9.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果-1"><span class="nav-number">10.</span> <span class="nav-text">结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-GC的目标"><span class="nav-number">2.</span> <span class="nav-text">Java GC的目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哪些对象可以被回收？"><span class="nav-number">3.</span> <span class="nav-text">哪些对象可以被回收？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用计数法"><span class="nav-number">4.</span> <span class="nav-text">引用计数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可达性分析法"><span class="nav-number">5.</span> <span class="nav-text">可达性分析法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈谈引用"><span class="nav-number">6.</span> <span class="nav-text">谈谈引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么时候回收？"><span class="nav-number">7.</span> <span class="nav-text">什么时候回收？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么回收？"><span class="nav-number">8.</span> <span class="nav-text">怎么回收？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标记清除算法"><span class="nav-number">9.</span> <span class="nav-text">标记清除算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制算法"><span class="nav-number">10.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标记整理算法"><span class="nav-number">11.</span> <span class="nav-text">标记整理算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分代回收算法"><span class="nav-number">12.</span> <span class="nav-text">分代回收算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾回收器"><span class="nav-number">13.</span> <span class="nav-text">垃圾回收器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">14.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

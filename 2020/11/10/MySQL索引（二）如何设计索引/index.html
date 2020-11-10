@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="MySQL索引,">
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="一名热爱编程和算法的在校大学生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="god-jiang的git个人博客">
-<meta property="og:url" content="https://god-jiang.github.io/tags/算法进阶/index.html">
+<meta name="description" content="背景到这一篇文章，我就已经默认你阅读完了前面的MySQL文章。你可能已经知道了索引本质就是一种数据结构，来加快查询效率的。但是索引要怎么设计呢？这就是这一篇文章的目的。 网上有很多博客会讲到最佳实践，比如单表索引数不能超过5个，联合索引中的字段不能超过5个等等。我只能说这些都是扯淡，任何实践都要放在特定的场景才能生效，所以接下来我们来聊聊索引设计吧。">
+<meta name="keywords" content="MySQL索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL索引（二）如何设计索引">
+<meta property="og:url" content="https://god-jiang.github.io/2020/11/10/MySQL索引（二）如何设计索引/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="一名热爱编程和算法的在校大学生">
+<meta property="og:description" content="背景到这一篇文章，我就已经默认你阅读完了前面的MySQL文章。你可能已经知道了索引本质就是一种数据结构，来加快查询效率的。但是索引要怎么设计呢？这就是这一篇文章的目的。 网上有很多博客会讲到最佳实践，比如单表索引数不能超过5个，联合索引中的字段不能超过5个等等。我只能说这些都是扯淡，任何实践都要放在特定的场景才能生效，所以接下来我们来聊聊索引设计吧。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-11-10T15:26:07.521Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="god-jiang的git个人博客">
-<meta name="twitter:description" content="一名热爱编程和算法的在校大学生">
+<meta name="twitter:title" content="MySQL索引（二）如何设计索引">
+<meta name="twitter:description" content="背景到这一篇文章，我就已经默认你阅读完了前面的MySQL文章。你可能已经知道了索引本质就是一种数据结构，来加快查询效率的。但是索引要怎么设计呢？这就是这一篇文章的目的。 网上有很多博客会讲到最佳实践，比如单表索引数不能超过5个，联合索引中的字段不能超过5个等等。我只能说这些都是扯淡，任何实践都要放在特定的场景才能生效，所以接下来我们来聊聊索引设计吧。">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/tags/算法进阶/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/11/10/MySQL索引（二）如何设计索引/">
 
 
 
 
 
-  <title>标签: 算法进阶 | god-jiang的git个人博客</title>
+  <title>MySQL索引（二）如何设计索引 | god-jiang的git个人博客</title>
   
 
 
@@ -143,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -279,156 +281,326 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>算法进阶<small>标签</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/11/10/MySQL索引（二）如何设计索引/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="god-jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="god-jiang的git个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/02/18/动态规划的高度套路/" itemprop="url">
-              
-                <span itemprop="name">动态规划的高度套路</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">MySQL索引（二）如何设计索引</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-02-18T12:36:28+08:00" content="2020-02-18">
-          02-18
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-10T23:24:47+08:00">
+                2020-11-10
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.6k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/11/神级算法——二分天下/" itemprop="url">
-              
-                <span itemprop="name">神级算法——二分天下</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-11T19:43:42+08:00" content="2020-01-11">
-          01-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/08/单调栈及其应用/" itemprop="url">
-              
-                <span itemprop="name">单调栈及其应用</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-08T20:17:16+08:00" content="2020-01-08">
-          01-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/26/荷兰国旗问题-快排-BFPRT算法/" itemprop="url">
-              
-                <span itemprop="name">荷兰国旗问题&快排&BFPRT算法</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-26T16:17:35+08:00" content="2019-12-26">
-          12-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/15/神级遍历-morris/" itemprop="url">
-              
-                <span itemprop="name">神级遍历-morris</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-15T14:10:49+08:00" content="2019-12-15">
-          12-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>到这一篇文章，我就已经默认你阅读完了前面的MySQL文章。你可能已经知道了索引本质就是一种数据结构，来加快查询效率的。但是索引要怎么设计呢？这就是这一篇文章的目的。</p>
+<p>网上有很多博客会讲到最佳实践，比如单表索引数不能超过5个，联合索引中的字段不能超过5个等等。我只能说这些都是扯淡，任何实践都要放在特定的场景才能生效，所以接下来我们来聊聊索引设计吧。</p>
+<a id="more"></a>
+<h2 id="索引设计的误区"><a href="#索引设计的误区" class="headerlink" title="索引设计的误区"></a>索引设计的误区</h2><h2 id="单表索引数不超过5个"><a href="#单表索引数不超过5个" class="headerlink" title="单表索引数不超过5个"></a>单表索引数不超过5个</h2><p>索引本质上就是一种数据结构，然而我们可以把索引映射到现实生活中，就好比是《深入浅出MySQL》这本书前面的目录。难不成我们说目录的章节不能超过5个吗？显然不可以的，在这么一个前提下，给一个索引增加一个上限值是不恰当的。所以涉及到慢查询的时候该加索引就加索引，不要给它们设置一个上限就好了。</p>
+<p>但是我们也不能在设计索引的时候滥用索引，在数据库表增加太多无用的索引也是会带来一些副作用的，比如DML语句会变得很慢。</p>
+<h2 id="给高频字段加索引"><a href="#给高频字段加索引" class="headerlink" title="给高频字段加索引"></a>给高频字段加索引</h2><p>这条在绝大部分情况下是对的，但是也不完全对。因为没有对应到场景上，所以不能说完全对，下面我们举例来说明一下。</p>
+<p>假如你设计了一个APP用来发送消息的模块，由于发送的消息太多，表中已经有1亿的数据量。为了提高发送消息的速度，领导要求你开发一个功能，给发送消息未成功的用户再尝试发送一次消息。</p>
+<p>这样我们就可以设计发送的状态status，这个status有三个值，0代表未发送，1代表已经发送，2代表发送失败。</p>
+<p>相关的SQL语句如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> messages <span class="keyword">where</span> <span class="keyword">status</span> = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>正常情况下，大家都是发送成功的，发送失败的概率非常低。</p>
+<p>然后我们从数据库表中做一个统计：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">status</span>, <span class="keyword">count</span>(*) <span class="keyword">from</span> messages <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">status</span>;</span><br><span class="line">| status | count(*) |</span><br><span class="line">|      0 |     1000 |</span><br><span class="line">|      1 | 99999000 |</span><br><span class="line">|      2 |       24 |</span><br></pre></td></tr></table></figure>
+<p>这种情况称之为数据的倾斜度高。</p>
+<p>在这种情况下，我们只需要查找status的值为2的情况即可，只要我们不统计status=1的情况，就不用在高频字段加上索引。所以在这个场景下，给高频字段加索引是不对的。</p>
+<h2 id="SQL执行顺序"><a href="#SQL执行顺序" class="headerlink" title="SQL执行顺序"></a>SQL执行顺序</h2><p>我们已经知道了SQL的执行计划（explain），那么SQL的执行顺序呢？是不是跟Java代码一样，按照编码的顺序来执行的，让我们来看看吧。</p>
+<p>在SQL语言中，执行顺序是按照一个固定的规则来执行的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">8、 <span class="keyword">SELECT</span></span><br><span class="line"><span class="number">9</span>、 <span class="keyword">DISTINCT</span> &lt;select_list&gt;</span><br><span class="line"><span class="number">1</span>、 <span class="keyword">FROM</span> &lt;left_table&gt;</span><br><span class="line"><span class="number">3</span>、 &lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt;</span><br><span class="line"><span class="number">2</span>、 <span class="keyword">ON</span> &lt;join_condition&gt;</span><br><span class="line"><span class="number">4</span>、 <span class="keyword">WHERE</span> &lt;where_condition&gt;</span><br><span class="line"><span class="number">5</span>、 <span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt;</span><br><span class="line"><span class="number">6</span>、 <span class="keyword">WITH</span> &#123;<span class="keyword">CUBE</span>|<span class="keyword">ROLLUP</span>&#125;</span><br><span class="line"><span class="number">7</span>、 <span class="keyword">HAVING</span> &lt;having_condition&gt;</span><br><span class="line"><span class="number">10</span>、<span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt;</span><br><span class="line"><span class="number">11</span>、<span class="keyword">LIMIT</span> &lt;limit_number&gt;</span><br></pre></td></tr></table></figure>
+<p>从上面的规则得知，SQL执行顺序是11个步骤，最先执行的是FROM子句，最后执行的是LIMIT子句。</p>
+<p>在SQL执行过程中，每一个步骤都会产生一个虚拟表（Virtual Table，简称VT），用来保存SQL的执行结果。下面分析一下SQL执行的整个过程：</p>
+<ol>
+<li>FROM。经过 FROM 语句得到一个虚拟表 VT1，如果有多表关联，会先执行笛卡尔积运算。</li>
+<li>ON。对虚拟表 VT1 执行 ON 条件筛选，筛选出符合 &lt;join_condition&gt; 条件的行，结果放入虚拟表 VT2 中。</li>
+<li>JOIN。如果是 OUTER JOIN 类型，上述表中未匹配到的行会作为外部行添加到虚拟表 VT2 中，生成虚拟表 VT3。</li>
+<li>WHERE。对虚拟表 VT3 应用 WHERE 条件，将符合 &lt;where_condition&gt; 条件的行插入到虚拟表 VT4 中。</li>
+<li>GROUP BY。根据 &lt;group_by_list&gt; 子句中的条件，对行记录进行分组处理，生成虚拟表 VT5。</li>
+<li>WITH。对表 VT5 进行 CUBE 或 ROLLUP 操作，生成虚拟表 VT6。</li>
+<li>HAVING。对虚拟表 VT6 的结果应用 HAVING 过滤，将符合 &lt;having_condition&gt; 条件的记录插入到虚拟表 VT7 中。</li>
+<li>SELECT。根据 SELECT 中的条件，选出指定的列，生成虚拟表 VT8。</li>
+<li>DISTINCT。对虚拟表 VT8 中的条件进行排重，产生虚拟表 VT9。</li>
+<li>ORDER BY。对虚拟表 VT9 中的记录，按照 &lt;order_by_condition&gt; 的条件进行排序操作，生成虚拟表 VT10。</li>
+<li>LIMIT。最后根据 LIMIT 的条件，取出指定的 LIMIT 区间的行，生成虚拟表 VT11，并将结果返回给用户。</li>
+</ol>
+<p>因此，我们在进行SQL调优时，要按照SQL语句执行的顺序进行优化，重点处理执行成本比较高的部分：</p>
+<ul>
+<li>多表JOIN，先看JOIN的条件是否有索引，避免笛卡尔积的产生。</li>
+<li>检查WHERE条件的索引是否合理，尽可能缩小结果集的大小。</li>
+<li>检查GROUP BY条件上是否有索引，如果没有索引，MySQL会通过临时表来完成GROUP BY操作</li>
+<li>检查ORDER BY条件是否有索引，如果没有索引，MySQL会使用排序算法将结果集放入在临时表进行排序</li>
+</ul>
+<h2 id="查询优化器"><a href="#查询优化器" class="headerlink" title="查询优化器"></a>查询优化器</h2><p>现在的关系型数据库，基本都使用了基于成本的优化器。</p>
+<p>现在估算成本的代价就是CPU代价+IO代价。在《数据库查询优化器的艺术》这本书讲到，MySQL数据库在有GROUP BY或者ORDER BY的操作下，没有索引的情况下会先走WHERE然后走GROUP BY和ORDER BY。反过来就是有索引的情况下，查询优化器会先走GROUP BY和ORDER BY再走WHERE。</p>
+<p>因为数据库优化器会认为GROUP BY和ORDER BY不走索引的代价会大于WHERE不走索引的代价，所以在有索引的情况下，优化器会先优化给GROUP BY和ORDER BY走索引操作。</p>
+<p>再深入的知识就要等你们自己去看书才能慢慢理解到了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>聊了网上的最佳实践有一些不完全对，并且举例说明了它们在某些情况下不正确的事实</li>
+<li>SQL执行顺序还有索引优化部分</li>
+<li>查询优化器的代价</li>
+</ul>
 
       
     </div>
+    
+    
+    
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
 
+  
+</div>
+<div>
+    
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>MySQL索引（二）如何设计索引</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2020年11月10日 - 23:24:47</p>
+  <p><span>最后更新:</span>2020年11月10日 - 23:26:07</p>
+  <p><span>原始链接:</span><a href="/2020/11/10/MySQL索引（二）如何设计索引/" title="MySQL索引（二）如何设计索引">https://god-jiang.github.io/2020/11/10/MySQL索引（二）如何设计索引/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/11/10/MySQL索引（二）如何设计索引/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+
+    
+</div>
+
+    
+
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div><font color="red"><b>创作不易，您的支持就是我坚持的动力，谢谢大家！</b></font></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="god-jiang 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL索引/" <i="" class="fa fa-tag"> MySQL索引</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/10/MySQL索引（一-介绍索引/" rel="next" title="MySQL索引（一）介绍索引">
+                <i class="fa fa-chevron-left"></i> MySQL索引（一）介绍索引
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -436,6 +608,13 @@
 
 
           
+
+  
+   <div id="gitalk-container"></div>
+ 
+  
+
+
 
         </div>
         
@@ -456,8 +635,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -535,6 +723,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引设计的误区"><span class="nav-number">2.</span> <span class="nav-text">索引设计的误区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单表索引数不超过5个"><span class="nav-number">3.</span> <span class="nav-text">单表索引数不超过5个</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#给高频字段加索引"><span class="nav-number">4.</span> <span class="nav-text">给高频字段加索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL执行顺序"><span class="nav-number">5.</span> <span class="nav-text">SQL执行顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询优化器"><span class="nav-number">6.</span> <span class="nav-text">查询优化器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -702,6 +906,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -742,6 +950,21 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'deedada779a5390ef257',
+          clientSecret: 'e4038303bdb44d9de883f9e3a5940223b19a02d2',
+          repo: 'god-jiang.github.io',
+          owner: 'god-jiang',
+          admin: ['god-jiang'],
+          id: decodeURI(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
   
 

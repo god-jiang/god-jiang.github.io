@@ -1,6 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL优化之超大分页查询</title>
+    <url>/2020/11/10/MySQL%E4%BC%98%E5%8C%96%E4%B9%8B%E8%B6%85%E5%A4%A7%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>基本上只要是做后台开发，都会接触到分页这个需求或者功能吧。基本上大家都是会用MySQL的LIMIT来处理，而且我现在负责的项目也是这样写的。但是一旦数据量起来了，其实LIMIT的效率会极其的低，这一篇文章就来讲一下LIMIT子句优化的。</p>
+<a id="more"></a>
+<h2 id="LIMIT优化"><a href="#LIMIT优化" class="headerlink" title="LIMIT优化"></a>LIMIT优化</h2><p>很多业务场景都需要用到分页这个功能，基本上都是用LIMIT来实现。</p>
+<p>建表并且插入200万条数据：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 新建一张t5表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t5`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`text`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`ix_name`</span> (<span class="string">`name`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`ix_test`</span> (<span class="string">`text`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建存储过程插入200万数据</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> t5_insert_200w()</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">DECLARE</span> i <span class="built_in">INT</span>;</span><br><span class="line">    <span class="keyword">SET</span> i=<span class="number">1000000</span>;</span><br><span class="line">    WHILE i&lt;=3000000 DO</span><br><span class="line">        <span class="keyword">INSERT</span> <span class="keyword">INTO</span> t5(<span class="string">`name`</span>,<span class="built_in">text</span>) <span class="keyword">VALUES</span>(<span class="string">'god-jiang666'</span>,<span class="keyword">concat</span>(<span class="string">'text'</span>, i));</span><br><span class="line">        <span class="keyword">SET</span> i=i+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">END</span> <span class="keyword">WHILE</span>;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用存储过程插入200万数据</span></span><br><span class="line"><span class="keyword">call</span> t5_insert_200w();</span><br></pre></td></tr></table></figure>
+<p>在翻页比较少的情况下，LIMIT是不会出现任何性能上的问题的。</p>
+<p>但是如果用户需要查到最后面的页数呢？</p>
+<p>通常情况下，我们要保证所有的页面可以正常跳转，因为不会使用order by xxx desc这样的倒序SQL来查询后面的页数，而是采用正序顺序来做分页查询：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">100000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-cc7f6549895ff407b6d59548ad605186_1440w.jpg" alt="img"></p>
+<p>采用这种SQL查询分页的话，从200万数据中取出这10行数据的代价是非常大的，需要先排序查出前1000010条记录，然后抛弃前面1000000条。我的macbook pro跑出来花了5.578秒。</p>
+<p>接下来我们来看一下，上面这条SQL语句的执行计划：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-1902a67f4083fa576387388dc0964dc6_1440w.jpg" alt="img"></p>
+<p>从执行计划可以看出，在大分页的情况下，MySQL没有走索引扫描，即使text字段我已经加上了索引。</p>
+<p>这是为什么呢？</p>
+<p>回到<strong>MySQL索引（二）如何设计索引</strong>中有提及到，MySQL数据库的查询优化器是采用了基于代价的，而查询代价的估算是基于<strong>CPU代价</strong>和<strong>IO代价</strong>。</p>
+<p>如果MySQL在查询代价估算中，认为全表扫描方式比走索引扫描的方式效率更高的话，就会放弃索引，直接全表扫描。</p>
+<p>这就是为什么在大分页的SQL查询中，明明给该字段加了索引，但是MySQL却走了全表扫描的原因。</p>
+<p>然后我们继续用上面的查询SQL来验证我的猜想：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">7774</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-76a0f5a4532bccdff895390f08898a1d_1440w.jpg" alt="img"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">7775</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-721252409034d53e854fb072c5cf9c92_1440w.jpg" alt="img"></p>
+<p>以上的实验均在我的mbp上运行的，在7774这个临界点上，MySQL分别采用了索引扫描和全表扫描的查询优化方式。</p>
+<p><strong>所以可以认为MySQL会根据它自己的代价查询优化器来判断是否使用索引。</strong></p>
+<p>由于MySQL的查询优化器的算法核心是我们无法人工干预的，所以我们的优化思路就要着手于如何让分页维持在最佳的的分页临界点。</p>
+<h2 id="优化方式"><a href="#优化方式" class="headerlink" title="优化方式"></a>优化方式</h2><h2 id="1、使用覆盖索引"><a href="#1、使用覆盖索引" class="headerlink" title="1、使用覆盖索引"></a>1、使用覆盖索引</h2><p>如果一条SQL语句，通过索引可以直接获取查询的结果，不再需要回表查询，就称这个索引为<strong>覆盖索引</strong>。</p>
+<p>在MySQL数据库中使用explain关键字查看执行计划，如果extra这一列显示<strong>Using index</strong>，就表示这条SQL语句使用了覆盖索引。</p>
+<p>让我们来对比一下使用了覆盖索引，性能会提升多少吧。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic4.zhimg.com/80/v2-606081e5a1e9a6c6bd3e15d08b160c13_1440w.jpg" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-f4567af54364cbbe2dc9c77b0fdcdec8_1440w.jpg" alt="img"></p>
+<p>这次查询花了3.690秒，让我们看一下使用了覆盖索引优化会提升多少性能吧。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="string">`text`</span> <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-f79b2a23b80b26be5a1bb18c6eecd7a1_1440w.jpg" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-57d4020ee03f829003d82d79d271d42c_1440w.jpg" alt="img"></p>
+<p>从上面的对比中，超大分页查询中，使用了覆盖索引之后，花了0.201秒，而没有使用覆盖索引花了3.690秒，提高了18倍多，这在实际开发中，就是一个大的性能优化了。（该数据在我的mbp上运行得出）</p>
+<h2 id="2、子查询优化"><a href="#2、子查询优化" class="headerlink" title="2、子查询优化"></a>2、子查询优化</h2><p>因为实际开发中，用SELECT查询一两列操作是非常少的，因此上述的覆盖索引的适用范围就比较有限。</p>
+<p>所以我们可以通过把分页的SQL语句改写成子查询的方法获得性能上的提升。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">where</span> <span class="keyword">id</span>&gt;=(<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">1</span>) <span class="keyword">limit</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-ef3e5410014412d43f0cc1e1b7df99dc_1440w.jpg" alt="img"></p>
+<p>其实使用这种方法，提升的效率和上面使用了覆盖索引基本一致。</p>
+<p>但是这种优化方法也有局限性：</p>
+<ol>
+<li>这种写法，要求主键ID必须是连续的</li>
+<li>Where子句不允许再添加其他条件</li>
+</ol>
+<h2 id="3、延迟关联"><a href="#3、延迟关联" class="headerlink" title="3、延迟关联"></a>3、延迟关联</h2><p>和上述的子查询做法类似，我们可以使用JOIN，先在索引列上完成分页操作，然后再回表获取所需要的列。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> a.* <span class="keyword">from</span> t5 a <span class="keyword">inner</span> <span class="keyword">join</span> (<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>) b <span class="keyword">on</span> a.id=b.id;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-2d651149561eb3d6ad0b36c55ed0bca9_1440w.jpg" alt="img"></p>
+<p>从实验中可以得出，在采用JOIN改写后，上面的两个局限性都已经解除了，而且SQL的执行效率也没有损失。</p>
+<h2 id="4、记录上次查询结束的位置"><a href="#4、记录上次查询结束的位置" class="headerlink" title="4、记录上次查询结束的位置"></a>4、记录上次查询结束的位置</h2><p>和上面使用的方法都不同，记录上次结束位置优化思路是使用某种变量记录上一次数据的位置，下次分页时直接从这个变量的位置开始扫描，从而避免MySQL扫描大量的数据再抛弃的操作。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">where</span> <span class="keyword">id</span>&gt;=<span class="number">1000000</span> <span class="keyword">limit</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-eca6a898ece7883b1d6beac99fdefbc2_1440w.jpg" alt="img"></p>
+<p>根据以上实验，不难得出，由于使用了主键索引做分页操作，SQL的性能是最快的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>介绍了超大分页查询性能过差的原因，还有分享了几个优化思路</li>
+<li>超大分页的优化思路就是让分页的SQL尽量在最佳的性能区间执行，不要触发全表扫描即可</li>
+<li>希望以上的分享，可以让你们在MySQL这条路上少走弯路～～～</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>《MySQL性能优化》第六章 查询优化性能</li>
+<li>《数据库查询优化器的艺术》</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL分页优化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL索引（三）索引不生效的情况</title>
     <url>/2020/11/10/MySQL%E7%B4%A2%E5%BC%95%EF%BC%88%E4%B8%89%EF%BC%89%E7%B4%A2%E5%BC%95%E4%B8%8D%E7%94%9F%E6%95%88%E7%9A%84%E6%83%85%E5%86%B5/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>经历了前面两篇的介绍MySQL索引，相信大家也可以很清晰的认识到索引。这一节想分享一下在MySQL中给字段加了索引，但是查询的时候却不生效索引的情况，让更多的开发者可以少踩坑，接下来直接进入正文～～～</p>

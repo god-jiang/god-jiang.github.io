@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="MySQL索引,">
 
 
 
@@ -79,16 +79,23 @@
 
 
 
-<meta name="description" content="一名热爱编程和算法的在校大学生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="god-jiang的git个人博客">
-<meta property="og:url" content="https://god-jiang.github.io/categories/算法积累ing/page/2/index.html">
+<meta name="description" content="背景经历了前面两篇的介绍MySQL索引，相信大家也可以很清晰的认识到索引。这一节想分享一下在MySQL中给字段加了索引，但是查询的时候却不生效索引的情况，让更多的开发者可以少踩坑，接下来直接进入正文～～～">
+<meta name="keywords" content="MySQL索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL索引（三）索引不生效的情况">
+<meta property="og:url" content="https://god-jiang.github.io/2020/11/10/MySQL索引（三）索引不生效的情况/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="一名热爱编程和算法的在校大学生">
+<meta property="og:description" content="背景经历了前面两篇的介绍MySQL索引，相信大家也可以很清晰的认识到索引。这一节想分享一下在MySQL中给字段加了索引，但是查询的时候却不生效索引的情况，让更多的开发者可以少踩坑，接下来直接进入正文～～～">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-23a56a513778f89c37422a994c415bfa_1440w.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-3f6556a29e583fc50007d156174876c5_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-79f1973e408e83605b7fdb772312a126_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-506816111cab945685d966598de4c6e8_1440w.jpg">
+<meta property="og:updated_time" content="2020-11-10T15:29:11.404Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="god-jiang的git个人博客">
-<meta name="twitter:description" content="一名热爱编程和算法的在校大学生">
+<meta name="twitter:title" content="MySQL索引（三）索引不生效的情况">
+<meta name="twitter:description" content="背景经历了前面两篇的介绍MySQL索引，相信大家也可以很清晰的认识到索引。这一节想分享一下在MySQL中给字段加了索引，但是查询的时候却不生效索引的情况，让更多的开发者可以少踩坑，接下来直接进入正文～～～">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-23a56a513778f89c37422a994c415bfa_1440w.jpg">
 
 
 
@@ -118,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/categories/算法积累ing/page/2/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/11/10/MySQL索引（三）索引不生效的情况/">
 
 
 
 
 
-  <title>分类: 算法积累ing | god-jiang的git个人博客</title>
+  <title>MySQL索引（三）索引不生效的情况 | god-jiang的git个人博客</title>
   
 
 
@@ -143,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -279,213 +286,326 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block category">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>算法积累ing<small>分类</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/11/10/MySQL索引（三）索引不生效的情况/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="god-jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="god-jiang的git个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/12/26/荷兰国旗问题-快排-BFPRT算法/" itemprop="url">
-              
-                <span itemprop="name">荷兰国旗问题&快排&BFPRT算法</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">MySQL索引（三）索引不生效的情况</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-26T16:17:35+08:00" content="2019-12-26">
-          12-26
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-10T23:28:35+08:00">
+                2020-11-10
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.4k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/20/有趣的位运算/" itemprop="url">
-              
-                <span itemprop="name">有趣的位运算</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-20T16:06:19+08:00" content="2019-12-20">
-          12-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/17/三大高效排序之堆排序-Java实现/" itemprop="url">
-              
-                <span itemprop="name">三大高效排序之堆排序(Java实现)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-17T13:17:22+08:00" content="2019-12-17">
-          12-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/16/三大高效排序之归并排序-Java实现/" itemprop="url">
-              
-                <span itemprop="name">三大高效排序之归并排序(Java实现)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-16T20:38:21+08:00" content="2019-12-16">
-          12-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/16/三大高效排序之快速排序-Java实现/" itemprop="url">
-              
-                <span itemprop="name">三大高效排序之快速排序(Java实现)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-16T12:33:10+08:00" content="2019-12-16">
-          12-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/12/15/神级遍历-morris/" itemprop="url">
-              
-                <span itemprop="name">神级遍历-morris</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-12-15T14:10:49+08:00" content="2019-12-15">
-          12-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/03/02/全排列算法/" itemprop="url">
-              
-                <span itemprop="name">全排列算法</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-03-02T14:51:28+08:00" content="2019-03-02">
-          03-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>经历了前面两篇的介绍MySQL索引，相信大家也可以很清晰的认识到索引。这一节想分享一下在MySQL中给字段加了索引，但是查询的时候却不生效索引的情况，让更多的开发者可以少踩坑，接下来直接进入正文～～～</p>
+<a id="more"></a>
+<h2 id="为什么索引不生效"><a href="#为什么索引不生效" class="headerlink" title="为什么索引不生效"></a>为什么索引不生效</h2><p>在上一篇MySQL（二）如何设计索引我们有提到过，MySQL使用的是基于成本的优化器，但是由于查询优化技术是关系型数据库实现中的难点，因此总会有一些索引不生效的情况。</p>
+<p>接下来我们先建立一张表，并且插入模拟数据，来分析什么情况索引不生效。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t4`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`account`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`client_type`</span> tinyint <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`security_code`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_client_type`</span> (<span class="string">`client_type`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_account`</span> (<span class="string">`account`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_security_code`</span> (<span class="string">`security_code`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure>
+<h3 id="1、在索引字段上运算"><a href="#1、在索引字段上运算" class="headerlink" title="1、在索引字段上运算"></a>1、在索引字段上运算</h3><p>查询数据库表的时候，已经创建了索引，WHERE条件中也包含了索引列，但是列对象上有函数或者运算符，这样会导致索引失效。</p>
+<p>比如下面这条SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span><span class="number">-1</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-23a56a513778f89c37422a994c415bfa_1440w.jpg" alt="img"></p>
+<p>从上面实验的执行计划可以得出，在索引列上使用函数或者运算符，会导致索引无法生效。</p>
+<h3 id="2、多个索引字段进行运算"><a href="#2、多个索引字段进行运算" class="headerlink" title="2、多个索引字段进行运算"></a>2、多个索引字段进行运算</h3><p>查询数据库表时，已经创建了索引，WHERE条件中也包含了索引列，但是列对象进行了运算操作。</p>
+<p>比如下面这条SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span> + client_type = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-3f6556a29e583fc50007d156174876c5_1440w.jpg" alt="img"></p>
+<p>从以上实验来看，即使两个列上都有索引字段，MySQL仍然无法在表达式中使用这些索引。</p>
+<h3 id="3、隐性转换"><a href="#3、隐性转换" class="headerlink" title="3、隐性转换"></a>3、隐性转换</h3><p>如果索引列是INT类型，隐性转换可以使用到索引。但是如果索引列是字符型，隐性转换无法使用索引。</p>
+<p>比如下面这条SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不能使用索引，因为security_code字段是字符，它要变成INT型才能和688688比较，所以索引失效</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> security_code = <span class="number">688688</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以使用索引，因为查询优化器是把'1'变成1，然后索引列没有变化，可以使用索引。</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span> = <span class="string">'1'</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-79f1973e408e83605b7fdb772312a126_1440w.jpg" alt="img"></p>
+<p>在当前版本中，MySQL查询优化器已经可以转换字符型数字了，从而使用索引。但是反过来，索引失效。</p>
+<h3 id="4、Like"><a href="#4、Like" class="headerlink" title="4、Like"></a>4、Like</h3><p>LIKE关键字，如果值是’%XXX’或者’%XXX%’，则无法使用索引。</p>
+<p>如果值是’XXX%’，可以正常使用索引。这是因为通配符’%’位于前面，会导致查询优化器不得不使用全表查询，导致索引失效。</p>
+<p>比如下面的SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">like</span> <span class="string">'%1'</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-506816111cab945685d966598de4c6e8_1440w.jpg" alt="img"></p>
+<p>如果业务中必须要用到模糊查询的话，我们可以试着引入全文搜索引擎ElasticSearch。</p>
+<h3 id="5、OR操作符"><a href="#5、OR操作符" class="headerlink" title="5、OR操作符"></a>5、OR操作符</h3><p>篇幅原因，我就不一一演示了，直接说结论，你们也可以去试试。</p>
+<ol>
+<li>OR条件的两边都是同一个索引列的情况下，如果WHERE条件是主键，则可以使用索引</li>
+<li>OR条件的两边都是同一个索引列的情况下，如果WHERE条件不是主键，则是否使用索引取决于MySQL查询优化器的代价估算。</li>
+<li>OR条件的两边是不同的索引列，是否使用索引取决于MySQL查询优化器的代价估算。如果能使用索引，MySQL会使用索引，如果代价太高，仍然会走全表索引</li>
+<li>如果多个OR条件中有其中一个条件没有索引，则必须进行全表索引</li>
+</ol>
+<h3 id="6、GROUP-BY子句"><a href="#6、GROUP-BY子句" class="headerlink" title="6、GROUP BY子句"></a>6、GROUP BY子句</h3><p>查询数据库表，WHERE条件不包含索引列，但是GROUP BY子句的条件中包含索引列。这个时候即使explain会显示它是走group by字句的索引，但是扫描的rows也是接近于全表扫描。</p>
+<p>你可以自己对比一下，WHERE字句中的条件有索引和无索引的SQL性能将会差距非常大，在全表扫描的情况下SQL的性能惨不忍睹。</p>
+<h3 id="7、ORDER-BY子句"><a href="#7、ORDER-BY子句" class="headerlink" title="7、ORDER BY子句"></a>7、ORDER BY子句</h3><p>和上面的GROUP BY子句类似，在MySQL查询优化器的代价估算模型中， ORDER BY和GROUP BY的代价，相对来说非常高，如果有索引就会尽可能的使用它。</p>
+<h3 id="8、联合索引"><a href="#8、联合索引" class="headerlink" title="8、联合索引"></a>8、联合索引</h3><p>根据上面的第6条和第7条，只要给SQL语句中的WHERE子句和ORDER BY/GROUP BY子句加上一个联合索引就可以解决全表扫描的问题。</p>
+<p>联合索引中索引失效的情况：</p>
+<ul>
+<li>没有使用索引前缀，就是没有遵循联合索引的最左匹配原则</li>
+<li>使用了联合索引的全部列，但是索引键不是AND操作，可能使用了OR操作符</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>这一节讨论了MySQL中无法使用索引的一些场景，可能会有遗漏，有错误的地方可以评论区提出来。</li>
+<li>对于WHERE子句来说，建议不要把运算操作放到SQL语句中，能在代码里面去运算尽量在代码里面运算，可以避免索引失效</li>
+<li>如果模糊查询比较多，可以引入ES来帮助你进行模糊查询</li>
+<li>ORDER BY和GROUP BY这两个子句，需要防范的问题是没有给WHERE条件设计索引，你在查看执行计划时也会比较迷惑，所以一定要注意</li>
+</ul>
+<p>希望你们读完这篇文章， 可以让你们在MySQL的这条路上少走弯路～～～</p>
 
       
     </div>
+    
+    
+    
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
 
+  
+</div>
+<div>
+    
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>MySQL索引（三）索引不生效的情况</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2020年11月10日 - 23:28:35</p>
+  <p><span>最后更新:</span>2020年11月10日 - 23:29:11</p>
+  <p><span>原始链接:</span><a href="/2020/11/10/MySQL索引（三）索引不生效的情况/" title="MySQL索引（三）索引不生效的情况">https://god-jiang.github.io/2020/11/10/MySQL索引（三）索引不生效的情况/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/11/10/MySQL索引（三）索引不生效的情况/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+
+    
+</div>
+
+    
+
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div><font color="red"><b>创作不易，您的支持就是我坚持的动力，谢谢大家！</b></font></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="god-jiang 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL索引/" <i="" class="fa fa-tag"> MySQL索引</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/10/MySQL索引（二）如何设计索引/" rel="next" title="MySQL索引（二）如何设计索引">
+                <i class="fa fa-chevron-left"></i> MySQL索引（二）如何设计索引
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/categories/算法积累ing/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/categories/算法积累ing/">1</a><span class="page-number current">2</span>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -493,6 +613,13 @@
 
 
           
+
+  
+   <div id="gitalk-container"></div>
+ 
+  
+
+
 
         </div>
         
@@ -513,8 +640,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -592,6 +728,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么索引不生效"><span class="nav-number">2.</span> <span class="nav-text">为什么索引不生效</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、在索引字段上运算"><span class="nav-number">2.1.</span> <span class="nav-text">1、在索引字段上运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、多个索引字段进行运算"><span class="nav-number">2.2.</span> <span class="nav-text">2、多个索引字段进行运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、隐性转换"><span class="nav-number">2.3.</span> <span class="nav-text">3、隐性转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、Like"><span class="nav-number">2.4.</span> <span class="nav-text">4、Like</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、OR操作符"><span class="nav-number">2.5.</span> <span class="nav-text">5、OR操作符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、GROUP-BY子句"><span class="nav-number">2.6.</span> <span class="nav-text">6、GROUP BY子句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、ORDER-BY子句"><span class="nav-number">2.7.</span> <span class="nav-text">7、ORDER BY子句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、联合索引"><span class="nav-number">2.8.</span> <span class="nav-text">8、联合索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -759,6 +911,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -799,6 +955,21 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'deedada779a5390ef257',
+          clientSecret: 'e4038303bdb44d9de883f9e3a5940223b19a02d2',
+          repo: 'god-jiang.github.io',
+          owner: 'god-jiang',
+          admin: ['god-jiang'],
+          id: decodeURI(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
   
 

@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL索引（三）索引不生效的情况</title>
+    <url>/2020/11/10/MySQL%E7%B4%A2%E5%BC%95%EF%BC%88%E4%B8%89%EF%BC%89%E7%B4%A2%E5%BC%95%E4%B8%8D%E7%94%9F%E6%95%88%E7%9A%84%E6%83%85%E5%86%B5/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>经历了前面两篇的介绍MySQL索引，相信大家也可以很清晰的认识到索引。这一节想分享一下在MySQL中给字段加了索引，但是查询的时候却不生效索引的情况，让更多的开发者可以少踩坑，接下来直接进入正文～～～</p>
+<a id="more"></a>
+<h2 id="为什么索引不生效"><a href="#为什么索引不生效" class="headerlink" title="为什么索引不生效"></a>为什么索引不生效</h2><p>在上一篇MySQL（二）如何设计索引我们有提到过，MySQL使用的是基于成本的优化器，但是由于查询优化技术是关系型数据库实现中的难点，因此总会有一些索引不生效的情况。</p>
+<p>接下来我们先建立一张表，并且插入模拟数据，来分析什么情况索引不生效。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t4`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`account`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`client_type`</span> tinyint <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`security_code`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_client_type`</span> (<span class="string">`client_type`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_account`</span> (<span class="string">`account`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_security_code`</span> (<span class="string">`security_code`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure>
+<h3 id="1、在索引字段上运算"><a href="#1、在索引字段上运算" class="headerlink" title="1、在索引字段上运算"></a>1、在索引字段上运算</h3><p>查询数据库表的时候，已经创建了索引，WHERE条件中也包含了索引列，但是列对象上有函数或者运算符，这样会导致索引失效。</p>
+<p>比如下面这条SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span><span class="number">-1</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-23a56a513778f89c37422a994c415bfa_1440w.jpg" alt="img"></p>
+<p>从上面实验的执行计划可以得出，在索引列上使用函数或者运算符，会导致索引无法生效。</p>
+<h3 id="2、多个索引字段进行运算"><a href="#2、多个索引字段进行运算" class="headerlink" title="2、多个索引字段进行运算"></a>2、多个索引字段进行运算</h3><p>查询数据库表时，已经创建了索引，WHERE条件中也包含了索引列，但是列对象进行了运算操作。</p>
+<p>比如下面这条SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span> + client_type = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-3f6556a29e583fc50007d156174876c5_1440w.jpg" alt="img"></p>
+<p>从以上实验来看，即使两个列上都有索引字段，MySQL仍然无法在表达式中使用这些索引。</p>
+<h3 id="3、隐性转换"><a href="#3、隐性转换" class="headerlink" title="3、隐性转换"></a>3、隐性转换</h3><p>如果索引列是INT类型，隐性转换可以使用到索引。但是如果索引列是字符型，隐性转换无法使用索引。</p>
+<p>比如下面这条SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 不能使用索引，因为security_code字段是字符，它要变成INT型才能和688688比较，所以索引失效</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> security_code = <span class="number">688688</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以使用索引，因为查询优化器是把'1'变成1，然后索引列没有变化，可以使用索引。</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span> = <span class="string">'1'</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic3.zhimg.com/80/v2-79f1973e408e83605b7fdb772312a126_1440w.jpg" alt="img"></p>
+<p>在当前版本中，MySQL查询优化器已经可以转换字符型数字了，从而使用索引。但是反过来，索引失效。</p>
+<h3 id="4、Like"><a href="#4、Like" class="headerlink" title="4、Like"></a>4、Like</h3><p>LIKE关键字，如果值是’%XXX’或者’%XXX%’，则无法使用索引。</p>
+<p>如果值是’XXX%’，可以正常使用索引。这是因为通配符’%’位于前面，会导致查询优化器不得不使用全表查询，导致索引失效。</p>
+<p>比如下面的SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t4 <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">like</span> <span class="string">'%1'</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-506816111cab945685d966598de4c6e8_1440w.jpg" alt="img"></p>
+<p>如果业务中必须要用到模糊查询的话，我们可以试着引入全文搜索引擎ElasticSearch。</p>
+<h3 id="5、OR操作符"><a href="#5、OR操作符" class="headerlink" title="5、OR操作符"></a>5、OR操作符</h3><p>篇幅原因，我就不一一演示了，直接说结论，你们也可以去试试。</p>
+<ol>
+<li>OR条件的两边都是同一个索引列的情况下，如果WHERE条件是主键，则可以使用索引</li>
+<li>OR条件的两边都是同一个索引列的情况下，如果WHERE条件不是主键，则是否使用索引取决于MySQL查询优化器的代价估算。</li>
+<li>OR条件的两边是不同的索引列，是否使用索引取决于MySQL查询优化器的代价估算。如果能使用索引，MySQL会使用索引，如果代价太高，仍然会走全表索引</li>
+<li>如果多个OR条件中有其中一个条件没有索引，则必须进行全表索引</li>
+</ol>
+<h3 id="6、GROUP-BY子句"><a href="#6、GROUP-BY子句" class="headerlink" title="6、GROUP BY子句"></a>6、GROUP BY子句</h3><p>查询数据库表，WHERE条件不包含索引列，但是GROUP BY子句的条件中包含索引列。这个时候即使explain会显示它是走group by字句的索引，但是扫描的rows也是接近于全表扫描。</p>
+<p>你可以自己对比一下，WHERE字句中的条件有索引和无索引的SQL性能将会差距非常大，在全表扫描的情况下SQL的性能惨不忍睹。</p>
+<h3 id="7、ORDER-BY子句"><a href="#7、ORDER-BY子句" class="headerlink" title="7、ORDER BY子句"></a>7、ORDER BY子句</h3><p>和上面的GROUP BY子句类似，在MySQL查询优化器的代价估算模型中， ORDER BY和GROUP BY的代价，相对来说非常高，如果有索引就会尽可能的使用它。</p>
+<h3 id="8、联合索引"><a href="#8、联合索引" class="headerlink" title="8、联合索引"></a>8、联合索引</h3><p>根据上面的第6条和第7条，只要给SQL语句中的WHERE子句和ORDER BY/GROUP BY子句加上一个联合索引就可以解决全表扫描的问题。</p>
+<p>联合索引中索引失效的情况：</p>
+<ul>
+<li>没有使用索引前缀，就是没有遵循联合索引的最左匹配原则</li>
+<li>使用了联合索引的全部列，但是索引键不是AND操作，可能使用了OR操作符</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>这一节讨论了MySQL中无法使用索引的一些场景，可能会有遗漏，有错误的地方可以评论区提出来。</li>
+<li>对于WHERE子句来说，建议不要把运算操作放到SQL语句中，能在代码里面去运算尽量在代码里面运算，可以避免索引失效</li>
+<li>如果模糊查询比较多，可以引入ES来帮助你进行模糊查询</li>
+<li>ORDER BY和GROUP BY这两个子句，需要防范的问题是没有给WHERE条件设计索引，你在查看执行计划时也会比较迷惑，所以一定要注意</li>
+</ul>
+<p>希望你们读完这篇文章， 可以让你们在MySQL的这条路上少走弯路～～～</p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL索引</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL索引（二）如何设计索引</title>
     <url>/2020/11/10/MySQL%E7%B4%A2%E5%BC%95%EF%BC%88%E4%BA%8C%EF%BC%89%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E7%B4%A2%E5%BC%95/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>到这一篇文章，我就已经默认你阅读完了前面的MySQL文章。你可能已经知道了索引本质就是一种数据结构，来加快查询效率的。但是索引要怎么设计呢？这就是这一篇文章的目的。</p>

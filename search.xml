@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>聊聊MySQL的COUNT(*)的性能</title>
+    <url>/2020/11/17/%E8%81%8A%E8%81%8AMySQL%E7%9A%84COUNT-%E7%9A%84%E6%80%A7%E8%83%BD/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基本职场上的程序员用来统计数据库表的行数都会使用count(*)，count(1)或者count(主键)，那么它们之间的区别和性能你又是否了解呢？</p>
+<p>其实程序员在开发的过程中，在一张大表上统计总行数是非常耗时的一个操作，那么我们应该用哪个方法统计会更快呢？</p>
+<p>接下来我们就来聊一聊MySQL中统计总行数的方法和性能。</p>
+<a id="more"></a>
+<h2 id="count-，count-1-，count-主键-哪个更快？"><a href="#count-，count-1-，count-主键-哪个更快？" class="headerlink" title="count(*)，count(1)，count(主键)哪个更快？"></a>count(*)，count(1)，count(主键)哪个更快？</h2><h2 id="1、建表并且插入1000万条数据进行实验测试："><a href="#1、建表并且插入1000万条数据进行实验测试：" class="headerlink" title="1、建表并且插入1000万条数据进行实验测试："></a>1、建表并且插入1000万条数据进行实验测试：</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 创建测试表</span><br><span class="line">CREATE TABLE `t6` (</span><br><span class="line">  `id` int(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `name` varchar(50) NOT NULL,</span><br><span class="line">  `status` tinyint(4) NOT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `idx_status` (`status`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br><span class="line"></span><br><span class="line"># 创建存储过程插入1000w数据</span><br><span class="line">CREATE PROCEDURE insert_1000w()</span><br><span class="line">BEGIN</span><br><span class="line">    DECLARE i INT;</span><br><span class="line">    SET i=1;</span><br><span class="line">    WHILE i&lt;=10000000 DO</span><br><span class="line">        INSERT INTO t6(name,status) VALUES(&apos;god-jiang-666&apos;,1);</span><br><span class="line">        SET i=i+1;</span><br><span class="line">    END WHILE;</span><br><span class="line">END;</span><br><span class="line"></span><br><span class="line">#调用存储过程，插入1000万行数据</span><br><span class="line">call insert_1000w();</span><br></pre></td></tr></table></figure>
+<h2 id="2、分析实验结果"><a href="#2、分析实验结果" class="headerlink" title="2、分析实验结果"></a>2、分析实验结果</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 花了0.572秒</span><br><span class="line">select count(*) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-0a2bb0c9a316184341faa427e1eb5d34_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 花了0.572秒</span><br><span class="line">select count(1) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-fce8bb342f50956ff6c65bfe8f56cbd0_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 花了0.580秒</span><br><span class="line">select count(id) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-198f3c672164c27ac1a82f7d087f2dd4_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 花了0.620秒</span><br><span class="line">select count(*) from t6 force index (primary);</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-2bfec4e5d385baa7bfb7a4bc1f3276e2_1440w.png" alt="img"></p>
+<p>从上面的实验我们可以得出，<strong>count(*)和count(1)是最快的，其次是count(id)，最慢的是count使用了强制主键</strong>的情况。</p>
+<p>下面我们继续测试一下它们各自的执行计划：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">explain select count(*) from t6;</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-fa553094fa8a44bd136d32f79a97494b_1440w.png" alt="img"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-0e61a8bb4dee6839ccc9e68224ff84ee_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">explain select count(1) from t6;</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-a5571b99df2242fc0d7dcae220cfdb57_1440w.png" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-a7c11018c55fb6753cc95a7f471c93e8_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">explain select count(id) from t6;</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic4.zhimg.com/80/v2-0ff199a9d1694836a9a0a1f6e2641883_1440w.png" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-900eda9d3f36c560da2a9a2bace72951_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">explain select count(*) from t6 force index (primary);</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-5402f12b831c7295a87f94c25454c59e_1440w.png" alt="img"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-8cd2b8ce13f2cc79825800a58e45c75c_1440w.png" alt="img"></p>
+<p>从上面的实验可以得出这三点：</p>
+<ol>
+<li>count(*)被MySQL查询优化器改写成了count(0)，并选择了idx_status索引</li>
+<li>count(1)和count(id)都选择了idx_statux索引</li>
+<li>加了force index(primary)之后，走了强制索引</li>
+</ol>
+<p>这个idx_status就是相当于是二级辅助索引树，目的就是为了说明： InnoDB在处理count(*)的时候，有辅助索引树的情况下，会优先选择辅助索引树来统计总行数。</p>
+<p>为了验证count(*)会优先选择辅助索引树这个结论，我们继续来看看下面的实验：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 删除idx_status索引，继续执行count(*)</span><br><span class="line">alter table t6 drop index idx_status;</span><br><span class="line"></span><br><span class="line">explain select count(*) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-adb7c38912a825e805c5233917e9d86a_1440w.png" alt="img"></p>
+<p>从以上实验可以得出，删除了idx_status这个辅助索引树，count(<em>)就会选择走主键索引。所以结论：**count(\</em>)会优先选择辅助索引，假如没有辅助索引的存在，就会走主键索引**。</p>
+<h2 id="为什么count-会优先选择辅助索引？"><a href="#为什么count-会优先选择辅助索引？" class="headerlink" title="为什么count(*)会优先选择辅助索引？"></a>为什么count(*)会优先选择辅助索引？</h2><p>在MySQL5.7.18之前，InnoDB通过扫描聚集索引来处理count(*)语句。</p>
+<p>从MySQL5.7.18开始，InnoDB通过遍历最小的可用二级索引来处理count(*)语句。如果不存在二级索引，则扫描聚集索引。</p>
+<h2 id="新版本为何会使用二级索引来处理count-呢？"><a href="#新版本为何会使用二级索引来处理count-呢？" class="headerlink" title="新版本为何会使用二级索引来处理count(*)呢？"></a>新版本为何会使用二级索引来处理count(*)呢？</h2><p>因为InnoDB二级索引树的叶子节点上存放的是主键，而主键索引树的叶子节点存放的是整行数据，所以二级索引树比主键索引树小。因此查询优化器基于成本考虑，优先选择的是二级索引。所以索引count(*)快于count(主键)。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章的结论就是<strong>count(*)=count(1)&gt;count(id)</strong>。</p>
+<p>为什么count(id)走了主键索引还会更慢呢？因为除了计算总行数之外，count(id)需要遍历主键索引树（聚集索引树），代价更高。</p>
+<p>count(*)是会总计出所有NOT NULL和NULL的字段，而count(id)是不会统计NULL字段的，所以我们在建表的尽量使用NOT NULL并且给它一个默认是空即可。</p>
+<p>最后，在以后总计数据库表的总行数的时候，可以大胆的使用count(*)或者count(1)。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>《高性能MySQL》（第三版）第六章优化COUNT()查询</li>
+<li>《MySQL实战45讲》林晓斌</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL的COUNT(*)</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL优化之超大分页查询</title>
     <url>/2020/11/10/MySQL%E4%BC%98%E5%8C%96%E4%B9%8B%E8%B6%85%E5%A4%A7%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>基本上只要是做后台开发，都会接触到分页这个需求或者功能吧。基本上大家都是会用MySQL的LIMIT来处理，而且我现在负责的项目也是这样写的。但是一旦数据量起来了，其实LIMIT的效率会极其的低，这一篇文章就来讲一下LIMIT子句优化的。</p>

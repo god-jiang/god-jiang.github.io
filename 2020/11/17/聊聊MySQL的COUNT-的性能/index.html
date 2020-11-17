@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="中等,">
+  <meta name="keywords" content="MySQL的COUNT(*),">
 
 
 
@@ -79,22 +79,32 @@
 
 
 
-<meta name="description" content="题目描述 输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判断程序会直接返回空）">
-<meta name="keywords" content="中等">
+<meta name="description" content="前言基本职场上的程序员用来统计数据库表的行数都会使用count(*)，count(1)或者count(主键)，那么它们之间的区别和性能你又是否了解呢？ 其实程序员在开发的过程中，在一张大表上统计总行数是非常耗时的一个操作，那么我们应该用哪个方法统计会更快呢？ 接下来我们就来聊一聊MySQL中统计总行数的方法和性能。">
+<meta name="keywords" content="MySQL的COUNT(*)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="复杂链表的复制">
-<meta property="og:url" content="https://god-jiang.github.io/2020/01/16/复杂链表的复制/index.html">
+<meta property="og:title" content="聊聊MySQL的COUNT(*)的性能">
+<meta property="og:url" content="https://god-jiang.github.io/2020/11/17/聊聊MySQL的COUNT-的性能/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="题目描述 输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判断程序会直接返回空）">
+<meta property="og:description" content="前言基本职场上的程序员用来统计数据库表的行数都会使用count(*)，count(1)或者count(主键)，那么它们之间的区别和性能你又是否了解呢？ 其实程序员在开发的过程中，在一张大表上统计总行数是非常耗时的一个操作，那么我们应该用哪个方法统计会更快呢？ 接下来我们就来聊一聊MySQL中统计总行数的方法和性能。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://god-jiang.github.io/images/复杂链表的复制/3.jpg">
-<meta property="og:image" content="https://god-jiang.github.io/images/复杂链表的复制/2.jpg">
-<meta property="og:image" content="https://god-jiang.github.io/images/复杂链表的复制/4.jpg">
-<meta property="og:updated_time" content="2020-01-16T11:52:12.000Z">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-0a2bb0c9a316184341faa427e1eb5d34_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-fce8bb342f50956ff6c65bfe8f56cbd0_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-198f3c672164c27ac1a82f7d087f2dd4_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-2bfec4e5d385baa7bfb7a4bc1f3276e2_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-fa553094fa8a44bd136d32f79a97494b_1440w.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-0e61a8bb4dee6839ccc9e68224ff84ee_1440w.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-a5571b99df2242fc0d7dcae220cfdb57_1440w.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-a7c11018c55fb6753cc95a7f471c93e8_1440w.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-0ff199a9d1694836a9a0a1f6e2641883_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-900eda9d3f36c560da2a9a2bace72951_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-5402f12b831c7295a87f94c25454c59e_1440w.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-8cd2b8ce13f2cc79825800a58e45c75c_1440w.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-adb7c38912a825e805c5233917e9d86a_1440w.png">
+<meta property="og:updated_time" content="2020-11-17T13:44:09.391Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="复杂链表的复制">
-<meta name="twitter:description" content="题目描述 输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判断程序会直接返回空）">
-<meta name="twitter:image" content="https://god-jiang.github.io/images/复杂链表的复制/3.jpg">
+<meta name="twitter:title" content="聊聊MySQL的COUNT(*)的性能">
+<meta name="twitter:description" content="前言基本职场上的程序员用来统计数据库表的行数都会使用count(*)，count(1)或者count(主键)，那么它们之间的区别和性能你又是否了解呢？ 其实程序员在开发的过程中，在一张大表上统计总行数是非常耗时的一个操作，那么我们应该用哪个方法统计会更快呢？ 接下来我们就来聊一聊MySQL中统计总行数的方法和性能。">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-0a2bb0c9a316184341faa427e1eb5d34_1440w.png">
 
 
 
@@ -124,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/2020/01/16/复杂链表的复制/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/11/17/聊聊MySQL的COUNT-的性能/">
 
 
 
 
 
-  <title>复杂链表的复制 | god-jiang的git个人博客</title>
+  <title>聊聊MySQL的COUNT(*)的性能 | god-jiang的git个人博客</title>
   
 
 
@@ -299,7 +309,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/01/16/复杂链表的复制/">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/11/17/聊聊MySQL的COUNT-的性能/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="god-jiang">
@@ -316,7 +326,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">复杂链表的复制</h1>
+          <h1 class="post-title" itemprop="name headline">聊聊MySQL的COUNT(*)的性能</h1>
         
 
         <div class="post-meta">
@@ -328,8 +338,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-16T19:37:19+08:00">
-                2020-01-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-17T21:42:33+08:00">
+                2020-11-17
               </time>
             
 
@@ -351,8 +361,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/LeetCode-牛客题解/" itemprop="url" rel="index">
-                    <span itemprop="name">LeetCode&牛客题解</span>
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
                   </a>
                 </span>
 
@@ -387,7 +397,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  818 字
+                  967 字
                 </span>
               
 
@@ -424,32 +434,55 @@
       
 
       
-        <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
-<p>输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制链表的head。（注意，输出结果中请不要返回参数中的节点引用，否则判断程序会直接返回空）</p>
-</blockquote>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基本职场上的程序员用来统计数据库表的行数都会使用count(*)，count(1)或者count(主键)，那么它们之间的区别和性能你又是否了解呢？</p>
+<p>其实程序员在开发的过程中，在一张大表上统计总行数是非常耗时的一个操作，那么我们应该用哪个方法统计会更快呢？</p>
+<p>接下来我们就来聊一聊MySQL中统计总行数的方法和性能。</p>
 <a id="more"></a>
-<h2 id="两种策略解决"><a href="#两种策略解决" class="headerlink" title="两种策略解决"></a>两种策略解决</h2><h2 id="策略1（HashMap解决）"><a href="#策略1（HashMap解决）" class="headerlink" title="策略1（HashMap解决）"></a>策略1（HashMap解决）</h2><ol>
-<li>先用一个HashMap的key存放原来的链表，value存放key的值。</li>
-<li>知道了key的指向，然后让value跟着key一样的指向即可。</li>
+<h2 id="count-，count-1-，count-主键-哪个更快？"><a href="#count-，count-1-，count-主键-哪个更快？" class="headerlink" title="count(*)，count(1)，count(主键)哪个更快？"></a>count(*)，count(1)，count(主键)哪个更快？</h2><h2 id="1、建表并且插入1000万条数据进行实验测试："><a href="#1、建表并且插入1000万条数据进行实验测试：" class="headerlink" title="1、建表并且插入1000万条数据进行实验测试："></a>1、建表并且插入1000万条数据进行实验测试：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># 创建测试表</span><br><span class="line">CREATE TABLE `t6` (</span><br><span class="line">  `id` int(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `name` varchar(50) NOT NULL,</span><br><span class="line">  `status` tinyint(4) NOT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `idx_status` (`status`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br><span class="line"></span><br><span class="line"># 创建存储过程插入1000w数据</span><br><span class="line">CREATE PROCEDURE insert_1000w()</span><br><span class="line">BEGIN</span><br><span class="line">    DECLARE i INT;</span><br><span class="line">    SET i=1;</span><br><span class="line">    WHILE i&lt;=10000000 DO</span><br><span class="line">        INSERT INTO t6(name,status) VALUES(&apos;god-jiang-666&apos;,1);</span><br><span class="line">        SET i=i+1;</span><br><span class="line">    END WHILE;</span><br><span class="line">END;</span><br><span class="line"></span><br><span class="line">#调用存储过程，插入1000万行数据</span><br><span class="line">call insert_1000w();</span><br></pre></td></tr></table></figure>
+<h2 id="2、分析实验结果"><a href="#2、分析实验结果" class="headerlink" title="2、分析实验结果"></a>2、分析实验结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 花了0.572秒</span><br><span class="line">select count(*) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-0a2bb0c9a316184341faa427e1eb5d34_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 花了0.572秒</span><br><span class="line">select count(1) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-fce8bb342f50956ff6c65bfe8f56cbd0_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 花了0.580秒</span><br><span class="line">select count(id) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-198f3c672164c27ac1a82f7d087f2dd4_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 花了0.620秒</span><br><span class="line">select count(*) from t6 force index (primary);</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-2bfec4e5d385baa7bfb7a4bc1f3276e2_1440w.png" alt="img"></p>
+<p>从上面的实验我们可以得出，<strong>count(*)和count(1)是最快的，其次是count(id)，最慢的是count使用了强制主键</strong>的情况。</p>
+<p>下面我们继续测试一下它们各自的执行计划：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select count(*) from t6;</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-fa553094fa8a44bd136d32f79a97494b_1440w.png" alt="img"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-0e61a8bb4dee6839ccc9e68224ff84ee_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select count(1) from t6;</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-a5571b99df2242fc0d7dcae220cfdb57_1440w.png" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-a7c11018c55fb6753cc95a7f471c93e8_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select count(id) from t6;</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic4.zhimg.com/80/v2-0ff199a9d1694836a9a0a1f6e2641883_1440w.png" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-900eda9d3f36c560da2a9a2bace72951_1440w.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select count(*) from t6 force index (primary);</span><br><span class="line">show warnings;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic1.zhimg.com/80/v2-5402f12b831c7295a87f94c25454c59e_1440w.png" alt="img"></p>
+<p><img src="https://pic4.zhimg.com/80/v2-8cd2b8ce13f2cc79825800a58e45c75c_1440w.png" alt="img"></p>
+<p>从上面的实验可以得出这三点：</p>
+<ol>
+<li>count(*)被MySQL查询优化器改写成了count(0)，并选择了idx_status索引</li>
+<li>count(1)和count(id)都选择了idx_statux索引</li>
+<li>加了force index(primary)之后，走了强制索引</li>
 </ol>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/1/16  18:48</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RandomListNodeCopy</span> </span>&#123;</span><br><span class="line">    <span class="comment">//定义复杂链表的结构</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RandomListNode</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> label;</span><br><span class="line">        RandomListNode next = <span class="keyword">null</span>;</span><br><span class="line">        RandomListNode random = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        RandomListNode(<span class="keyword">int</span> label) &#123;</span><br><span class="line">            <span class="keyword">this</span>.label = label;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RandomListNode <span class="title">Clone</span><span class="params">(RandomListNode pHead)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;RandomListNode, RandomListNode&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        RandomListNode cur = pHead;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            map.put(cur, <span class="keyword">new</span> RandomListNode(cur.label));</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        &#125;</span><br><span class="line">        cur = pHead;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            map.get(cur).next = map.get(cur.next);</span><br><span class="line">            map.get(cur).random = map.get(cur.random);</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> map.get(pHead);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="通过截图"><a href="#通过截图" class="headerlink" title="通过截图"></a>通过截图</h2><p><img src="/images/复杂链表的复制/3.jpg" alt="img"></p>
-<h2 id="HashMap解法总结"><a href="#HashMap解法总结" class="headerlink" title="HashMap解法总结"></a>HashMap解法总结</h2><blockquote>
-<p>用HashMap做简单，容易理解，时间复杂度为O(N)，空间复杂度也为O(N)，其实这道题还可以做到时间复杂度为O(N)，空间复杂度为O(1)，就是我接下来介绍的这种解法。</p>
-</blockquote>
-<hr>
-<h2 id="策略2（创建拆分）"><a href="#策略2（创建拆分）" class="headerlink" title="策略2（创建拆分）"></a>策略2（创建拆分）</h2><ol>
-<li>遍历链表，复制每个节点，如复制节点A得到A1，将节点A1插到节点A后面</li>
-<li>重新遍历链表，复制旧节点的随机指针给新节点，如A1.random = A.random.next</li>
-<li>拆分链表，将链表拆分为原链表和复制后的链表</li>
-</ol>
-<h2 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h2><p><img src="/images/复杂链表的复制/2.jpg" alt="img"></p>
-<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/1/16  18:48</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RandomListNodeCopy</span> </span>&#123;</span><br><span class="line">    <span class="comment">//定义复杂链表的结构</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RandomListNode</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> label;</span><br><span class="line">        RandomListNode next = <span class="keyword">null</span>;</span><br><span class="line">        RandomListNode random = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        RandomListNode(<span class="keyword">int</span> label) &#123;</span><br><span class="line">            <span class="keyword">this</span>.label = label;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//合并拆分的时间复杂度为O(N)，空间复杂度为O(1)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RandomListNode <span class="title">Clone</span><span class="params">(RandomListNode pHead)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (pHead == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        RandomListNode cur = pHead;</span><br><span class="line">        <span class="comment">//1、复制每个结点，如复制结点A得到A1，将结点A1插到结点A后面；</span></span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            RandomListNode cloneNode = <span class="keyword">new</span> RandomListNode(cur.label);</span><br><span class="line">            RandomListNode nextNode = cur.next;</span><br><span class="line">            cur.next = cloneNode;</span><br><span class="line">            cloneNode.next = nextNode;</span><br><span class="line">            cur = nextNode;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        cur = pHead;</span><br><span class="line">        <span class="comment">//2、重新遍历链表，复制老结点的随机指针给新结点，如A1.random = A.random.next;</span></span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            cur.next.random = cur.random == <span class="keyword">null</span> ? <span class="keyword">null</span> : cur.random.next;</span><br><span class="line">            cur = cur.next.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3、拆分链表，将链表拆分为原链表和复制后的链表</span></span><br><span class="line">        cur = pHead;</span><br><span class="line">        RandomListNode pCloneHead = pHead.next;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            RandomListNode cloneNode = cur.next;</span><br><span class="line">            cur.next = cloneNode.next;</span><br><span class="line">            cloneNode.next = cloneNode.next == <span class="keyword">null</span> ? <span class="keyword">null</span> : cloneNode.next.next;</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pCloneHead;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="通过截图-1"><a href="#通过截图-1" class="headerlink" title="通过截图"></a>通过截图</h2><p><img src="/images/复杂链表的复制/4.jpg" alt="img"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
-<p>一道好的题目往往有多种解决的办法，大二时期的我就只会用最基础的贪心和暴力解决各类问题，不是说暴力解法不好，只是有时候有更好的算法可以解决我们又为何不去掌握呢。所以一道题目的多种的解法我都会好好研读和学习。希望也有人喜欢和我一样多了解多种解法，扩展一下自己的思路，嘿嘿嘿。。。</p>
-</blockquote>
-<p><strong>PS：如果觉得博主写的不错的话可以点点赞，关注走一波，谢谢大家的支持了~~~</strong></p>
+<p>这个idx_status就是相当于是二级辅助索引树，目的就是为了说明： InnoDB在处理count(*)的时候，有辅助索引树的情况下，会优先选择辅助索引树来统计总行数。</p>
+<p>为了验证count(*)会优先选择辅助索引树这个结论，我们继续来看看下面的实验：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 删除idx_status索引，继续执行count(*)</span><br><span class="line">alter table t6 drop index idx_status;</span><br><span class="line"></span><br><span class="line">explain select count(*) from t6;</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic2.zhimg.com/80/v2-adb7c38912a825e805c5233917e9d86a_1440w.png" alt="img"></p>
+<p>从以上实验可以得出，删除了idx_status这个辅助索引树，count(<em>)就会选择走主键索引。所以结论：**count(\</em>)会优先选择辅助索引，假如没有辅助索引的存在，就会走主键索引**。</p>
+<h2 id="为什么count-会优先选择辅助索引？"><a href="#为什么count-会优先选择辅助索引？" class="headerlink" title="为什么count(*)会优先选择辅助索引？"></a>为什么count(*)会优先选择辅助索引？</h2><p>在MySQL5.7.18之前，InnoDB通过扫描聚集索引来处理count(*)语句。</p>
+<p>从MySQL5.7.18开始，InnoDB通过遍历最小的可用二级索引来处理count(*)语句。如果不存在二级索引，则扫描聚集索引。</p>
+<h2 id="新版本为何会使用二级索引来处理count-呢？"><a href="#新版本为何会使用二级索引来处理count-呢？" class="headerlink" title="新版本为何会使用二级索引来处理count(*)呢？"></a>新版本为何会使用二级索引来处理count(*)呢？</h2><p>因为InnoDB二级索引树的叶子节点上存放的是主键，而主键索引树的叶子节点存放的是整行数据，所以二级索引树比主键索引树小。因此查询优化器基于成本考虑，优先选择的是二级索引。所以索引count(*)快于count(主键)。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章的结论就是<strong>count(*)=count(1)&gt;count(id)</strong>。</p>
+<p>为什么count(id)走了主键索引还会更慢呢？因为除了计算总行数之外，count(id)需要遍历主键索引树（聚集索引树），代价更高。</p>
+<p>count(*)是会总计出所有NOT NULL和NULL的字段，而count(id)是不会统计NULL字段的，所以我们在建表的尽量使用NOT NULL并且给它一个默认是空即可。</p>
+<p>最后，在以后总计数据库表的总行数的时候，可以大胆的使用count(*)或者count(1)。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>《高性能MySQL》（第三版）第六章优化COUNT()查询</li>
+<li>《MySQL实战45讲》林晓斌</li>
+</ul>
 
       
     </div>
@@ -477,12 +510,12 @@
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
 
-  <p><span>本文标题:</span>复杂链表的复制</p>
+  <p><span>本文标题:</span>聊聊MySQL的COUNT(*)的性能</p>
   <p><span>文章作者:</span>god-jiang</p>
-  <p><span>发布时间:</span>2020年01月16日 - 19:37:19</p>
-  <p><span>最后更新:</span>2020年01月16日 - 19:52:12</p>
-  <p><span>原始链接:</span><a href="/2020/01/16/复杂链表的复制/" title="复杂链表的复制">https://god-jiang.github.io/2020/01/16/复杂链表的复制/</a>
-    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/01/16/复杂链表的复制/" aria-label="复制成功！"></i></span>
+  <p><span>发布时间:</span>2020年11月17日 - 21:42:33</p>
+  <p><span>最后更新:</span>2020年11月17日 - 21:44:09</p>
+  <p><span>原始链接:</span><a href="/2020/11/17/聊聊MySQL的COUNT-的性能/" title="聊聊MySQL的COUNT(*)的性能">https://god-jiang.github.io/2020/11/17/聊聊MySQL的COUNT-的性能/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/11/17/聊聊MySQL的COUNT-的性能/" aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -540,7 +573,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/中等/" <i="" class="fa fa-tag"> 中等</a>
+            <a href="/tags/MySQL的COUNT/" <i="" class="fa fa-tag"> MySQL的COUNT(*)</a>
           
         </div>
       
@@ -553,8 +586,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/11/神级算法——二分天下/" rel="next" title="神级算法——二分天下">
-                <i class="fa fa-chevron-left"></i> 神级算法——二分天下
+              <a href="/2020/11/10/MySQL优化之超大分页查询/" rel="next" title="MySQL优化之超大分页查询">
+                <i class="fa fa-chevron-left"></i> MySQL优化之超大分页查询
               </a>
             
           </div>
@@ -562,10 +595,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/01/17/顺时针打印矩阵/" rel="prev" title="顺时针打印矩阵">
-                顺时针打印矩阵 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -718,7 +747,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述"><span class="nav-number">1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种策略解决"><span class="nav-number">2.</span> <span class="nav-text">两种策略解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#策略1（HashMap解决）"><span class="nav-number">3.</span> <span class="nav-text">策略1（HashMap解决）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过截图"><span class="nav-number">5.</span> <span class="nav-text">通过截图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap解法总结"><span class="nav-number">6.</span> <span class="nav-text">HashMap解法总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#策略2（创建拆分）"><span class="nav-number">7.</span> <span class="nav-text">策略2（创建拆分）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图解"><span class="nav-number">8.</span> <span class="nav-text">图解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码-1"><span class="nav-number">9.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过截图-1"><span class="nav-number">10.</span> <span class="nav-text">通过截图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#count-，count-1-，count-主键-哪个更快？"><span class="nav-number">2.</span> <span class="nav-text">count(*)，count(1)，count(主键)哪个更快？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1、建表并且插入1000万条数据进行实验测试："><span class="nav-number">3.</span> <span class="nav-text">1、建表并且插入1000万条数据进行实验测试：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、分析实验结果"><span class="nav-number">4.</span> <span class="nav-text">2、分析实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么count-会优先选择辅助索引？"><span class="nav-number">5.</span> <span class="nav-text">为什么count(*)会优先选择辅助索引？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本为何会使用二级索引来处理count-呢？"><span class="nav-number">6.</span> <span class="nav-text">新版本为何会使用二级索引来处理count(*)呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">8.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>

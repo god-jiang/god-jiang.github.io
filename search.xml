@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SpringBoot自动配置（源码解读）</title>
+    <url>/2020/12/15/SpringBoot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%EF%BC%88%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我参加SpringBoot项目开发也已经五个多月时间了，项目遇到一个大数据量文本的取存问题，DBA不允许我们存text或者blob类型的数据在MySQL中，不得已采取了ElasticSearch作为一个中间数据库使用，然后根据网上的方法把maven依赖导入，application.properties粘贴过来，发现已经引入了ElasticSearch这个组件，最后把问题解决了。</p>
+<p>但是这也引发了我的思考，为啥SpringBoot可以自动识别并且帮我初始化ES呢？阅读了SpringBoot源码，我按照我的理解讲一下SpringBoot的自动配置。</p>
+<a id="more"></a>
+<h2 id="理论知识"><a href="#理论知识" class="headerlink" title="理论知识"></a>理论知识</h2><p>创建一个SpringBoot项目，它会帮我们生成我们开发者所需要的环境，它的一个注解@SpringBootApplication可以帮助我们开发者开启自动配置并且初始化我们所需要的bean。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-8f5371ee090523bb7360f1c0f57e162e_1440w.jpg" alt="img"></p>
+<p><strong>但是@SpringBootApplication为什么可以这样呢？</strong></p>
+<p>点进去看这个注解，原来这个注解是一个复合注解，里面还有一个@EnableAutoConfiguration，顾名思义就是自动开启配置。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-0fb5141c20fabfdb3362ced59613b032_1440w.jpg" alt="img"></p>
+<p>然后再点进去查看它的源码</p>
+<p><img src="https://pic2.zhimg.com/80/v2-9cab0333e5cd049b2e51c82f928fff85_1440w.jpg" alt="img"></p>
+<p>发现原来SpringBoot自动配置的关键就是这个注解@Import({AutoConfigurationImportSelector.class})，点进去查看源码</p>
+<p><img src="https://pic4.zhimg.com/80/v2-1c6fd564121e5f8429f57ba6a434c3df_1440w.jpg" alt="img"></p>
+<p>它的作用就是导入AutoConfigurationImportSelector的selectImports方法，通过SpringFactoriesLoader.loadFactoryNames()扫描所有META-INF/spring.factories的jar包。然后spring-boot-autoconfigure-2.4.1.jar里面有一个spring.factories文件。该文件由一堆key=value组成，其中key是EnableAutoConfiguration类的全类名，而value是xxxAutoConfiguration的类名列表，以逗号分隔。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-99207f853d42a9a78bed0f84a5ec1f9a_1440w.jpg" alt="img"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-f3772b7b4916d6d7c57fa8bf5013156a_1440w.jpg" alt="img"></p>
+<p>上面所列出来的org.springframework.boot.autoconfigure.xxx.yyyAutoConfiguration列表会被初始化到Spring容器中。</p>
+<p>当SpringBoot项目启动时，@SpringBootApplication在启动类SpringApplication.run(xxx.class)的内部会执行selectImports()方法，找到所有自动配置类的全限定名对应的class，然后把所有的自动配置类加载到Spring容器中。</p>
+<p><strong>那么这么多xxxAutoConfiguration类都会被加载吗？</strong></p>
+<p>答案是不会。因为注解类会有一个@ConditionalOnClass注解，只要在当前的类路径下找到对应的类才会被加载，否则放弃加载并且初始化到Spring容器中。</p>
+<p>这就很好理解为啥SpringBoot项目引入一个依赖就能自动帮你初始化bean了吧。</p>
+<h2 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h2><p>举例我最近用的elasticSearch的配置信息如何加载到bean容器中的。</p>
+<p>引入组件所需要的maven依赖：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-441f07cc5a3d51531b3c3901edd48a70_1440w.jpg" alt="img"></p>
+<p>配置application.properties基础信息：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-64ad9ed965aa6df64cb534baa25ad8bb_1440w.jpg" alt="img"></p>
+<p><strong>为何要这样配置呢？源码告诉你答案。</strong></p>
+<p>springboot自动配置全都是由autoconfigure注入的，打开maven引入的autoconfigure的jar包</p>
+<p><img src="https://pic3.zhimg.com/80/v2-da0ab23a8d7a1fd6cbca34c7b6c347fe_1440w.jpg" alt="img"></p>
+<p>SpringBoot加载会读取里面的spring.factories文件</p>
+<p><img src="https://pic3.zhimg.com/80/v2-3de5eed83d47b6efc7c6e5290fe4ff7e_1440w.jpg" alt="img"></p>
+<p>所有的配置都是由org.springframework.boot.autoconfigure.EnableAutoConfiguration来完成注入，格式都是为org.springframework.boot.autoconfigure.xxx.yyyAutoConfiguration。</p>
+<p>拿我们配置的elasticsearch来说明一下，点进去看它配置的源码</p>
+<p><img src="https://pic2.zhimg.com/80/v2-063db3b62d349c5f82245e1ea73ec181_1440w.jpg" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-a303e4ed3985b225f7df1f09cc1b1184_1440w.jpg" alt="img"></p>
+<p>可以看到有一个注解@EnableConfigurationProperties，就是用来配置和初始化bean的。点进去看ElasticsearchRestClientProperties的配置信息</p>
+<p><img src="https://pic4.zhimg.com/80/v2-d988172fc5d634c7946340d1a83445bf_1440w.jpg" alt="img"></p>
+<p>一切恍然大悟，原来这里的@ConfigurationProperties(prefix=”spring.elasticsearch.rest”)已经规定了配置文件该如何写了，就是限制了前缀”spring.elasticsearch.rest”，后面的uris的类型是List代表它支持集群，可以加载多个服务器。然后它们有对应的get/set方法可以帮助我们开发者注入，这就对应上我们的application.properties文件了吧。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-9053d0afdfcb3c0d5cb3e172fb0a2bf9_1440w.jpg" alt="img"></p>
+<p><strong>就是通过这种方式注入到bean容器并且初始化的，这就是springboot的“约定大于配置”。</strong></p>
+<h2 id="类比其他配置信息"><a href="#类比其他配置信息" class="headerlink" title="类比其他配置信息"></a><strong>类比其他配置信息</strong></h2><p>我直接把springboot中redis的约定贴出来，你们也可以对比一下你们自己的项目配置，知道为什么要这样写就行了。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-a6684c8853899867821d1a4ac1b99e5d_1440w.jpg" alt="img"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-1f96b7902acb3cf76a13c4703b847848_1440w.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这一次项目引入ElasticSearch引发的一场SpringBoot自动配置源码阅读，我觉得还是受益匪浅的，希望以上的内容对正在学SpringBoot或者已经工作的开发者们有帮助。</p>
+]]></content>
+      <categories>
+        <category>源码解读</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot自动配置</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>解读阿里巴巴开发规范之MySQL</title>
     <url>/2020/11/29/%E8%A7%A3%E8%AF%BB%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E4%B9%8BMySQL/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从7月份毕业开始算起，也是将近有5个月的工作经验了吧。在工作上，经历了一段时间的适应，现在接触到不同大神写出来的代码，发现各有优劣，于是就在思考一个问题，什么样的代码才是最正常最规范的呢？我的同事甩给我了一本《阿里巴巴Java开发手册》，从头到尾也算是过了一遍。今天趁着双休的假期，我就来讲一下这本书里面的MySQL规范制约吧</p>

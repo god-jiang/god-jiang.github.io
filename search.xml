@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java之自定义注解</title>
+    <url>/2020/12/27/Java%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3/</url>
+    <content><![CDATA[<h2 id="什么是注解？"><a href="#什么是注解？" class="headerlink" title="什么是注解？"></a>什么是注解？</h2><ul>
+<li>Annotation是JDK5.0开始引入的技术</li>
+<li>Annotation的作用可以对程序作出解释（和注释没什么区别），可以被其他程序读取</li>
+<li>Annotation的格式是以“@注释名“在代码中存在的，还可以添加参数值，如@SuppressWarnings(value = “all”)</li>
+<li>Annotation可以附加在package，class，method，field等上面，给他们添加额外的辅助信息，可以配合反射实现对元数据的访问</li>
+</ul>
+<a id="more"></a>
+<h2 id="Java内置注解"><a href="#Java内置注解" class="headerlink" title="Java内置注解"></a>Java内置注解</h2><ul>
+<li>@Override：定义在java.lang.Override中，此注释作用于方法上，表示一个方法重写超类中的另一个方法声明</li>
+<li>@Deprecated：定义在java.lang.Deprecated中，此注释作用于方法，属性，类，表示不鼓励程序员使用，通常是因为它很危险或者存在更好的选择</li>
+<li>@SuppressWarnings：定义在java.lang.SuppressWarnings中，用来意志编译时的警告信息</li>
+<li><strong>JDK还有许多内置注解，有兴趣可以去观看源码，这里就不一一列举了</strong></li>
+</ul>
+<h2 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h2><p>元注解的作用是负责注解其他注解，Java定义了4个标准的meta-annotation类型，它们被用来提供对其他annotation类型作解释。</p>
+<p>这些类型和它们所支持的类在java.lang.annotation包中可以找到（@Target，@Retention，@Decumented，@Inherited）</p>
+<ul>
+<li>@Target：用于描述注解的使用范围（注解使用在类上，方法上，字段上等等）</li>
+<li>@Retention：表示需要在什么级别保存该注释信息，用于描述注解的生命周期（SOURCE &lt; CLASS &lt; RUNTIME）</li>
+<li>@Decument：说明该注解将被javadoc打包生成</li>
+<li>@Inherited：说明子类可以继承父类中的注解</li>
+</ul>
+<h2 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h2><ul>
+<li>@interface用来声明一个注解，格式为：public @interface 注解名 { 定义内容 }</li>
+<li>其中的每一个方法实际上是声明了一个配置参数</li>
+<li>方法的名称就是参数的名称</li>
+<li>返回值类型就是参数的类型（返回值只能是基本类型Class，String，Enum）</li>
+<li>可以通过default来声明参数的默认值</li>
+<li>如果只有一个参数成员，一般参数名为value</li>
+<li>注解元素必须要有值，我们定义注解元素时，经常使用空字符串或者0作为默认值</li>
+</ul>
+<h2 id="自定义注解演示案例"><a href="#自定义注解演示案例" class="headerlink" title="自定义注解演示案例"></a>自定义注解演示案例</h2><p>创建一个注解MyAnnotation.java：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-f62dadfddb16c10ee575c2111eda4ef0_1440w.jpg" alt="img"></p>
+<p>创建一个pojo名为User.java：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-7eb75e6ca60ea7016158d047545e1f84_1440w.jpg" alt="img"></p>
+<p>创建一个Test.java演示自定义注解：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-81ddb6f36811f54d74a5c1d2fc2c8610_1440w.jpg" alt="img"></p>
+<p>最终控制台输出结果：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-0836c7c07d29f0111a32b103a6df6f4c_1440w.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>注解其实跟我们平时写代码的注释没多大区别，主要是注释给我们程序员看的，而注解是给程序解释的。通常注解和反射一起运用才是绝配，可以发挥出很强大的作用。希望这篇自定义注解对你们有所帮助～～～</p>
+]]></content>
+      <categories>
+        <category>Java基础</category>
+      </categories>
+      <tags>
+        <tag>注解与反射</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringBoot自动配置（源码解读）</title>
     <url>/2020/12/15/SpringBoot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%EF%BC%88%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%EF%BC%89/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我参加SpringBoot项目开发也已经五个多月时间了，项目遇到一个大数据量文本的取存问题，DBA不允许我们存text或者blob类型的数据在MySQL中，不得已采取了ElasticSearch作为一个中间数据库使用，然后根据网上的方法把maven依赖导入，application.properties粘贴过来，发现已经引入了ElasticSearch这个组件，最后把问题解决了。</p>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="注解与反射,">
 
 
 
@@ -79,16 +79,23 @@
 
 
 
-<meta name="description" content="一名热爱编程和算法的在校大学生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="god-jiang的git个人博客">
-<meta property="og:url" content="https://god-jiang.github.io/tags/单例模式/index.html">
+<meta name="description" content="什么是注解？ Annotation是JDK5.0开始引入的技术 Annotation的作用可以对程序作出解释（和注释没什么区别），可以被其他程序读取 Annotation的格式是以“@注释名“在代码中存在的，还可以添加参数值，如@SuppressWarnings(value = “all”) Annotation可以附加在package，class，method，field等上面，给他们添加额外的">
+<meta name="keywords" content="注解与反射">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java之自定义注解">
+<meta property="og:url" content="https://god-jiang.github.io/2020/12/27/Java之自定义注解/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="一名热爱编程和算法的在校大学生">
+<meta property="og:description" content="什么是注解？ Annotation是JDK5.0开始引入的技术 Annotation的作用可以对程序作出解释（和注释没什么区别），可以被其他程序读取 Annotation的格式是以“@注释名“在代码中存在的，还可以添加参数值，如@SuppressWarnings(value = “all”) Annotation可以附加在package，class，method，field等上面，给他们添加额外的">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-f62dadfddb16c10ee575c2111eda4ef0_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-7eb75e6ca60ea7016158d047545e1f84_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-81ddb6f36811f54d74a5c1d2fc2c8610_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-0836c7c07d29f0111a32b103a6df6f4c_1440w.jpg">
+<meta property="og:updated_time" content="2020-12-27T14:39:52.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="god-jiang的git个人博客">
-<meta name="twitter:description" content="一名热爱编程和算法的在校大学生">
+<meta name="twitter:title" content="Java之自定义注解">
+<meta name="twitter:description" content="什么是注解？ Annotation是JDK5.0开始引入的技术 Annotation的作用可以对程序作出解释（和注释没什么区别），可以被其他程序读取 Annotation的格式是以“@注释名“在代码中存在的，还可以添加参数值，如@SuppressWarnings(value = “all”) Annotation可以附加在package，class，method，field等上面，给他们添加额外的">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/v2-f62dadfddb16c10ee575c2111eda4ef0_1440w.jpg">
 
 
 
@@ -118,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/tags/单例模式/">
+  <link rel="canonical" href="https://god-jiang.github.io/2020/12/27/Java之自定义注解/">
 
 
 
 
 
-  <title>标签: 单例模式 | god-jiang的git个人博客</title>
+  <title>Java之自定义注解 | god-jiang的git个人博客</title>
   
 
 
@@ -143,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -279,52 +286,316 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>单例模式<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/12/27/Java之自定义注解/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="god-jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="god-jiang的git个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/02/08/浅谈单例模式的几种实现/" itemprop="url">
-              
-                <span itemprop="name">浅谈单例模式的几种实现</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Java之自定义注解</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-02-08T12:37:17+08:00" content="2020-02-08">
-          02-08
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-27T22:35:36+08:00">
+                2020-12-27
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  690 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是注解？"><a href="#什么是注解？" class="headerlink" title="什么是注解？"></a>什么是注解？</h2><ul>
+<li>Annotation是JDK5.0开始引入的技术</li>
+<li>Annotation的作用可以对程序作出解释（和注释没什么区别），可以被其他程序读取</li>
+<li>Annotation的格式是以“@注释名“在代码中存在的，还可以添加参数值，如@SuppressWarnings(value = “all”)</li>
+<li>Annotation可以附加在package，class，method，field等上面，给他们添加额外的辅助信息，可以配合反射实现对元数据的访问</li>
+</ul>
+<a id="more"></a>
+<h2 id="Java内置注解"><a href="#Java内置注解" class="headerlink" title="Java内置注解"></a>Java内置注解</h2><ul>
+<li>@Override：定义在java.lang.Override中，此注释作用于方法上，表示一个方法重写超类中的另一个方法声明</li>
+<li>@Deprecated：定义在java.lang.Deprecated中，此注释作用于方法，属性，类，表示不鼓励程序员使用，通常是因为它很危险或者存在更好的选择</li>
+<li>@SuppressWarnings：定义在java.lang.SuppressWarnings中，用来意志编译时的警告信息</li>
+<li><strong>JDK还有许多内置注解，有兴趣可以去观看源码，这里就不一一列举了</strong></li>
+</ul>
+<h2 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h2><p>元注解的作用是负责注解其他注解，Java定义了4个标准的meta-annotation类型，它们被用来提供对其他annotation类型作解释。</p>
+<p>这些类型和它们所支持的类在java.lang.annotation包中可以找到（@Target，@Retention，@Decumented，@Inherited）</p>
+<ul>
+<li>@Target：用于描述注解的使用范围（注解使用在类上，方法上，字段上等等）</li>
+<li>@Retention：表示需要在什么级别保存该注释信息，用于描述注解的生命周期（SOURCE &lt; CLASS &lt; RUNTIME）</li>
+<li>@Decument：说明该注解将被javadoc打包生成</li>
+<li>@Inherited：说明子类可以继承父类中的注解</li>
+</ul>
+<h2 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h2><ul>
+<li>@interface用来声明一个注解，格式为：public @interface 注解名 { 定义内容 }</li>
+<li>其中的每一个方法实际上是声明了一个配置参数</li>
+<li>方法的名称就是参数的名称</li>
+<li>返回值类型就是参数的类型（返回值只能是基本类型Class，String，Enum）</li>
+<li>可以通过default来声明参数的默认值</li>
+<li>如果只有一个参数成员，一般参数名为value</li>
+<li>注解元素必须要有值，我们定义注解元素时，经常使用空字符串或者0作为默认值</li>
+</ul>
+<h2 id="自定义注解演示案例"><a href="#自定义注解演示案例" class="headerlink" title="自定义注解演示案例"></a>自定义注解演示案例</h2><p>创建一个注解MyAnnotation.java：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-f62dadfddb16c10ee575c2111eda4ef0_1440w.jpg" alt="img"></p>
+<p>创建一个pojo名为User.java：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-7eb75e6ca60ea7016158d047545e1f84_1440w.jpg" alt="img"></p>
+<p>创建一个Test.java演示自定义注解：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-81ddb6f36811f54d74a5c1d2fc2c8610_1440w.jpg" alt="img"></p>
+<p>最终控制台输出结果：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-0836c7c07d29f0111a32b103a6df6f4c_1440w.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>注解其实跟我们平时写代码的注释没多大区别，主要是注释给我们程序员看的，而注解是给程序解释的。通常注解和反射一起运用才是绝配，可以发挥出很强大的作用。希望这篇自定义注解对你们有所帮助～～～</p>
 
       
     </div>
+    
+    
+    
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
 
+  
+</div>
+<div>
+    
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>Java之自定义注解</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2020年12月27日 - 22:35:36</p>
+  <p><span>最后更新:</span>2020年12月27日 - 22:39:52</p>
+  <p><span>原始链接:</span><a href="/2020/12/27/Java之自定义注解/" title="Java之自定义注解">https://god-jiang.github.io/2020/12/27/Java之自定义注解/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/12/27/Java之自定义注解/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+
+    
+</div>
+
+    
+
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div><font color="red"><b>创作不易，您的支持就是我坚持的动力，谢谢大家！</b></font></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="god-jiang 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/注解与反射/" <i="" class="fa fa-tag"> 注解与反射</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/15/SpringBoot自动配置（源码解读）/" rel="next" title="SpringBoot自动配置（源码解读）">
+                <i class="fa fa-chevron-left"></i> SpringBoot自动配置（源码解读）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -332,6 +603,13 @@
 
 
           
+
+  
+   <div id="gitalk-container"></div>
+ 
+  
+
+
 
         </div>
         
@@ -352,8 +630,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -431,6 +718,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是注解？"><span class="nav-number">1.</span> <span class="nav-text">什么是注解？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内置注解"><span class="nav-number">2.</span> <span class="nav-text">Java内置注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元注解"><span class="nav-number">3.</span> <span class="nav-text">元注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义注解"><span class="nav-number">4.</span> <span class="nav-text">自定义注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义注解演示案例"><span class="nav-number">5.</span> <span class="nav-text">自定义注解演示案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -598,6 +901,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -638,6 +945,21 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'deedada779a5390ef257',
+          clientSecret: 'e4038303bdb44d9de883f9e3a5940223b19a02d2',
+          repo: 'god-jiang.github.io',
+          owner: 'god-jiang',
+          admin: ['god-jiang'],
+          id: decodeURI(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
   
 

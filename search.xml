@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL日志之redo log和binlog</title>
+    <url>/2021/02/16/MySQL%E6%97%A5%E5%BF%97%E4%B9%8Bredo-log%E5%92%8Cbinlog/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>只要是接触过MySQL的程序员，那么或多或少都有听过redo log（重做日志）和binlog（归档日志）。今天就来分享一下这两个日志的用处和区别。</p>
+<p>简单来说，redo log是InnoDB特有的日志，如果使用的是其他存储引擎，就没有redo log，只有binlog。</p>
+<p>binlog是MySQL的Server层的日志，不管使用什么存储引擎，都会有binlog的存在。那么，为什么要有redo log和binlog呢？一个binlog不就可以全部解决了吗？接下来我们就来详细看一下redo log和binlog的区别吧。</p>
+<a id="more"></a>
+<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><p>在MySQL中，如果你要更新一条语句，需要带更新条件，比如update T set name = ‘god-jiang’ where id=6，一般都是先查询到id=6的语句，然后再进行更新操作。</p>
+<p>如果更新的数量是100条，1000条甚至10000条的时候，每一次更新都需要写到磁盘上。然后磁盘也要找到对应的记录，然后再更新，整个过程IO成本、查找成本太大，为了解决这个问题，MySQL的设计者采用了WAL技术来解决。WAL全称是Write Ahead Logging，意思就是先写日志，再写磁盘。</p>
+<p>具体操作：当有一条记录需要更新的时候，InnoDB引擎会先把记录写到redo log中，并更新内存，这个时候更新就算完成了。同时，InnoDB引擎会在适当的时候（系统空闲时），将这个操作记录更新到磁盘中，这个更新往往是在系统比较空闲的时候。</p>
+<p>但是redo log的大小是固定的，不可能一直无限写，让我们看下MySQL怎么做到的吧。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-7a95bcd27432082ce985744c7fd9585d_1440w.jpg" alt="img"></p>
+<p>write pos是当前记录的位置，一边写一边往后移动。check point是当前要擦除的位置，也是往后移动并且循环的，擦除记录之前要把记录更新到数据文件中。</p>
+<p>write pos与check point之间绿色的部分表示可以记录新的操作。如果write pos追上了check point，表示redo log满了，这个时候就不能继续执行新的操作，需要停下擦除一些记录，并且把check point往后推进。</p>
+<p>有了redo log，InnoDB可以保证即使数据库发现异常重启了，也不会丢失之前提交的事务，这个能力也被称为crash-safe。</p>
+<p>以上就是redo log的介绍，看完了之后，你可以试着去问一下你公司的DBA同事，MySQL是否可以恢复到半个月内任意一秒的状态，得到的答案肯定是可以的，这都要归功于redo log的功劳。</p>
+<h2 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h2><p>从MySQL整体来看，其实分为两层，一层是Server层，一层是存储引擎层。上面聊到的redo log就是属于InnoDB引擎特有的日志，而binlog是属于Server层的日志，也称为归档日志。</p>
+<p><strong>redo log和binlog的区别</strong></p>
+<ul>
+<li>redo log是InnoDB引擎特有的；binlog是MySQL的Server层实现的，所有引擎都可以使用</li>
+<li>redo log是物理日志，记录的是“在XXX数据页上做了XXX修改”；binlog是逻辑日志，记录的是原始逻辑，其记录是对应的SQL语句</li>
+<li>redo log是循环写的，空间一定会用完，需要write pos和check point搭配；binlog是追加写，写到一定大小会切换到下一个，并不会覆盖以前的日志</li>
+</ul>
+<p><strong>通过简单的更新语句演示执行器和InnoDB引擎的内部流程</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">update</span> T <span class="keyword">set</span> <span class="keyword">name</span> = <span class="string">'god-jiang'</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">6</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>通过执行器从InnoDB引擎取出id=6的记录，然后加载到内存中</li>
+<li>执行器拿到引擎返回的结果，把name修改为’god-jiang’，再重新调用存储引擎的接口写入新数据</li>
+<li>引擎将新数据更新到内存中，同时将这个更新操作写到redo log中，此时redo log处于prepare状态</li>
+<li>执行器生成这个操作的binlog，并把binlog写到磁盘中</li>
+<li>执行器调用引擎提交事务的接口，并且把刚刚写入的redo log改为commit状态，更新完成</li>
+</ol>
+<p><strong>对应的流程图</strong></p>
+<p><img src="https://pic4.zhimg.com/80/v2-dd93c8ffd44592f4e6befeca0833907b_1440w.jpg" alt="img"></p>
+<p>最后为什么写入redo log会处于prepare状态，然后写入binlog还要变成commit状态？其实这个过程就叫做“两阶段提交”。</p>
+<h2 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a>两阶段提交</h2><p>其实redo log和binlog都可以用于表示事务的提交的状态，而两阶段提交就是让这两个状态保持逻辑上的一致。</p>
+<p>举例子：update T set name = ‘god-jiang’ where id = 6没有两阶段提交会发生什么？</p>
+<p>先写redo log后写binlog。假设写完了redo log，binlog还没有写完，这个时候MySQL异常重启。因为redo log写完了，恢复系统的时候name=’god-jiang’。但是binlog没有写完，所以binlog没有记录这条语句，这个时候用binlog恢复数据的时候，恢复出来的name就是原来值，与redo log不同。</p>
+<p>同理可得，先写binlog后写redo log也会发现两个日志恢复的数据不同。这个不一致会导致线上出现主从不一致的情况。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>redo log可以保存crash-safe能力，可以保证MySQL异常重启数据不丢失</li>
+<li>binlog可以记录对应的SQL语句，也可以保证MySQL异常重启数据不丢失</li>
+<li>提交事务的两阶段提交，可以维持数据逻辑一致性</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>MySQL实战45讲</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL日志系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL的基础架构</title>
     <url>/2021/02/16/MySQL%E7%9A%84%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>临近春节，这段时间闲来无事又读了一些关于MySQL的文章和书籍，觉得受益良多。尤其是阿里巴巴丁奇的MySQL实战45讲，真的让我感觉到有质的提升。以前看书看博客都是优先看索引部分，优化部分。都是一些工作中常用的知识点。但现在我对MySQL的底层越来越好奇，所以从MySQL的基础架构开始学起，就有了这篇博客。</p>

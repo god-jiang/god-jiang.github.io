@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="MySQL分页优化,">
+  <meta name="keywords" content="MySQL日志系统,">
 
 
 
@@ -79,30 +79,21 @@
 
 
 
-<meta name="description" content="背景基本上只要是做后台开发，都会接触到分页这个需求或者功能吧。基本上大家都是会用MySQL的LIMIT来处理，而且我现在负责的项目也是这样写的。但是一旦数据量起来了，其实LIMIT的效率会极其的低，这一篇文章就来讲一下LIMIT子句优化的。">
-<meta name="keywords" content="MySQL分页优化">
+<meta name="description" content="前言只要是接触过MySQL的程序员，那么或多或少都有听过redo log（重做日志）和binlog（归档日志）。今天就来分享一下这两个日志的用处和区别。 简单来说，redo log是InnoDB特有的日志，如果使用的是其他存储引擎，就没有redo log，只有binlog。 binlog是MySQL的Server层的日志，不管使用什么存储引擎，都会有binlog的存在。那么，为什么要有redo l">
+<meta name="keywords" content="MySQL日志系统">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL优化之超大分页查询">
-<meta property="og:url" content="https://god-jiang.github.io/2020/11/10/MySQL优化之超大分页查询/index.html">
+<meta property="og:title" content="MySQL日志之redo log和binlog">
+<meta property="og:url" content="https://god-jiang.github.io/2021/02/16/MySQL日志之redo-log和binlog/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="背景基本上只要是做后台开发，都会接触到分页这个需求或者功能吧。基本上大家都是会用MySQL的LIMIT来处理，而且我现在负责的项目也是这样写的。但是一旦数据量起来了，其实LIMIT的效率会极其的低，这一篇文章就来讲一下LIMIT子句优化的。">
+<meta property="og:description" content="前言只要是接触过MySQL的程序员，那么或多或少都有听过redo log（重做日志）和binlog（归档日志）。今天就来分享一下这两个日志的用处和区别。 简单来说，redo log是InnoDB特有的日志，如果使用的是其他存储引擎，就没有redo log，只有binlog。 binlog是MySQL的Server层的日志，不管使用什么存储引擎，都会有binlog的存在。那么，为什么要有redo l">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-cc7f6549895ff407b6d59548ad605186_1440w.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-1902a67f4083fa576387388dc0964dc6_1440w.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-76a0f5a4532bccdff895390f08898a1d_1440w.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-721252409034d53e854fb072c5cf9c92_1440w.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-606081e5a1e9a6c6bd3e15d08b160c13_1440w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-f4567af54364cbbe2dc9c77b0fdcdec8_1440w.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-f79b2a23b80b26be5a1bb18c6eecd7a1_1440w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-57d4020ee03f829003d82d79d271d42c_1440w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-ef3e5410014412d43f0cc1e1b7df99dc_1440w.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-2d651149561eb3d6ad0b36c55ed0bca9_1440w.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-eca6a898ece7883b1d6beac99fdefbc2_1440w.jpg">
-<meta property="og:updated_time" content="2020-11-10T15:31:07.994Z">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-7a95bcd27432082ce985744c7fd9585d_1440w.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-dd93c8ffd44592f4e6befeca0833907b_1440w.jpg">
+<meta property="og:updated_time" content="2021-02-16T08:24:18.296Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL优化之超大分页查询">
-<meta name="twitter:description" content="背景基本上只要是做后台开发，都会接触到分页这个需求或者功能吧。基本上大家都是会用MySQL的LIMIT来处理，而且我现在负责的项目也是这样写的。但是一旦数据量起来了，其实LIMIT的效率会极其的低，这一篇文章就来讲一下LIMIT子句优化的。">
-<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-cc7f6549895ff407b6d59548ad605186_1440w.jpg">
+<meta name="twitter:title" content="MySQL日志之redo log和binlog">
+<meta name="twitter:description" content="前言只要是接触过MySQL的程序员，那么或多或少都有听过redo log（重做日志）和binlog（归档日志）。今天就来分享一下这两个日志的用处和区别。 简单来说，redo log是InnoDB特有的日志，如果使用的是其他存储引擎，就没有redo log，只有binlog。 binlog是MySQL的Server层的日志，不管使用什么存储引擎，都会有binlog的存在。那么，为什么要有redo l">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-7a95bcd27432082ce985744c7fd9585d_1440w.jpg">
 
 
 
@@ -132,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/2020/11/10/MySQL优化之超大分页查询/">
+  <link rel="canonical" href="https://god-jiang.github.io/2021/02/16/MySQL日志之redo-log和binlog/">
 
 
 
 
 
-  <title>MySQL优化之超大分页查询 | god-jiang的git个人博客</title>
+  <title>MySQL日志之redo log和binlog | god-jiang的git个人博客</title>
   
 
 
@@ -307,7 +298,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/11/10/MySQL优化之超大分页查询/">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2021/02/16/MySQL日志之redo-log和binlog/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="god-jiang">
@@ -324,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">MySQL优化之超大分页查询</h1>
+          <h1 class="post-title" itemprop="name headline">MySQL日志之redo log和binlog</h1>
         
 
         <div class="post-meta">
@@ -336,8 +327,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-10T23:30:25+08:00">
-                2020-11-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-16T16:23:40+08:00">
+                2021-02-16
               </time>
             
 
@@ -395,7 +386,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k 字
+                  1.4k 字
                 </span>
               
 
@@ -411,7 +402,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5 分钟
+                  4 分钟
                 </span>
               
             </div>
@@ -432,70 +423,49 @@
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>基本上只要是做后台开发，都会接触到分页这个需求或者功能吧。基本上大家都是会用MySQL的LIMIT来处理，而且我现在负责的项目也是这样写的。但是一旦数据量起来了，其实LIMIT的效率会极其的低，这一篇文章就来讲一下LIMIT子句优化的。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>只要是接触过MySQL的程序员，那么或多或少都有听过redo log（重做日志）和binlog（归档日志）。今天就来分享一下这两个日志的用处和区别。</p>
+<p>简单来说，redo log是InnoDB特有的日志，如果使用的是其他存储引擎，就没有redo log，只有binlog。</p>
+<p>binlog是MySQL的Server层的日志，不管使用什么存储引擎，都会有binlog的存在。那么，为什么要有redo log和binlog呢？一个binlog不就可以全部解决了吗？接下来我们就来详细看一下redo log和binlog的区别吧。</p>
 <a id="more"></a>
-<h2 id="LIMIT优化"><a href="#LIMIT优化" class="headerlink" title="LIMIT优化"></a>LIMIT优化</h2><p>很多业务场景都需要用到分页这个功能，基本上都是用LIMIT来实现。</p>
-<p>建表并且插入200万条数据：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建一张t5表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t5`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`text`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`ix_name`</span> (<span class="string">`name`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`ix_test`</span> (<span class="string">`text`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建存储过程插入200万数据</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> t5_insert_200w()</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">DECLARE</span> i <span class="built_in">INT</span>;</span><br><span class="line">    <span class="keyword">SET</span> i=<span class="number">1000000</span>;</span><br><span class="line">    WHILE i&lt;=3000000 DO</span><br><span class="line">        <span class="keyword">INSERT</span> <span class="keyword">INTO</span> t5(<span class="string">`name`</span>,<span class="built_in">text</span>) <span class="keyword">VALUES</span>(<span class="string">'god-jiang666'</span>,<span class="keyword">concat</span>(<span class="string">'text'</span>, i));</span><br><span class="line">        <span class="keyword">SET</span> i=i+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">END</span> <span class="keyword">WHILE</span>;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用存储过程插入200万数据</span></span><br><span class="line"><span class="keyword">call</span> t5_insert_200w();</span><br></pre></td></tr></table></figure>
-<p>在翻页比较少的情况下，LIMIT是不会出现任何性能上的问题的。</p>
-<p>但是如果用户需要查到最后面的页数呢？</p>
-<p>通常情况下，我们要保证所有的页面可以正常跳转，因为不会使用order by xxx desc这样的倒序SQL来查询后面的页数，而是采用正序顺序来做分页查询：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">100000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic3.zhimg.com/80/v2-cc7f6549895ff407b6d59548ad605186_1440w.jpg" alt="img"></p>
-<p>采用这种SQL查询分页的话，从200万数据中取出这10行数据的代价是非常大的，需要先排序查出前1000010条记录，然后抛弃前面1000000条。我的macbook pro跑出来花了5.578秒。</p>
-<p>接下来我们来看一下，上面这条SQL语句的执行计划：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic3.zhimg.com/80/v2-1902a67f4083fa576387388dc0964dc6_1440w.jpg" alt="img"></p>
-<p>从执行计划可以看出，在大分页的情况下，MySQL没有走索引扫描，即使text字段我已经加上了索引。</p>
-<p>这是为什么呢？</p>
-<p>回到<strong>MySQL索引（二）如何设计索引</strong>中有提及到，MySQL数据库的查询优化器是采用了基于代价的，而查询代价的估算是基于<strong>CPU代价</strong>和<strong>IO代价</strong>。</p>
-<p>如果MySQL在查询代价估算中，认为全表扫描方式比走索引扫描的方式效率更高的话，就会放弃索引，直接全表扫描。</p>
-<p>这就是为什么在大分页的SQL查询中，明明给该字段加了索引，但是MySQL却走了全表扫描的原因。</p>
-<p>然后我们继续用上面的查询SQL来验证我的猜想：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">7774</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic2.zhimg.com/80/v2-76a0f5a4532bccdff895390f08898a1d_1440w.jpg" alt="img"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">7775</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic3.zhimg.com/80/v2-721252409034d53e854fb072c5cf9c92_1440w.jpg" alt="img"></p>
-<p>以上的实验均在我的mbp上运行的，在7774这个临界点上，MySQL分别采用了索引扫描和全表扫描的查询优化方式。</p>
-<p><strong>所以可以认为MySQL会根据它自己的代价查询优化器来判断是否使用索引。</strong></p>
-<p>由于MySQL的查询优化器的算法核心是我们无法人工干预的，所以我们的优化思路就要着手于如何让分页维持在最佳的的分页临界点。</p>
-<h2 id="优化方式"><a href="#优化方式" class="headerlink" title="优化方式"></a>优化方式</h2><h2 id="1、使用覆盖索引"><a href="#1、使用覆盖索引" class="headerlink" title="1、使用覆盖索引"></a>1、使用覆盖索引</h2><p>如果一条SQL语句，通过索引可以直接获取查询的结果，不再需要回表查询，就称这个索引为<strong>覆盖索引</strong>。</p>
-<p>在MySQL数据库中使用explain关键字查看执行计划，如果extra这一列显示<strong>Using index</strong>，就表示这条SQL语句使用了覆盖索引。</p>
-<p>让我们来对比一下使用了覆盖索引，性能会提升多少吧。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic4.zhimg.com/80/v2-606081e5a1e9a6c6bd3e15d08b160c13_1440w.jpg" alt="img"></p>
-<p><img src="https://pic1.zhimg.com/80/v2-f4567af54364cbbe2dc9c77b0fdcdec8_1440w.jpg" alt="img"></p>
-<p>这次查询花了3.690秒，让我们看一下使用了覆盖索引优化会提升多少性能吧。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="string">`text`</span> <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic2.zhimg.com/80/v2-f79b2a23b80b26be5a1bb18c6eecd7a1_1440w.jpg" alt="img"></p>
-<p><img src="https://pic1.zhimg.com/80/v2-57d4020ee03f829003d82d79d271d42c_1440w.jpg" alt="img"></p>
-<p>从上面的对比中，超大分页查询中，使用了覆盖索引之后，花了0.201秒，而没有使用覆盖索引花了3.690秒，提高了18倍多，这在实际开发中，就是一个大的性能优化了。（该数据在我的mbp上运行得出）</p>
-<h2 id="2、子查询优化"><a href="#2、子查询优化" class="headerlink" title="2、子查询优化"></a>2、子查询优化</h2><p>因为实际开发中，用SELECT查询一两列操作是非常少的，因此上述的覆盖索引的适用范围就比较有限。</p>
-<p>所以我们可以通过把分页的SQL语句改写成子查询的方法获得性能上的提升。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">where</span> <span class="keyword">id</span>&gt;=(<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">1</span>) <span class="keyword">limit</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic1.zhimg.com/80/v2-ef3e5410014412d43f0cc1e1b7df99dc_1440w.jpg" alt="img"></p>
-<p>其实使用这种方法，提升的效率和上面使用了覆盖索引基本一致。</p>
-<p>但是这种优化方法也有局限性：</p>
+<h2 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h2><p>在MySQL中，如果你要更新一条语句，需要带更新条件，比如update T set name = ‘god-jiang’ where id=6，一般都是先查询到id=6的语句，然后再进行更新操作。</p>
+<p>如果更新的数量是100条，1000条甚至10000条的时候，每一次更新都需要写到磁盘上。然后磁盘也要找到对应的记录，然后再更新，整个过程IO成本、查找成本太大，为了解决这个问题，MySQL的设计者采用了WAL技术来解决。WAL全称是Write Ahead Logging，意思就是先写日志，再写磁盘。</p>
+<p>具体操作：当有一条记录需要更新的时候，InnoDB引擎会先把记录写到redo log中，并更新内存，这个时候更新就算完成了。同时，InnoDB引擎会在适当的时候（系统空闲时），将这个操作记录更新到磁盘中，这个更新往往是在系统比较空闲的时候。</p>
+<p>但是redo log的大小是固定的，不可能一直无限写，让我们看下MySQL怎么做到的吧。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-7a95bcd27432082ce985744c7fd9585d_1440w.jpg" alt="img"></p>
+<p>write pos是当前记录的位置，一边写一边往后移动。check point是当前要擦除的位置，也是往后移动并且循环的，擦除记录之前要把记录更新到数据文件中。</p>
+<p>write pos与check point之间绿色的部分表示可以记录新的操作。如果write pos追上了check point，表示redo log满了，这个时候就不能继续执行新的操作，需要停下擦除一些记录，并且把check point往后推进。</p>
+<p>有了redo log，InnoDB可以保证即使数据库发现异常重启了，也不会丢失之前提交的事务，这个能力也被称为crash-safe。</p>
+<p>以上就是redo log的介绍，看完了之后，你可以试着去问一下你公司的DBA同事，MySQL是否可以恢复到半个月内任意一秒的状态，得到的答案肯定是可以的，这都要归功于redo log的功劳。</p>
+<h2 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h2><p>从MySQL整体来看，其实分为两层，一层是Server层，一层是存储引擎层。上面聊到的redo log就是属于InnoDB引擎特有的日志，而binlog是属于Server层的日志，也称为归档日志。</p>
+<p><strong>redo log和binlog的区别</strong></p>
+<ul>
+<li>redo log是InnoDB引擎特有的；binlog是MySQL的Server层实现的，所有引擎都可以使用</li>
+<li>redo log是物理日志，记录的是“在XXX数据页上做了XXX修改”；binlog是逻辑日志，记录的是原始逻辑，其记录是对应的SQL语句</li>
+<li>redo log是循环写的，空间一定会用完，需要write pos和check point搭配；binlog是追加写，写到一定大小会切换到下一个，并不会覆盖以前的日志</li>
+</ul>
+<p><strong>通过简单的更新语句演示执行器和InnoDB引擎的内部流程</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> T <span class="keyword">set</span> <span class="keyword">name</span> = <span class="string">'god-jiang'</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <ol>
-<li>这种写法，要求主键ID必须是连续的</li>
-<li>Where子句不允许再添加其他条件</li>
+<li>通过执行器从InnoDB引擎取出id=6的记录，然后加载到内存中</li>
+<li>执行器拿到引擎返回的结果，把name修改为’god-jiang’，再重新调用存储引擎的接口写入新数据</li>
+<li>引擎将新数据更新到内存中，同时将这个更新操作写到redo log中，此时redo log处于prepare状态</li>
+<li>执行器生成这个操作的binlog，并把binlog写到磁盘中</li>
+<li>执行器调用引擎提交事务的接口，并且把刚刚写入的redo log改为commit状态，更新完成</li>
 </ol>
-<h2 id="3、延迟关联"><a href="#3、延迟关联" class="headerlink" title="3、延迟关联"></a>3、延迟关联</h2><p>和上述的子查询做法类似，我们可以使用JOIN，先在索引列上完成分页操作，然后再回表获取所需要的列。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> a.* <span class="keyword">from</span> t5 a <span class="keyword">inner</span> <span class="keyword">join</span> (<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> t5 <span class="keyword">order</span> <span class="keyword">by</span> <span class="built_in">text</span> <span class="keyword">limit</span> <span class="number">1000000</span>, <span class="number">10</span>) b <span class="keyword">on</span> a.id=b.id;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic2.zhimg.com/80/v2-2d651149561eb3d6ad0b36c55ed0bca9_1440w.jpg" alt="img"></p>
-<p>从实验中可以得出，在采用JOIN改写后，上面的两个局限性都已经解除了，而且SQL的执行效率也没有损失。</p>
-<h2 id="4、记录上次查询结束的位置"><a href="#4、记录上次查询结束的位置" class="headerlink" title="4、记录上次查询结束的位置"></a>4、记录上次查询结束的位置</h2><p>和上面使用的方法都不同，记录上次结束位置优化思路是使用某种变量记录上一次数据的位置，下次分页时直接从这个变量的位置开始扫描，从而避免MySQL扫描大量的数据再抛弃的操作。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t5 <span class="keyword">where</span> <span class="keyword">id</span>&gt;=<span class="number">1000000</span> <span class="keyword">limit</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="https://pic3.zhimg.com/80/v2-eca6a898ece7883b1d6beac99fdefbc2_1440w.jpg" alt="img"></p>
-<p>根据以上实验，不难得出，由于使用了主键索引做分页操作，SQL的性能是最快的。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>介绍了超大分页查询性能过差的原因，还有分享了几个优化思路</li>
-<li>超大分页的优化思路就是让分页的SQL尽量在最佳的性能区间执行，不要触发全表扫描即可</li>
-<li>希望以上的分享，可以让你们在MySQL这条路上少走弯路～～～</li>
-</ol>
+<p><strong>对应的流程图</strong></p>
+<p><img src="https://pic4.zhimg.com/80/v2-dd93c8ffd44592f4e6befeca0833907b_1440w.jpg" alt="img"></p>
+<p>最后为什么写入redo log会处于prepare状态，然后写入binlog还要变成commit状态？其实这个过程就叫做“两阶段提交”。</p>
+<h2 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a>两阶段提交</h2><p>其实redo log和binlog都可以用于表示事务的提交的状态，而两阶段提交就是让这两个状态保持逻辑上的一致。</p>
+<p>举例子：update T set name = ‘god-jiang’ where id = 6没有两阶段提交会发生什么？</p>
+<p>先写redo log后写binlog。假设写完了redo log，binlog还没有写完，这个时候MySQL异常重启。因为redo log写完了，恢复系统的时候name=’god-jiang’。但是binlog没有写完，所以binlog没有记录这条语句，这个时候用binlog恢复数据的时候，恢复出来的name就是原来值，与redo log不同。</p>
+<p>同理可得，先写binlog后写redo log也会发现两个日志恢复的数据不同。这个不一致会导致线上出现主从不一致的情况。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>redo log可以保存crash-safe能力，可以保证MySQL异常重启数据不丢失</li>
+<li>binlog可以记录对应的SQL语句，也可以保证MySQL异常重启数据不丢失</li>
+<li>提交事务的两阶段提交，可以维持数据逻辑一致性</li>
+</ul>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li>《MySQL性能优化》第六章 查询优化性能</li>
-<li>《数据库查询优化器的艺术》</li>
+<li>MySQL实战45讲</li>
 </ul>
 
       
@@ -524,12 +494,12 @@
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
 
-  <p><span>本文标题:</span>MySQL优化之超大分页查询</p>
+  <p><span>本文标题:</span>MySQL日志之redo log和binlog</p>
   <p><span>文章作者:</span>god-jiang</p>
-  <p><span>发布时间:</span>2020年11月10日 - 23:30:25</p>
-  <p><span>最后更新:</span>2020年11月10日 - 23:31:07</p>
-  <p><span>原始链接:</span><a href="/2020/11/10/MySQL优化之超大分页查询/" title="MySQL优化之超大分页查询">https://god-jiang.github.io/2020/11/10/MySQL优化之超大分页查询/</a>
-    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/11/10/MySQL优化之超大分页查询/" aria-label="复制成功！"></i></span>
+  <p><span>发布时间:</span>2021年02月16日 - 16:23:40</p>
+  <p><span>最后更新:</span>2021年02月16日 - 16:24:18</p>
+  <p><span>原始链接:</span><a href="/2021/02/16/MySQL日志之redo-log和binlog/" title="MySQL日志之redo log和binlog">https://god-jiang.github.io/2021/02/16/MySQL日志之redo-log和binlog/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2021/02/16/MySQL日志之redo-log和binlog/" aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -587,7 +557,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MySQL分页优化/" <i="" class="fa fa-tag"> MySQL分页优化</a>
+            <a href="/tags/MySQL日志系统/" <i="" class="fa fa-tag"> MySQL日志系统</a>
           
         </div>
       
@@ -600,8 +570,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/11/10/MySQL索引（三）索引不生效的情况/" rel="next" title="MySQL索引（三）索引不生效的情况">
-                <i class="fa fa-chevron-left"></i> MySQL索引（三）索引不生效的情况
+              <a href="/2021/02/16/MySQL的基础架构/" rel="next" title="MySQL的基础架构">
+                <i class="fa fa-chevron-left"></i> MySQL的基础架构
               </a>
             
           </div>
@@ -609,10 +579,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/11/17/聊聊MySQL的COUNT-的性能/" rel="prev" title="聊聊MySQL的COUNT(*)的性能">
-                聊聊MySQL的COUNT(*)的性能 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -765,7 +731,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LIMIT优化"><span class="nav-number">2.</span> <span class="nav-text">LIMIT优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化方式"><span class="nav-number">3.</span> <span class="nav-text">优化方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1、使用覆盖索引"><span class="nav-number">4.</span> <span class="nav-text">1、使用覆盖索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、子查询优化"><span class="nav-number">5.</span> <span class="nav-text">2、子查询优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、延迟关联"><span class="nav-number">6.</span> <span class="nav-text">3、延迟关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、记录上次查询结束的位置"><span class="nav-number">7.</span> <span class="nav-text">4、记录上次查询结束的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redo-log"><span class="nav-number">2.</span> <span class="nav-text">redo log</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog"><span class="nav-number">3.</span> <span class="nav-text">binlog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两阶段提交"><span class="nav-number">4.</span> <span class="nav-text">两阶段提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>

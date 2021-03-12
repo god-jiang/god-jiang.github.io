@@ -1,6 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL的行锁</title>
+    <url>/2021/03/12/MySQL%E7%9A%84%E8%A1%8C%E9%94%81/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>自从过年值班就一直在公司读《 MySQL实战45讲》这本书，当时看完了MySQL的全局锁、表级锁还有行锁和间隙锁。其中的行锁和间隙锁迟迟无法理解，最近趁着有空再次阅读了一遍，并且对照了《深入浅出MySQL》，发现对MySQL锁的理解又上了一个台阶，今天就来分享一下MySQL的行锁。</p>
+<a id="more"></a>
+<h2 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h2><p>MySQL的行锁又分为共享锁（S锁）和排他锁（X锁）。</p>
+<p><strong>一般普通的select语句，InnoDB不加任何锁，我们称之为快照读</strong></p>
+<ul>
+<li>select * from test;</li>
+</ul>
+<p><strong>通过加S锁和X锁的select语句或者插入/更新/删除操作，我们称之为当前读</strong></p>
+<ul>
+<li>select * from test lock in share mode;</li>
+<li>select * from test for update;</li>
+<li>insert into test values(…);</li>
+<li>update test set …;</li>
+<li>delete from test …;</li>
+</ul>
+<p>特殊说明：<strong>以上的当前读，读取的都是记录的最新版本。对读取记录都会加锁，除了第一条语句lock in share mode是对记录加S锁（共享锁）外，其他的操作都是加X锁（排他锁）</strong>。</p>
+<h2 id="两阶段锁协议"><a href="#两阶段锁协议" class="headerlink" title="两阶段锁协议"></a>两阶段锁协议</h2><p>传统的关系型数据库加锁都要遵循一个原则：两阶段锁原则。</p>
+<p>两阶段锁是将锁的操作分为两个阶段，加锁阶段和解锁阶段，并且保证加锁阶段和解锁阶段不相交。</p>
+<p>分享一个例子说明两阶段锁协议：</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>begin;</td>
+<td></td>
+</tr>
+<tr>
+<td>update test set name=’god-jiang’ where id=1;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>begin;</td>
+</tr>
+<tr>
+<td></td>
+<td>delete from test where name=’god-jiang’;</td>
+</tr>
+<tr>
+<td>commit;</td>
+</tr>
+</tbody>
+</table>
+<p>事务A执行完update语句后，手上持有着name=’god-jiang’的X锁，而事务B执行delete语句删除name=’god-jiang’记录的时候会阻塞，直到事务A执行commit之后，事务B才会执行delete。</p>
+<p>也就是说，<strong>在InnoDB存储引擎中，行锁是在需要的时候加上的，但并不是不需要了就立刻释放行锁，而是要等到事务结束的时候才释放，这个就是两阶段锁协议。</strong></p>
+<h2 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h2><p>不同事务隔离级别对应的行锁也是不同的，所以我们需要先了解事务的隔离级别后，再来演示不同隔离级别的行锁如何加上去。</p>
+<p>MySQL的4种隔离级别：</p>
+<ol>
+<li>READ UNCOMMITTED（读未提交）：任何一个事务当中，都可以看见其他事务的执行情况，会出现脏读现象。</li>
+<li>READ COMMITTED（读已提交，简称：RC）：在当前事务中只能看见已经提交事务的执行结果，当同一事务在读取期间出现新的commit操作，会出现不可重复读现象。</li>
+<li>REPEATABLE READ（可重复读，简称：RR）：这是MySQL默认的隔离级别，得益于MVCC，它能在同一事务在多实例并发读取数据时看到相同的数据行，消除了脏读、不可重复读，默认不会出现幻读（<strong>MySQL的行锁+间隙锁解决了快照读的幻读，未解决当前读的幻读</strong>）。</li>
+<li>SERIALIZABLE（串行）：MySQL的最高隔离级别，通过加锁，强制事务执行顺序，保证不会出现幻读问题。</li>
+</ol>
+<h2 id="加锁分析（以下默认是RC隔离级别并且都是当前读）"><a href="#加锁分析（以下默认是RC隔离级别并且都是当前读）" class="headerlink" title="加锁分析（以下默认是RC隔离级别并且都是当前读）"></a>加锁分析（以下默认是RC隔离级别并且都是当前读）</h2><p>这里我挑选出RC隔离级别下三种常见情况分析SQL如何加锁：</p>
+<ul>
+<li>RC隔离级别，where字段没有索引</li>
+<li>RC隔离级别，where字段有唯一索引</li>
+<li>RC隔离级别，where字段有普通索引</li>
+</ul>
+<p><strong>以下加锁分析默认表名为test，主键为id，唯一索引为a，普通索引为b，无索引为c。</strong></p>
+<h2 id="RC隔离级别-where无索引"><a href="#RC隔离级别-where无索引" class="headerlink" title="RC隔离级别+where无索引"></a>RC隔离级别+where无索引</h2><p><img src="https://pic1.zhimg.com/80/v2-82ffcecc923231297d9db93d9f10a438_1440w.jpg" alt="img"></p>
+<p>由于c字段没有索引，SQL将会进行全表扫描。这个时候的所有记录，都会加上X锁。</p>
+<p><strong>为什么不是只在c=10的记录上加锁呢？</strong></p>
+<p>这是因为在MySQL中，如果where条件不能通过索引快速过滤，那么在MySQL的server层就会将所有记录都加锁然后调用InnoDB存储引擎查询，因此也就把所有记录都锁上了。</p>
+<p>总结：<strong>没有索引的情况下，InnoDB的当前读会对所有记录都加锁。所以在实际开发中，如果是当前读或者是插入/更新/删除等操作一定要使用索引，否则会产生大量的锁等待</strong>。</p>
+<h2 id="RC隔离级别-where唯一索引"><a href="#RC隔离级别-where唯一索引" class="headerlink" title="RC隔离级别+where唯一索引"></a>RC隔离级别+where唯一索引</h2><p><img src="https://pic1.zhimg.com/80/v2-e69525e2366cd0b2b0ee784b63745e00_1440w.jpg" alt="img"></p>
+<p>由于a字段有唯一索引，因此通过MySQL的server层会选择走a列的索引进行过滤，找到a=2记录后，将唯一索引上a=1的索引记录加上X锁，同时读取主键id并找到聚集索引树给id=2的记录加上X锁。</p>
+<p>总结：<strong>如果查询的条件是唯一索引，那么SQL在满足的唯一索引的记录上加X锁，并且在对应的聚集索引上加X锁</strong>。</p>
+<h2 id="RC隔离级别-where普通索引"><a href="#RC隔离级别-where普通索引" class="headerlink" title="RC隔离级别+where普通索引"></a>RC隔离级别+where普通索引</h2><p><img src="https://pic1.zhimg.com/80/v2-8caa6854f59724e0929c2429720d5dbc_1440w.jpg" alt="img"></p>
+<p>由于b字段有普通索引，所以在满足b=2的所有记录上都加上了X锁，同时对应的聚集索引记录也加上了X锁。与唯一索引对比，唯一索引查询最多有一行记录上锁，而普通索引会把满足条件的所有记录上锁。</p>
+<p>总结：<strong>如果查询的条件是普通索引，那么SQL会在满足条件的非唯一索引记录加上X锁，并且会在它们对应的聚集索引上加X锁</strong>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>InnoDB支持行锁，是替代MyISAM存储引擎的重要原因之一</li>
+<li>分享了两阶段锁协议和MySQL的事务隔离级别</li>
+<li>分析了RC隔离级别下常见的当前读加锁情况</li>
+</ul>
+<p><strong>最最重要的就是，在RC隔离级别下，我们更新数据，插入数据，删除数据都要尽可能走索引，不然会使所有的记录都被加上X锁，假如在线上操作的话，会严重影响业务</strong>。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>《MySQL实战45讲》林晓斌</li>
+<li>《深入浅出MySQL》20.3.4 InnoDB行锁实现方式</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL锁</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL的全局锁和表级锁</title>
     <url>/2021/02/27/MySQL%E7%9A%84%E5%85%A8%E5%B1%80%E9%94%81%E5%92%8C%E8%A1%A8%E7%BA%A7%E9%94%81/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在真实的企业开发环境中使用MySQL，MySQL肯定不会只有我一个人使用，而是一个团队显式的使用MySQL，或者是业务隐式的使用MySQL，那么多个用户或者客户端连接使用的时候，我们应该考虑一个问题：<strong>如果保证数据并发访问的一致性呢</strong>？这一篇我就来聊聊MySQL的锁，不涉及MySQL的事务隔离级别。</p>

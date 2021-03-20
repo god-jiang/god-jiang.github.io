@@ -1,6 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL的间隙锁</title>
+    <url>/2021/03/20/MySQL%E7%9A%84%E9%97%B4%E9%9A%99%E9%94%81/</url>
+    <content><![CDATA[<p>你好，我是god-jiang~</p>
+<p>接上篇的MySQL行锁，我分享了RC隔离级别下的各种常见情况的加锁分析。这次分享的是MySQL间隙锁，分析RR隔离级别下各种常见情况的加锁分析。</p>
+<a id="more"></a>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="string">`test`</span>(</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`a`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`b`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`c`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span>(<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> unix_key(<span class="string">'a'</span>),</span><br><span class="line">  <span class="keyword">KEY</span> ix_key(<span class="string">`b`</span>)</span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">test</span> <span class="keyword">values</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>),(<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>),(<span class="number">10</span>,<span class="number">10</span>,<span class="number">10</span>,<span class="number">10</span>),(<span class="number">20</span>,<span class="number">20</span>,<span class="number">20</span>,<span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>创建一张test表，id是主键，a是唯一索引，b是普通索引，c是没有索引。</strong></p>
+<p>现在假设是在RC隔离级别下，我们来做一个实验看看：</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>set session transaction_isolation=’READ-COMMITTED’;</td>
+<td>set session transation_isolation=’READ-COMMITTED’;</td>
+</tr>
+<tr>
+<td>begin;</td>
+<td></td>
+</tr>
+<tr>
+<td>select * from test where b=5 for update; 返回：(5,5,5,5)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>begin;</td>
+</tr>
+<tr>
+<td></td>
+<td>insert into test values(6,5,5,5);</td>
+</tr>
+<tr>
+<td></td>
+<td>commit;</td>
+</tr>
+<tr>
+<td>select * from test where b=5 for update; 返回：(5,5,5,5)，(6,5,5,5)</td>
+<td></td>
+</tr>
+<tr>
+<td>commit;</td>
+</tr>
+</tbody>
+</table>
+<p>由上面实验得出，在RC隔离级别下，事务A对b=5这一行记录加了X锁，但是事务B插入一条新的记录的b字段也是为5，然后在事务A中可以查出b=5有两条记录，这个就产生了“幻读”。</p>
+<p>也就是说，幻读是指一个事务前后两次查询同一范围的时候，后一次查询看到了前一次查询没有看到的行记录。</p>
+<p><strong>为什么会产生幻读呢？</strong></p>
+<p>我们来分析一下此时RC隔离级别+b普通索引的加锁情况：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-e591415ab6b2c3693ec78ccd8729b51d_1440w.jpg" alt="img"></p>
+<p>可以看到RC隔离级别下，b=5的记录加上了X锁，但是(0,5)还有(5,10)的间隙没有锁的情况，所以在这个间隙中可以插入新的数据。</p>
+<p>现在我就可以回答出为什么会产生幻读了。产生幻读的原因是，行锁只能锁住行，但是新插入记录的这个动作，要更新的是记录之间的“间隙”。因此，为了解决幻读的问题，InnoDB在RR隔离级别引入了新的锁，它就是间隙锁（Gap Lock）。</p>
+<p>上面讲了幻读怎么产生的，还有InnoDB引入间隙锁解决了幻读的情况，接下来分析一下RR隔离级别的加锁分析。</p>
+<h2 id="加锁分析（以下默认都是RR隔离级别并且都是当前读）"><a href="#加锁分析（以下默认都是RR隔离级别并且都是当前读）" class="headerlink" title="加锁分析（以下默认都是RR隔离级别并且都是当前读）"></a>加锁分析（以下默认都是RR隔离级别并且都是当前读）</h2><p>这里我挑选出RC隔离级别下三种常见情况分析SQL如何加锁：</p>
+<ul>
+<li>RR隔离级别，where字段没有索引</li>
+<li>RR隔离级别，where字段有普通索引</li>
+<li>RR隔离级别，where字段有唯一索引</li>
+</ul>
+<p>以下演示的表结构是文章开头的结构，数据是我个人臆想的。</p>
+<h2 id="RR隔离级别-无索引"><a href="#RR隔离级别-无索引" class="headerlink" title="RR隔离级别+无索引"></a>RR隔离级别+无索引</h2><p><img src="https://pic3.zhimg.com/80/v2-0abf25325b62055568cd0abb51ed3ff6_1440w.jpg" alt="img"></p>
+<p><strong>上图所示，GAP锁加在c字段的(负无穷,0），(0，5），（5,10），(10,20），(20，正无穷）。但是在RR隔离级别下，我们都是默认是用next-key Lock（行锁+间隙锁），所以我们都是默认是左开右闭。</strong></p>
+<p>如上图所示，所有记录都加上了X锁，并且还加上了GAP锁。因此这张表在执行select * from test where c=5 for update期间还没有commit的话，除了不加锁的快照读，其他任何加锁的操作都会阻塞，如果这是在线上出现这种情况，将会是一件非常恐怖的事情。</p>
+<p>总结：<strong>RR隔离级别下，无索引的条件字段的当前读不仅会把每条记录都加上X锁，还会加上GAP锁。再次强调，当前读或者插入/更新/删除操作需要加上索引。</strong></p>
+<h2 id="RR隔离级别-普通索引"><a href="#RR隔离级别-普通索引" class="headerlink" title="RR隔离级别+普通索引"></a>RR隔离级别+普通索引</h2><p><img src="https://pic1.zhimg.com/80/v2-edd46b1b2e29bab7c4cc30ca9683bb8c_1440w.jpg" alt="img"></p>
+<p>如上图所示，普通索引字段b=10给两条记录加了X锁，并且把聚集索引树的两条记录也加了X锁。GAP锁的是b的范围(5,10)，(10,10)，(10,正无穷)。所以next-key Lock锁的是(5,10]，(10,10]，（10，正无穷]。期间只要是b在next-key Lock的范围内就更新全部阻塞。</p>
+<p>举例：insert into test values(6,6,6,6)就会被阻塞，原因就是RR隔离级别的间隙锁锁住了记录之间的“间隙”，所以会阻塞操作。</p>
+<h2 id="RR隔离级别-唯一索引"><a href="#RR隔离级别-唯一索引" class="headerlink" title="RR隔离级别+唯一索引"></a>RR隔离级别+唯一索引</h2><p>唯一索引的情况是最简单的，因为不管是RC隔离级别或者是RR隔离级别，唯一索引都只能查出一条记录，只会在对应的行记录加上X锁就没了。</p>
+<p>为什么会这样？</p>
+<p>因为GAP锁的目的是为了防止同一事务被连续两次当前读，然后两次读的情况不一致。如果能够保证字段是唯一的（唯一索引），其实就是最多只有一条记录满足条件，所以查询唯一索引的时候绝对不会出现GAP锁。</p>
+<p>可以理解为RR+唯一索引和RC+唯一索引的加锁情况是一样的就好了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>这次分享了RC隔离级别下出现幻读的情况，然后分析了为什么会出现幻读。</li>
+<li>InnoDB为了解决幻读，在RR下引入了GAP锁，和行锁组成next-key Lock</li>
+<li>分析了三种常见情况的加锁情况</li>
+</ul>
+<p><strong>特别注意：InnoDB引入的next-key Lock只解决了快照读的幻读，并没有解决当前读的幻读。</strong></p>
+<p>其实next-key Lock解决了快照读的幻读很大的一部分原因是因为undo log和MVCC，这里先留个悬念，关于MVCC的分享我会抽空写出来，并且分享出来。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>《MySQL实战45讲》林晓斌</li>
+<li>《MySQL加锁处理分析》何登成</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL锁</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL的行锁</title>
     <url>/2021/03/12/MySQL%E7%9A%84%E8%A1%8C%E9%94%81/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>自从过年值班就一直在公司读《 MySQL实战45讲》这本书，当时看完了MySQL的全局锁、表级锁还有行锁和间隙锁。其中的行锁和间隙锁迟迟无法理解，最近趁着有空再次阅读了一遍，并且对照了《深入浅出MySQL》，发现对MySQL锁的理解又上了一个台阶，今天就来分享一下MySQL的行锁。</p>

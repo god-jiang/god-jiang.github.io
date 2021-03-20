@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="基础排序,">
+  <meta name="keywords" content="MySQL锁,">
 
 
 
@@ -79,21 +79,22 @@
 
 
 
-<meta name="description" content="计数排序（百度百科） 计数排序是一个非基于比较的排序算法，该算法于1954年由 Harold H. Seward  提出。它的优势在于在对一定范围内的整数排序时，它的复杂度为Ο(n+k)（其中k是整数的范围），快于任何比较排序算法。 [1]   当然这是一种牺牲空间换取时间的做法，而且当O(k)&amp;gt;O(n*log(n))的时候其效率反而不如基于比较的排序（基于比较的排序的时间复杂度在理论上的下">
-<meta name="keywords" content="基础排序">
+<meta name="description" content="你好，我是god-jiang~ 接上篇的MySQL行锁，我分享了RC隔离级别下的各种常见情况的加锁分析。这次分享的是MySQL间隙锁，分析RR隔离级别下各种常见情况的加锁分析。">
+<meta name="keywords" content="MySQL锁">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计数排序">
-<meta property="og:url" content="https://god-jiang.github.io/2020/03/06/计数排序/index.html">
+<meta property="og:title" content="MySQL的间隙锁">
+<meta property="og:url" content="https://god-jiang.github.io/2021/03/20/MySQL的间隙锁/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="计数排序（百度百科） 计数排序是一个非基于比较的排序算法，该算法于1954年由 Harold H. Seward  提出。它的优势在于在对一定范围内的整数排序时，它的复杂度为Ο(n+k)（其中k是整数的范围），快于任何比较排序算法。 [1]   当然这是一种牺牲空间换取时间的做法，而且当O(k)&amp;gt;O(n*log(n))的时候其效率反而不如基于比较的排序（基于比较的排序的时间复杂度在理论上的下">
+<meta property="og:description" content="你好，我是god-jiang~ 接上篇的MySQL行锁，我分享了RC隔离级别下的各种常见情况的加锁分析。这次分享的是MySQL间隙锁，分析RR隔离级别下各种常见情况的加锁分析。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://pic1.zhimg.com/v2-827d96b8ca3682e8775f4916f22b45ac_b.webp">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-df64e7422e1dce874e910dcda9d8d710_720w.jpg">
-<meta property="og:updated_time" content="2020-03-06T12:30:32.000Z">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-e591415ab6b2c3693ec78ccd8729b51d_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-0abf25325b62055568cd0abb51ed3ff6_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-edd46b1b2e29bab7c4cc30ca9683bb8c_1440w.jpg">
+<meta property="og:updated_time" content="2021-03-20T09:44:32.786Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="计数排序">
-<meta name="twitter:description" content="计数排序（百度百科） 计数排序是一个非基于比较的排序算法，该算法于1954年由 Harold H. Seward  提出。它的优势在于在对一定范围内的整数排序时，它的复杂度为Ο(n+k)（其中k是整数的范围），快于任何比较排序算法。 [1]   当然这是一种牺牲空间换取时间的做法，而且当O(k)&amp;gt;O(n*log(n))的时候其效率反而不如基于比较的排序（基于比较的排序的时间复杂度在理论上的下">
-<meta name="twitter:image" content="https://pic1.zhimg.com/v2-827d96b8ca3682e8775f4916f22b45ac_b.webp">
+<meta name="twitter:title" content="MySQL的间隙锁">
+<meta name="twitter:description" content="你好，我是god-jiang~ 接上篇的MySQL行锁，我分享了RC隔离级别下的各种常见情况的加锁分析。这次分享的是MySQL间隙锁，分析RR隔离级别下各种常见情况的加锁分析。">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-e591415ab6b2c3693ec78ccd8729b51d_1440w.jpg">
 
 
 
@@ -123,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/2020/03/06/计数排序/">
+  <link rel="canonical" href="https://god-jiang.github.io/2021/03/20/MySQL的间隙锁/">
 
 
 
 
 
-  <title>计数排序 | god-jiang的git个人博客</title>
+  <title>MySQL的间隙锁 | god-jiang的git个人博客</title>
   
 
 
@@ -298,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2020/03/06/计数排序/">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2021/03/20/MySQL的间隙锁/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="god-jiang">
@@ -315,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">计数排序</h1>
+          <h1 class="post-title" itemprop="name headline">MySQL的间隙锁</h1>
         
 
         <div class="post-meta">
@@ -327,8 +328,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-06T20:15:38+08:00">
-                2020-03-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-20T17:43:18+08:00">
+                2021-03-20
               </time>
             
 
@@ -350,8 +351,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法积累ing/" itemprop="url" rel="index">
-                    <span itemprop="name">算法积累ing</span>
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
                   </a>
                 </span>
 
@@ -386,7 +387,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  597 字
+                  1.4k 字
                 </span>
               
 
@@ -402,7 +403,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  5 分钟
                 </span>
               
             </div>
@@ -423,25 +424,90 @@
       
 
       
-        <h2 id="计数排序（百度百科）"><a href="#计数排序（百度百科）" class="headerlink" title="计数排序（百度百科）"></a>计数排序（百度百科）</h2><blockquote>
-<p>计数排序是一个非基于比较的<a href="https://link.zhihu.com/?target=https%3A//baike.baidu.com/item/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/5399605" target="_blank" rel="noopener">排序算法</a>，该算法于1954年由 Harold H. Seward  提出。它的优势在于在对一定范围内的整数排序时，它的复杂度为Ο(n+k)（其中k是整数的范围），快于任何比较排序算法。 [1]   当然这是一种牺牲空间换取时间的做法，而且当O(k)&gt;O(n*log(n))的时候其效率反而不如基于比较的排序（基于比较的排序的时间复杂度在理论上的下限是O(n*log(n)), 如归并排序，堆排序）</p>
-</blockquote>
+        <p>你好，我是god-jiang~</p>
+<p>接上篇的MySQL行锁，我分享了RC隔离级别下的各种常见情况的加锁分析。这次分享的是MySQL间隙锁，分析RR隔离级别下各种常见情况的加锁分析。</p>
 <a id="more"></a>
-<h2 id="排序思路"><a href="#排序思路" class="headerlink" title="排序思路"></a>排序思路</h2><ol>
-<li>假设有N个数的数组Array，取值范围在（0~9）之间，所以初始化一个数组countArray大小为10（即最大值+1），然后全部初始化为0</li>
-<li>遍历Array数组填充countArray数组。就是把Array数组的值作为countArray数组的下标然后加1</li>
-<li>遍历countArray数组，把值按照顺序填回Array数组，最终输出结果即可</li>
-</ol>
-<h2 id="图示过程（菜鸟教程）"><a href="#图示过程（菜鸟教程）" class="headerlink" title="图示过程（菜鸟教程）"></a>图示过程（菜鸟教程）</h2><p><img src="https://pic1.zhimg.com/v2-827d96b8ca3682e8775f4916f22b45ac_b.webp" alt="img"></p>
-<h2 id="算法局限性"><a href="#算法局限性" class="headerlink" title="算法局限性"></a>算法局限性</h2><ul>
-<li>当数列中的元素不是整数的时候，不适合用计数排序</li>
-<li>当数列中的元素最大值和最小值差距过大时，不适合用计数排序</li>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="string">`test`</span>(</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`a`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`b`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`c`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span>(<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> unix_key(<span class="string">'a'</span>),</span><br><span class="line">  <span class="keyword">KEY</span> ix_key(<span class="string">`b`</span>)</span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">test</span> <span class="keyword">values</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>),(<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>),(<span class="number">10</span>,<span class="number">10</span>,<span class="number">10</span>,<span class="number">10</span>),(<span class="number">20</span>,<span class="number">20</span>,<span class="number">20</span>,<span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>创建一张test表，id是主键，a是唯一索引，b是普通索引，c是没有索引。</strong></p>
+<p>现在假设是在RC隔离级别下，我们来做一个实验看看：</p>
+<table>
+<thead>
+<tr>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>set session transaction_isolation=’READ-COMMITTED’;</td>
+<td>set session transation_isolation=’READ-COMMITTED’;</td>
+</tr>
+<tr>
+<td>begin;</td>
+<td></td>
+</tr>
+<tr>
+<td>select * from test where b=5 for update; 返回：(5,5,5,5)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>begin;</td>
+</tr>
+<tr>
+<td></td>
+<td>insert into test values(6,5,5,5);</td>
+</tr>
+<tr>
+<td></td>
+<td>commit;</td>
+</tr>
+<tr>
+<td>select * from test where b=5 for update; 返回：(5,5,5,5)，(6,5,5,5)</td>
+<td></td>
+</tr>
+<tr>
+<td>commit;</td>
+</tr>
+</tbody>
+</table>
+<p>由上面实验得出，在RC隔离级别下，事务A对b=5这一行记录加了X锁，但是事务B插入一条新的记录的b字段也是为5，然后在事务A中可以查出b=5有两条记录，这个就产生了“幻读”。</p>
+<p>也就是说，幻读是指一个事务前后两次查询同一范围的时候，后一次查询看到了前一次查询没有看到的行记录。</p>
+<p><strong>为什么会产生幻读呢？</strong></p>
+<p>我们来分析一下此时RC隔离级别+b普通索引的加锁情况：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-e591415ab6b2c3693ec78ccd8729b51d_1440w.jpg" alt="img"></p>
+<p>可以看到RC隔离级别下，b=5的记录加上了X锁，但是(0,5)还有(5,10)的间隙没有锁的情况，所以在这个间隙中可以插入新的数据。</p>
+<p>现在我就可以回答出为什么会产生幻读了。产生幻读的原因是，行锁只能锁住行，但是新插入记录的这个动作，要更新的是记录之间的“间隙”。因此，为了解决幻读的问题，InnoDB在RR隔离级别引入了新的锁，它就是间隙锁（Gap Lock）。</p>
+<p>上面讲了幻读怎么产生的，还有InnoDB引入间隙锁解决了幻读的情况，接下来分析一下RR隔离级别的加锁分析。</p>
+<h2 id="加锁分析（以下默认都是RR隔离级别并且都是当前读）"><a href="#加锁分析（以下默认都是RR隔离级别并且都是当前读）" class="headerlink" title="加锁分析（以下默认都是RR隔离级别并且都是当前读）"></a>加锁分析（以下默认都是RR隔离级别并且都是当前读）</h2><p>这里我挑选出RC隔离级别下三种常见情况分析SQL如何加锁：</p>
+<ul>
+<li>RR隔离级别，where字段没有索引</li>
+<li>RR隔离级别，where字段有普通索引</li>
+<li>RR隔离级别，where字段有唯一索引</li>
 </ul>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> sort;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020/3/6  19:36</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountSort</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] countSort(<span class="keyword">int</span>[] array) &#123;</span><br><span class="line">        <span class="comment">//求Array数组的最大值</span></span><br><span class="line">        <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (array[i] &gt; max) &#123;</span><br><span class="line">                max = array[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建一个长度为max+1的countArray数组</span></span><br><span class="line">        <span class="keyword">int</span>[] countArray = <span class="keyword">new</span> <span class="keyword">int</span>[max + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">//计数排序</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            countArray[array[i]]++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span>[] sortedArray = <span class="keyword">new</span> <span class="keyword">int</span>[array.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; countArray.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; countArray[i]; j++) &#123;</span><br><span class="line">                sortedArray[index++] = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sortedArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//主函数入口</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">6</span>&#125;;</span><br><span class="line">        <span class="keyword">int</span>[] sortedArray = countSort(array);</span><br><span class="line">        System.out.println(Arrays.toString(sortedArray));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="运行截图"><a href="#运行截图" class="headerlink" title="运行截图"></a>运行截图</h2><p><img src="https://pic1.zhimg.com/80/v2-df64e7422e1dce874e910dcda9d8d710_720w.jpg" alt="img"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><blockquote>
-<p>计数排序的时间复杂度可以做到O(N)，因为它的原理不是比较，而是计数。而通过比较达到排序效果的最快也要O(N*logN)。所以计数排序能达到线性排序的效果，但是这个算法有着局限性（max和min的差距不能过大；必须是整数）。</p>
-</blockquote>
+<p>以下演示的表结构是文章开头的结构，数据是我个人臆想的。</p>
+<h2 id="RR隔离级别-无索引"><a href="#RR隔离级别-无索引" class="headerlink" title="RR隔离级别+无索引"></a>RR隔离级别+无索引</h2><p><img src="https://pic3.zhimg.com/80/v2-0abf25325b62055568cd0abb51ed3ff6_1440w.jpg" alt="img"></p>
+<p><strong>上图所示，GAP锁加在c字段的(负无穷,0），(0，5），（5,10），(10,20），(20，正无穷）。但是在RR隔离级别下，我们都是默认是用next-key Lock（行锁+间隙锁），所以我们都是默认是左开右闭。</strong></p>
+<p>如上图所示，所有记录都加上了X锁，并且还加上了GAP锁。因此这张表在执行select * from test where c=5 for update期间还没有commit的话，除了不加锁的快照读，其他任何加锁的操作都会阻塞，如果这是在线上出现这种情况，将会是一件非常恐怖的事情。</p>
+<p>总结：<strong>RR隔离级别下，无索引的条件字段的当前读不仅会把每条记录都加上X锁，还会加上GAP锁。再次强调，当前读或者插入/更新/删除操作需要加上索引。</strong></p>
+<h2 id="RR隔离级别-普通索引"><a href="#RR隔离级别-普通索引" class="headerlink" title="RR隔离级别+普通索引"></a>RR隔离级别+普通索引</h2><p><img src="https://pic1.zhimg.com/80/v2-edd46b1b2e29bab7c4cc30ca9683bb8c_1440w.jpg" alt="img"></p>
+<p>如上图所示，普通索引字段b=10给两条记录加了X锁，并且把聚集索引树的两条记录也加了X锁。GAP锁的是b的范围(5,10)，(10,10)，(10,正无穷)。所以next-key Lock锁的是(5,10]，(10,10]，（10，正无穷]。期间只要是b在next-key Lock的范围内就更新全部阻塞。</p>
+<p>举例：insert into test values(6,6,6,6)就会被阻塞，原因就是RR隔离级别的间隙锁锁住了记录之间的“间隙”，所以会阻塞操作。</p>
+<h2 id="RR隔离级别-唯一索引"><a href="#RR隔离级别-唯一索引" class="headerlink" title="RR隔离级别+唯一索引"></a>RR隔离级别+唯一索引</h2><p>唯一索引的情况是最简单的，因为不管是RC隔离级别或者是RR隔离级别，唯一索引都只能查出一条记录，只会在对应的行记录加上X锁就没了。</p>
+<p>为什么会这样？</p>
+<p>因为GAP锁的目的是为了防止同一事务被连续两次当前读，然后两次读的情况不一致。如果能够保证字段是唯一的（唯一索引），其实就是最多只有一条记录满足条件，所以查询唯一索引的时候绝对不会出现GAP锁。</p>
+<p>可以理解为RR+唯一索引和RC+唯一索引的加锁情况是一样的就好了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>这次分享了RC隔离级别下出现幻读的情况，然后分析了为什么会出现幻读。</li>
+<li>InnoDB为了解决幻读，在RR下引入了GAP锁，和行锁组成next-key Lock</li>
+<li>分析了三种常见情况的加锁情况</li>
+</ul>
+<p><strong>特别注意：InnoDB引入的next-key Lock只解决了快照读的幻读，并没有解决当前读的幻读。</strong></p>
+<p>其实next-key Lock解决了快照读的幻读很大的一部分原因是因为undo log和MVCC，这里先留个悬念，关于MVCC的分享我会抽空写出来，并且分享出来。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>《MySQL实战45讲》林晓斌</li>
+<li>《MySQL加锁处理分析》何登成</li>
+</ul>
 
       
     </div>
@@ -469,12 +535,12 @@
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
 
-  <p><span>本文标题:</span>计数排序</p>
+  <p><span>本文标题:</span>MySQL的间隙锁</p>
   <p><span>文章作者:</span>god-jiang</p>
-  <p><span>发布时间:</span>2020年03月06日 - 20:15:38</p>
-  <p><span>最后更新:</span>2020年03月06日 - 20:30:32</p>
-  <p><span>原始链接:</span><a href="/2020/03/06/计数排序/" title="计数排序">https://god-jiang.github.io/2020/03/06/计数排序/</a>
-    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2020/03/06/计数排序/" aria-label="复制成功！"></i></span>
+  <p><span>发布时间:</span>2021年03月20日 - 17:43:18</p>
+  <p><span>最后更新:</span>2021年03月20日 - 17:44:32</p>
+  <p><span>原始链接:</span><a href="/2021/03/20/MySQL的间隙锁/" title="MySQL的间隙锁">https://god-jiang.github.io/2021/03/20/MySQL的间隙锁/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2021/03/20/MySQL的间隙锁/" aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
 </div>
@@ -532,7 +598,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/基础排序/" <i="" class="fa fa-tag"> 基础排序</a>
+            <a href="/tags/MySQL锁/" <i="" class="fa fa-tag"> MySQL锁</a>
           
         </div>
       
@@ -545,8 +611,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/27/基础排序（冒泡、选择、插入）/" rel="next" title="基础排序（冒泡、选择、插入）">
-                <i class="fa fa-chevron-left"></i> 基础排序（冒泡、选择、插入）
+              <a href="/2021/03/12/MySQL的行锁/" rel="next" title="MySQL的行锁">
+                <i class="fa fa-chevron-left"></i> MySQL的行锁
               </a>
             
           </div>
@@ -554,10 +620,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/07/桶排序/" rel="prev" title="桶排序">
-                桶排序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -710,7 +772,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#计数排序（百度百科）"><span class="nav-number">1.</span> <span class="nav-text">计数排序（百度百科）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序思路"><span class="nav-number">2.</span> <span class="nav-text">排序思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图示过程（菜鸟教程）"><span class="nav-number">3.</span> <span class="nav-text">图示过程（菜鸟教程）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法局限性"><span class="nav-number">4.</span> <span class="nav-text">算法局限性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">5.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行截图"><span class="nav-number">6.</span> <span class="nav-text">运行截图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#加锁分析（以下默认都是RR隔离级别并且都是当前读）"><span class="nav-number">1.</span> <span class="nav-text">加锁分析（以下默认都是RR隔离级别并且都是当前读）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RR隔离级别-无索引"><span class="nav-number">2.</span> <span class="nav-text">RR隔离级别+无索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RR隔离级别-普通索引"><span class="nav-number">3.</span> <span class="nav-text">RR隔离级别+普通索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RR隔离级别-唯一索引"><span class="nav-number">4.</span> <span class="nav-text">RR隔离级别+唯一索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>

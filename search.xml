@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>JVM核心参数图解</title>
+    <url>/2021/05/15/JVM%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0%E5%9B%BE%E8%A7%A3/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。</p>
+<a id="more"></a>
+<h2 id="JVM核心参数"><a href="#JVM核心参数" class="headerlink" title="JVM核心参数"></a>JVM核心参数</h2><p>在JVM里有几个比较核心的参数，今天就主要来讲这几个：</p>
+<p>-Xms：JVM初始堆内存大小<br>-Xmx：JVM堆内存的最大值<br>-Xmn：JVM中新生代大小<br>-XX:PermSize：永久代大小<br>-XX:MaxPermSize：永久代最大值<br>-Xss：JVM每个线程的大小</p>
+<p>下面我们就对上面列举的几个核心参数进行说明。</p>
+<h3 id="1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"><a href="#1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值" class="headerlink" title="1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"></a>1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值</h3><p>这两个参数主要作用就是限定JVM中堆内存的大小。<br><img src="https://img-blog.csdnimg.cn/20210515112604780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="2、-Xmn：表示JVM堆内存中新生代的大小"><a href="#2、-Xmn：表示JVM堆内存中新生代的大小" class="headerlink" title="2、-Xmn：表示JVM堆内存中新生代的大小"></a>2、-Xmn：表示JVM堆内存中新生代的大小</h3><p>一般设置完堆内存，然后用堆内存-新生代大小=老年代大小<br><img src="https://img-blog.csdnimg.cn/20210515112616344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值"><a href="#3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值" class="headerlink" title="3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值"></a>3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值</h3><p>如果在JDK8以后，永久代被元空间替代了，所以这两个参数变成了-XX:MetaspaceSize和-XX:MaxMetaspaceSize。这两个参数就是限定永久代的大小。<br><img src="https://img-blog.csdnimg.cn/20210515112625850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="4、-Xss：这个参数限定了JVM每个参数的大小"><a href="#4、-Xss：这个参数限定了JVM每个参数的大小" class="headerlink" title="4、-Xss：这个参数限定了JVM每个参数的大小"></a>4、-Xss：这个参数限定了JVM每个参数的大小</h3><p>每个线程都有自己一个虚拟机栈，每次执行一个方法，就会把方法的栈帧压入栈中，方法执行完，该栈帧就会从线程里的栈出栈<br><img src="https://img-blog.csdnimg.cn/202105151126359.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="启动系统的时候配置JVM参数"><a href="#启动系统的时候配置JVM参数" class="headerlink" title="启动系统的时候配置JVM参数"></a>启动系统的时候配置JVM参数</h2><p>在自己的编译器（以Idea举例）设置启动时JVM参数，可以加快Idea的编译速度</p>
+<p>在启动的main类选择==Edit Configurations==，然后在==VM options==配置JVM参数即可<br><img src="https://img-blog.csdnimg.cn/20210515112650272.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210515112657392.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>除了以上的方法外，还有第二种方法是打开==idea.vmoptions==修改配置信息，一般在idea的==Help==菜单下的==Edit Custom VM Options==<br><img src="https://img-blog.csdnimg.cn/20210515112708342.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>把编译器的堆内存改大就可以使编译速度提高（<strong>当然也不是绝对的，大部分情况下可以</strong>）</p>
+<h2 id="线上部署应用的时候如何指定JVM参数"><a href="#线上部署应用的时候如何指定JVM参数" class="headerlink" title="线上部署应用的时候如何指定JVM参数"></a>线上部署应用的时候如何指定JVM参数</h2><p>这个其实就很简单，举例采用”java -jar”的方式启动应用，可以采用以下的方式：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java -Xms512M -Xmx512M -Xmn256M -Xss1M -XX:PermSize=<span class="number">128</span>M -XX:MaxPermSize=<span class="number">128</span>M -jar test.jar</span><br></pre></td></tr></table></figure></p>
+<p>其他方式部署的也是可以配置启动参数，感兴趣可以自行了解。</p>
+<h2 id="最后分享"><a href="#最后分享" class="headerlink" title="最后分享"></a>最后分享</h2><p>分享了JVM的核心参数之后，最后想说一句，其实JVM参数该如何配置，应该是根据不同的业务具体的一些场景来决定的，而不是说有一个固定的配置模块，一切都要从业务场景出发。</p>
+]]></content>
+      <categories>
+        <category>Java进阶</category>
+      </categories>
+      <tags>
+        <tag>JVM参数</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM定位问题之jstack使用</title>
     <url>/2021/05/03/JVM%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98%E4%B9%8Bjstack%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>本人在刚开始接触企业级开发的时候，就曾经写过一段类似于死循环的代码。然后把这个代码发布到线上，Grafana显示该应用上线后CPU一直接近100%，于是在大佬的帮助下用jstack定位到问题并且解决了，所以总结一下jstack的使用吧。</p>

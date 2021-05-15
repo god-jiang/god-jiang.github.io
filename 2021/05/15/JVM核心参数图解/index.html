@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="JVM参数,">
 
 
 
@@ -79,16 +79,26 @@
 
 
 
-<meta name="description" content="一名热爱编程和算法的在校大学生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="god-jiang的git个人博客">
-<meta property="og:url" content="https://god-jiang.github.io/archives/2020/page/5/index.html">
+<meta name="description" content="前言作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。">
+<meta name="keywords" content="JVM参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM核心参数图解">
+<meta property="og:url" content="https://god-jiang.github.io/2021/05/15/JVM核心参数图解/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="一名热爱编程和算法的在校大学生">
+<meta property="og:description" content="前言作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112604780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112616344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112625850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/202105151126359.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112650272.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112657392.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112708342.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2021-05-15T03:29:26.057Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="god-jiang的git个人博客">
-<meta name="twitter:description" content="一名热爱编程和算法的在校大学生">
+<meta name="twitter:title" content="JVM核心参数图解">
+<meta name="twitter:description" content="前言作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210515112604780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
 
 
 
@@ -118,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/archives/2020/page/5/">
+  <link rel="canonical" href="https://god-jiang.github.io/2021/05/15/JVM核心参数图解/">
 
 
 
 
 
-  <title>归档 | god-jiang的git个人博客</title>
+  <title>JVM核心参数图解 | god-jiang的git个人博客</title>
   
 
 
@@ -143,7 +153,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -279,390 +289,294 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2021/05/15/JVM核心参数图解/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="god-jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="god-jiang的git个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
-         
+          <h1 class="post-title" itemprop="name headline">JVM核心参数图解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-15T11:17:26+08:00">
+                2021-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        好! 目前共计 77 篇日志。 继续努力。
-      </span>
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">Java进阶</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/24/N数之和求解/" itemprop="url">
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
               
-                <span itemprop="name">N数之和求解</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  713 字
+                </span>
               
-            </a>
-        
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-24T18:56:09+08:00" content="2020-01-24">
-          01-24
-        </time>
-      </div>
+              
+                <span class="post-meta-divider">|</span>
+              
 
-    </header>
-  </article>
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
 
+          
 
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/22/统计无序数组各元素出现的次数/" itemprop="url">
-              
-                <span itemprop="name">统计无序数组各元素出现的次数</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-22T17:49:20+08:00" content="2020-01-22">
-          01-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/22/python爬虫入门笔记/" itemprop="url">
-              
-                <span itemprop="name">python爬虫入门笔记</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-22T12:09:27+08:00" content="2020-01-22">
-          01-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。</p>
+<a id="more"></a>
+<h2 id="JVM核心参数"><a href="#JVM核心参数" class="headerlink" title="JVM核心参数"></a>JVM核心参数</h2><p>在JVM里有几个比较核心的参数，今天就主要来讲这几个：</p>
+<p>-Xms：JVM初始堆内存大小<br>-Xmx：JVM堆内存的最大值<br>-Xmn：JVM中新生代大小<br>-XX:PermSize：永久代大小<br>-XX:MaxPermSize：永久代最大值<br>-Xss：JVM每个线程的大小</p>
+<p>下面我们就对上面列举的几个核心参数进行说明。</p>
+<h3 id="1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"><a href="#1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值" class="headerlink" title="1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"></a>1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值</h3><p>这两个参数主要作用就是限定JVM中堆内存的大小。<br><img src="https://img-blog.csdnimg.cn/20210515112604780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="2、-Xmn：表示JVM堆内存中新生代的大小"><a href="#2、-Xmn：表示JVM堆内存中新生代的大小" class="headerlink" title="2、-Xmn：表示JVM堆内存中新生代的大小"></a>2、-Xmn：表示JVM堆内存中新生代的大小</h3><p>一般设置完堆内存，然后用堆内存-新生代大小=老年代大小<br><img src="https://img-blog.csdnimg.cn/20210515112616344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值"><a href="#3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值" class="headerlink" title="3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值"></a>3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值</h3><p>如果在JDK8以后，永久代被元空间替代了，所以这两个参数变成了-XX:MetaspaceSize和-XX:MaxMetaspaceSize。这两个参数就是限定永久代的大小。<br><img src="https://img-blog.csdnimg.cn/20210515112625850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="4、-Xss：这个参数限定了JVM每个参数的大小"><a href="#4、-Xss：这个参数限定了JVM每个参数的大小" class="headerlink" title="4、-Xss：这个参数限定了JVM每个参数的大小"></a>4、-Xss：这个参数限定了JVM每个参数的大小</h3><p>每个线程都有自己一个虚拟机栈，每次执行一个方法，就会把方法的栈帧压入栈中，方法执行完，该栈帧就会从线程里的栈出栈<br><img src="https://img-blog.csdnimg.cn/202105151126359.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="启动系统的时候配置JVM参数"><a href="#启动系统的时候配置JVM参数" class="headerlink" title="启动系统的时候配置JVM参数"></a>启动系统的时候配置JVM参数</h2><p>在自己的编译器（以Idea举例）设置启动时JVM参数，可以加快Idea的编译速度</p>
+<p>在启动的main类选择==Edit Configurations==，然后在==VM options==配置JVM参数即可<br><img src="https://img-blog.csdnimg.cn/20210515112650272.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210515112657392.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>除了以上的方法外，还有第二种方法是打开==idea.vmoptions==修改配置信息，一般在idea的==Help==菜单下的==Edit Custom VM Options==<br><img src="https://img-blog.csdnimg.cn/20210515112708342.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>把编译器的堆内存改大就可以使编译速度提高（<strong>当然也不是绝对的，大部分情况下可以</strong>）</p>
+<h2 id="线上部署应用的时候如何指定JVM参数"><a href="#线上部署应用的时候如何指定JVM参数" class="headerlink" title="线上部署应用的时候如何指定JVM参数"></a>线上部署应用的时候如何指定JVM参数</h2><p>这个其实就很简单，举例采用”java -jar”的方式启动应用，可以采用以下的方式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Xms512M -Xmx512M -Xmn256M -Xss1M -XX:PermSize=<span class="number">128</span>M -XX:MaxPermSize=<span class="number">128</span>M -jar test.jar</span><br></pre></td></tr></table></figure></p>
+<p>其他方式部署的也是可以配置启动参数，感兴趣可以自行了解。</p>
+<h2 id="最后分享"><a href="#最后分享" class="headerlink" title="最后分享"></a>最后分享</h2><p>分享了JVM的核心参数之后，最后想说一句，其实JVM参数该如何配置，应该是根据不同的业务具体的一些场景来决定的，而不是说有一个固定的配置模块，一切都要从业务场景出发。</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/21/链表中环的入口节点/" itemprop="url">
-              
-                <span itemprop="name">链表中环的入口节点</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-21T11:20:30+08:00" content="2020-01-21">
-          01-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/18/字符串的排列/" itemprop="url">
-              
-                <span itemprop="name">字符串的排列</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-18T21:38:40+08:00" content="2020-01-18">
-          01-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/17/顺时针打印矩阵/" itemprop="url">
-              
-                <span itemprop="name">顺时针打印矩阵</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-17T19:57:40+08:00" content="2020-01-17">
-          01-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/16/复杂链表的复制/" itemprop="url">
-              
-                <span itemprop="name">复杂链表的复制</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-16T19:37:19+08:00" content="2020-01-16">
-          01-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/11/神级算法——二分天下/" itemprop="url">
-              
-                <span itemprop="name">神级算法——二分天下</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-11T19:43:42+08:00" content="2020-01-11">
-          01-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/08/单调栈及其应用/" itemprop="url">
-              
-                <span itemprop="name">单调栈及其应用</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-08T20:17:16+08:00" content="2020-01-08">
-          01-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/06/栈-Stack-与队列-Queue/" itemprop="url">
-              
-                <span itemprop="name">栈(Stack)与队列(Queue)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-01-06T16:36:24+08:00" content="2020-01-06">
-          01-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+<div>
+    
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>JVM核心参数图解</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2021年05月15日 - 11:17:26</p>
+  <p><span>最后更新:</span>2021年05月15日 - 11:29:26</p>
+  <p><span>原始链接:</span><a href="/2021/05/15/JVM核心参数图解/" title="JVM核心参数图解">https://god-jiang.github.io/2021/05/15/JVM核心参数图解/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2021/05/15/JVM核心参数图解/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+
+    
+</div>
+
+    
+
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div><font color="red"><b>创作不易，您的支持就是我坚持的动力，谢谢大家！</b></font></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="god-jiang 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM参数/" <i="" class="fa fa-tag"> JVM参数</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/03/JVM定位问题之jstack使用/" rel="next" title="JVM定位问题之jstack使用">
+                <i class="fa fa-chevron-left"></i> JVM定位问题之jstack使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2020/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/2020/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2020/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/archives/2020/page/6/">6</a><a class="extend next" rel="next" href="/archives/2020/page/6/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -670,6 +584,13 @@
 
 
           
+
+  
+   <div id="gitalk-container"></div>
+ 
+  
+
+
 
         </div>
         
@@ -690,8 +611,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -769,6 +699,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM核心参数"><span class="nav-number">2.</span> <span class="nav-text">JVM核心参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"><span class="nav-number">2.1.</span> <span class="nav-text">1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、-Xmn：表示JVM堆内存中新生代的大小"><span class="nav-number">2.2.</span> <span class="nav-text">2、-Xmn：表示JVM堆内存中新生代的大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值"><span class="nav-number">2.3.</span> <span class="nav-text">3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、-Xss：这个参数限定了JVM每个参数的大小"><span class="nav-number">2.4.</span> <span class="nav-text">4、-Xss：这个参数限定了JVM每个参数的大小</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动系统的时候配置JVM参数"><span class="nav-number">3.</span> <span class="nav-text">启动系统的时候配置JVM参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线上部署应用的时候如何指定JVM参数"><span class="nav-number">4.</span> <span class="nav-text">线上部署应用的时候如何指定JVM参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后分享"><span class="nav-number">5.</span> <span class="nav-text">最后分享</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -936,6 +882,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -976,6 +926,21 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'deedada779a5390ef257',
+          clientSecret: 'e4038303bdb44d9de883f9e3a5940223b19a02d2',
+          repo: 'god-jiang.github.io',
+          owner: 'god-jiang',
+          admin: ['god-jiang'],
+          id: decodeURI(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
   
 

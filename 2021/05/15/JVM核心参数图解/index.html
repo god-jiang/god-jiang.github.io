@@ -94,7 +94,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112650272.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112657392.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20210515112708342.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2021-05-15T03:29:26.057Z">
+<meta property="og:updated_time" content="2021-05-15T03:36:35.162Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM核心参数图解">
 <meta name="twitter:description" content="前言作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。">
@@ -391,7 +391,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  713 字
+                  781 字
                 </span>
               
 
@@ -435,7 +435,9 @@
 <p>下面我们就对上面列举的几个核心参数进行说明。</p>
 <h3 id="1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"><a href="#1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值" class="headerlink" title="1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值"></a>1、-Xms和-Xmx分别表示JVM初始堆内存大小和堆内存最大值</h3><p>这两个参数主要作用就是限定JVM中堆内存的大小。<br><img src="https://img-blog.csdnimg.cn/20210515112604780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <h3 id="2、-Xmn：表示JVM堆内存中新生代的大小"><a href="#2、-Xmn：表示JVM堆内存中新生代的大小" class="headerlink" title="2、-Xmn：表示JVM堆内存中新生代的大小"></a>2、-Xmn：表示JVM堆内存中新生代的大小</h3><p>一般设置完堆内存，然后用堆内存-新生代大小=老年代大小<br><img src="https://img-blog.csdnimg.cn/20210515112616344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h3 id="3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值"><a href="#3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值" class="headerlink" title="3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值"></a>3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值</h3><p>如果在JDK8以后，永久代被元空间替代了，所以这两个参数变成了-XX:MetaspaceSize和-XX:MaxMetaspaceSize。这两个参数就是限定永久代的大小。<br><img src="https://img-blog.csdnimg.cn/20210515112625850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值"><a href="#3、-XX-PermSize和-XX-MaxPermSize，分别代表永久代的大小和永久代的最大值" class="headerlink" title="3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值"></a>3、-XX:PermSize和-XX:MaxPermSize，分别代表永久代的大小和永久代的最大值</h3><p>如果在JDK8以后，永久代被元空间替代了，所以这两个参数变成了-XX:MetaspaceSize和-XX:MaxMetaspaceSize。这两个参数就是限定永久代的大小。</p>
+<p>实际用元空间代替永久代可以避免OOM，因为元空间用的是本地内存，不同于永久代是有上限的。更深层的原因是要合并HotSpot和JRockit，然后JRockit没有永久代，所以就使用了元空间。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210515112625850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <h3 id="4、-Xss：这个参数限定了JVM每个参数的大小"><a href="#4、-Xss：这个参数限定了JVM每个参数的大小" class="headerlink" title="4、-Xss：这个参数限定了JVM每个参数的大小"></a>4、-Xss：这个参数限定了JVM每个参数的大小</h3><p>每个线程都有自己一个虚拟机栈，每次执行一个方法，就会把方法的栈帧压入栈中，方法执行完，该栈帧就会从线程里的栈出栈<br><img src="https://img-blog.csdnimg.cn/202105151126359.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <h2 id="启动系统的时候配置JVM参数"><a href="#启动系统的时候配置JVM参数" class="headerlink" title="启动系统的时候配置JVM参数"></a>启动系统的时候配置JVM参数</h2><p>在自己的编译器（以Idea举例）设置启动时JVM参数，可以加快Idea的编译速度</p>
 <p>在启动的main类选择==Edit Configurations==，然后在==VM options==配置JVM参数即可<br><img src="https://img-blog.csdnimg.cn/20210515112650272.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
@@ -475,7 +477,7 @@
   <p><span>本文标题:</span>JVM核心参数图解</p>
   <p><span>文章作者:</span>god-jiang</p>
   <p><span>发布时间:</span>2021年05月15日 - 11:17:26</p>
-  <p><span>最后更新:</span>2021年05月15日 - 11:29:26</p>
+  <p><span>最后更新:</span>2021年05月15日 - 11:36:35</p>
   <p><span>原始链接:</span><a href="/2021/05/15/JVM核心参数图解/" title="JVM核心参数图解">https://god-jiang.github.io/2021/05/15/JVM核心参数图解/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2021/05/15/JVM核心参数图解/" aria-label="复制成功！"></i></span>
   </p>
@@ -754,7 +756,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共 81.7k 字</span>
+  <span class="post-count">全站共 81.8k 字</span>
 </div>
 
         

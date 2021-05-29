@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="JVM类加载,">
 
 
 
@@ -79,16 +79,23 @@
 
 
 
-<meta name="description" content="一名热爱编程和算法的在校大学生">
-<meta property="og:type" content="website">
-<meta property="og:title" content="god-jiang的git个人博客">
-<meta property="og:url" content="https://god-jiang.github.io/categories/Java基础/index.html">
+<meta name="description" content="前言近来读了《深入理解JVM虚拟机》的部分内容，对JVM也慢慢有个整体的认识，今天就来分享一下我对JVM类加载过程的学习和理解。">
+<meta name="keywords" content="JVM类加载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM的类加载过程">
+<meta property="og:url" content="https://god-jiang.github.io/2021/05/29/JVM的类加载过程/index.html">
 <meta property="og:site_name" content="god-jiang的git个人博客">
-<meta property="og:description" content="一名热爱编程和算法的在校大学生">
+<meta property="og:description" content="前言近来读了《深入理解JVM虚拟机》的部分内容，对JVM也慢慢有个整体的认识，今天就来分享一下我对JVM类加载过程的学习和理解。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210529161221629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2021052916142788.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210529161458874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210529161530422.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2021-05-29T08:17:31.951Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="god-jiang的git个人博客">
-<meta name="twitter:description" content="一名热爱编程和算法的在校大学生">
+<meta name="twitter:title" content="JVM的类加载过程">
+<meta name="twitter:description" content="前言近来读了《深入理解JVM虚拟机》的部分内容，对JVM也慢慢有个整体的认识，今天就来分享一下我对JVM类加载过程的学习和理解。">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210529161221629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70">
 
 
 
@@ -118,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://god-jiang.github.io/categories/Java基础/">
+  <link rel="canonical" href="https://god-jiang.github.io/2021/05/29/JVM的类加载过程/">
 
 
 
 
 
-  <title>分类: Java基础 | god-jiang的git个人博客</title>
+  <title>JVM的类加载过程 | god-jiang的git个人博客</title>
   
 
 
@@ -143,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -279,105 +286,306 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block category">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Java基础<small>分类</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://god-jiang.github.io/2021/05/29/JVM的类加载过程/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="god-jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="god-jiang的git个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2021/01/03/Java反射机制/" itemprop="url">
-              
-                <span itemprop="name">Java反射机制</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">JVM的类加载过程</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2021-01-03T22:18:37+08:00" content="2021-01-03">
-          01-03
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-29T16:09:31+08:00">
+                2021-05-29
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">Java进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.4k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/12/27/Java之自定义注解/" itemprop="url">
-              
-                <span itemprop="name">Java之自定义注解</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-12-27T22:35:36+08:00" content="2020-12-27">
-          12-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/10/08/JVM必会Java-GC，助你过五关斩六将/" itemprop="url">
-              
-                <span itemprop="name">JVM必会Java GC，助你过五关斩六将</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-10-08T22:51:28+08:00" content="2020-10-08">
-          10-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近来读了《深入理解JVM虚拟机》的部分内容，对JVM也慢慢有个整体的认识，今天就来分享一下我对JVM类加载过程的学习和理解。</p>
+<a id="more"></a>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>我们平时写的Java写代码一般都是.java文件，编译成为.class字节码文件，然后类加载器把.class文件加载到JVM内存中，接下来JVM就执行我们的字节码文件，整个过程就是这样。</p>
+<p>画个图方便大家好理解：<br><img src="https://img-blog.csdnimg.cn/20210529161221629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>类加载过程其实非常琐碎且复杂，但是我们只要把握其中的核心工作原理即可</p>
+<p>一个类从加载到使用会经历以下步骤：</p>
+<p><strong>加载-〉验证-〉准备-〉解析-〉初始化-〉使用-〉卸载</strong></p>
+<p>以以下ClassLoadDemo类代码举例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/5/29</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoadDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">666</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ReplicaManager replicaManager = <span class="keyword">new</span> ReplicaManager();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><p>那么什么时候会加载一个类呢？答案很简单，当你使用到这个类的时候JVM就会去加载。示例代码main函数是入口，会加载ClassLoadDemo.class字节码，又因为main函数使用了ReplicaManager.class，所以继续加载。<br><img src="https://img-blog.csdnimg.cn/2021052916142788.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>验证这一步，是根据JVM规范，来校验你加载进来的.class文件的内容是否符合规范。当你的.class文件被人恶意修改了，字节码不符合JVM规范，那么JVM是没法执行这个字节码的。所以.class被加载到内存中需要验证，通过了之后才能交给JVM来运行</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备这一步，就是给你的class中的类分配一定的内存空间，比如ClassLoadDemo类，就会给它分配内存空间，然后给它里面的static变量分配内存空间，给一个默认的初始值。</p>
+<p><strong>PS：int的默认值为0，boolean的默认值是false，引用类型的默认值为null，以此类推。</strong></p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析这一步，实际上就是把符号引用替换为直接引用的过程。这一部分涉及JVM底层，有点复杂，所以不再深究。</p>
+<p>以上三步，就核心就是“准备阶段”。因为这个阶段是给加载进来的类分配好了内存空间，类变量也分配了内存空间，并且给了默认的初始值，这个概念，大家心里一定要有。</p>
+<h2 id="核心阶段：初始化"><a href="#核心阶段：初始化" class="headerlink" title="核心阶段：初始化"></a>核心阶段：初始化</h2><p>上面讲过准备阶段会给类变量分配一个内存空间，然后给初始值。但是赋值这一段逻辑在哪里执行呢？答案就是在初始化阶段。</p>
+<p><strong>以上的示例代码ClassLoadDemo.class的count变量在准备阶段就是给一个默认值0，但是到了初始化就会赋值为666。</strong></p>
+<p>知道了类的加载过程，那么什么时候初始化一个类呢？这里有一个非常重要的规则，就是如果初始化一个类，发现他的父类还没初始化，那么必须先初始化他的父类。</p>
+<p>到这里大家应该对类加载的整个过程都有一定的了解，我再根据以上内容画一个张图方便理解。<br><img src="https://img-blog.csdnimg.cn/20210529161458874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>现在相信大家已经搞明白了整个类加载从触发时机到初始化的过程了，那么还有一个重要的知识点是类加载器，接着分享。</p>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>JVM的类加载器主要有四种，Bootstrap ClassLoader、Extension ClassLoader、Application ClassLoader，还有一个是自定义类加载器。接下来我来介绍一下他们。</p>
+<h3 id="启动类加载器"><a href="#启动类加载器" class="headerlink" title="启动类加载器"></a>启动类加载器</h3><p>Bootstrap ClassLoader主要负责加载我们在电脑上安装的Java目录下的核心类。比如我们安装的JDK下就有一个lib目录，里面放着Java最核心的类，支持着Java系统的运行。</p>
+<h3 id="扩展类加载器"><a href="#扩展类加载器" class="headerlink" title="扩展类加载器"></a>扩展类加载器</h3><p>Extension ClassLoader也是类似的，在我们安装的JDK中有一个lib/ext目录，这里面有一些类就是需要使用这个类加载器加载，支持你的Java系统运行。</p>
+<h3 id="应用程序类加载器"><a href="#应用程序类加载器" class="headerlink" title="应用程序类加载器"></a>应用程序类加载器</h3><p>Application ClassLoader负责去加载ClassPath环境变量所指定的类，其实可以大概理解为加载你写好的Java代码，然后这个类加载器帮我们把写好的代码加载到内存中运行。</p>
+<h3 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h3><p>除了以上的三种类加载器，我们还可以自定义类加载器，根据自己的需求加载类。</p>
+<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><p>JVM的类加载器是有亲子层级结构，启动类加载器是处于最上层的，扩展类加载器在第二层，第三层是应用程序类加载器，最后一层是自定义加载器。<br><img src="https://img-blog.csdnimg.cn/20210529161530422.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>双亲委派机制说的是，假设你的应用程序需要加载一个类，它会首先委派给自己的父类加载器去加载，最后到Bootstrap ClassLoader加载器。</p>
+<p>如果最上层的类加载器加载不了，他就会下推权利给下面的类加载去加载，一层层下来。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天分享了类加载过程还有类加载器的相关知识，主要以我的学习理解还有图来更加直观的理解这个知识点。</p>
+<p>希望以上的内容对你们有所帮助。</p>
 
       
     </div>
+    
+    
+    
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
 
+  
+</div>
+<div>
+    
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+
+  <p><span>本文标题:</span>JVM的类加载过程</p>
+  <p><span>文章作者:</span>god-jiang</p>
+  <p><span>发布时间:</span>2021年05月29日 - 16:09:31</p>
+  <p><span>最后更新:</span>2021年05月29日 - 16:17:31</p>
+  <p><span>原始链接:</span><a href="/2021/05/29/JVM的类加载过程/" title="JVM的类加载过程">https://god-jiang.github.io/2021/05/29/JVM的类加载过程/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://god-jiang.github.io/2021/05/29/JVM的类加载过程/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+
+    
+</div>
+
+    
+
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div><font color="red"><b>创作不易，您的支持就是我坚持的动力，谢谢大家！</b></font></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="god-jiang 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM类加载/" <i="" class="fa fa-tag"> JVM类加载</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/15/JVM核心参数图解/" rel="next" title="JVM核心参数图解">
+                <i class="fa fa-chevron-left"></i> JVM核心参数图解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -385,6 +593,13 @@
 
 
           
+
+  
+   <div id="gitalk-container"></div>
+ 
+  
+
+
 
         </div>
         
@@ -405,8 +620,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -484,6 +708,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">2.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载"><span class="nav-number">3.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证"><span class="nav-number">4.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">5.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析"><span class="nav-number">6.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心阶段：初始化"><span class="nav-number">7.</span> <span class="nav-text">核心阶段：初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器"><span class="nav-number">8.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动类加载器"><span class="nav-number">8.1.</span> <span class="nav-text">启动类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展类加载器"><span class="nav-number">8.2.</span> <span class="nav-text">扩展类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用程序类加载器"><span class="nav-number">8.3.</span> <span class="nav-text">应用程序类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义类加载器"><span class="nav-number">8.4.</span> <span class="nav-text">自定义类加载器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双亲委派机制"><span class="nav-number">9.</span> <span class="nav-text">双亲委派机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -651,6 +891,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -691,6 +935,21 @@
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'deedada779a5390ef257',
+          clientSecret: 'e4038303bdb44d9de883f9e3a5940223b19a02d2',
+          repo: 'god-jiang.github.io',
+          owner: 'god-jiang',
+          admin: ['god-jiang'],
+          id: decodeURI(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
   
 

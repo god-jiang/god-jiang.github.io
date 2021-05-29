@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>JVM的类加载过程</title>
+    <url>/2021/05/29/JVM%E7%9A%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近来读了《深入理解JVM虚拟机》的部分内容，对JVM也慢慢有个整体的认识，今天就来分享一下我对JVM类加载过程的学习和理解。</p>
+<a id="more"></a>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>我们平时写的Java写代码一般都是.java文件，编译成为.class字节码文件，然后类加载器把.class文件加载到JVM内存中，接下来JVM就执行我们的字节码文件，整个过程就是这样。</p>
+<p>画个图方便大家好理解：<br><img src="https://img-blog.csdnimg.cn/20210529161221629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>类加载过程其实非常琐碎且复杂，但是我们只要把握其中的核心工作原理即可</p>
+<p>一个类从加载到使用会经历以下步骤：</p>
+<p><strong>加载-〉验证-〉准备-〉解析-〉初始化-〉使用-〉卸载</strong></p>
+<p>以以下ClassLoadDemo类代码举例：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> god-jiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/5/29</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoadDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">666</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ReplicaManager replicaManager = <span class="keyword">new</span> ReplicaManager();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><p>那么什么时候会加载一个类呢？答案很简单，当你使用到这个类的时候JVM就会去加载。示例代码main函数是入口，会加载ClassLoadDemo.class字节码，又因为main函数使用了ReplicaManager.class，所以继续加载。<br><img src="https://img-blog.csdnimg.cn/2021052916142788.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>验证这一步，是根据JVM规范，来校验你加载进来的.class文件的内容是否符合规范。当你的.class文件被人恶意修改了，字节码不符合JVM规范，那么JVM是没法执行这个字节码的。所以.class被加载到内存中需要验证，通过了之后才能交给JVM来运行</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备这一步，就是给你的class中的类分配一定的内存空间，比如ClassLoadDemo类，就会给它分配内存空间，然后给它里面的static变量分配内存空间，给一个默认的初始值。</p>
+<p><strong>PS：int的默认值为0，boolean的默认值是false，引用类型的默认值为null，以此类推。</strong></p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析这一步，实际上就是把符号引用替换为直接引用的过程。这一部分涉及JVM底层，有点复杂，所以不再深究。</p>
+<p>以上三步，就核心就是“准备阶段”。因为这个阶段是给加载进来的类分配好了内存空间，类变量也分配了内存空间，并且给了默认的初始值，这个概念，大家心里一定要有。</p>
+<h2 id="核心阶段：初始化"><a href="#核心阶段：初始化" class="headerlink" title="核心阶段：初始化"></a>核心阶段：初始化</h2><p>上面讲过准备阶段会给类变量分配一个内存空间，然后给初始值。但是赋值这一段逻辑在哪里执行呢？答案就是在初始化阶段。</p>
+<p><strong>以上的示例代码ClassLoadDemo.class的count变量在准备阶段就是给一个默认值0，但是到了初始化就会赋值为666。</strong></p>
+<p>知道了类的加载过程，那么什么时候初始化一个类呢？这里有一个非常重要的规则，就是如果初始化一个类，发现他的父类还没初始化，那么必须先初始化他的父类。</p>
+<p>到这里大家应该对类加载的整个过程都有一定的了解，我再根据以上内容画一个张图方便理解。<br><img src="https://img-blog.csdnimg.cn/20210529161458874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>现在相信大家已经搞明白了整个类加载从触发时机到初始化的过程了，那么还有一个重要的知识点是类加载器，接着分享。</p>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>JVM的类加载器主要有四种，Bootstrap ClassLoader、Extension ClassLoader、Application ClassLoader，还有一个是自定义类加载器。接下来我来介绍一下他们。</p>
+<h3 id="启动类加载器"><a href="#启动类加载器" class="headerlink" title="启动类加载器"></a>启动类加载器</h3><p>Bootstrap ClassLoader主要负责加载我们在电脑上安装的Java目录下的核心类。比如我们安装的JDK下就有一个lib目录，里面放着Java最核心的类，支持着Java系统的运行。</p>
+<h3 id="扩展类加载器"><a href="#扩展类加载器" class="headerlink" title="扩展类加载器"></a>扩展类加载器</h3><p>Extension ClassLoader也是类似的，在我们安装的JDK中有一个lib/ext目录，这里面有一些类就是需要使用这个类加载器加载，支持你的Java系统运行。</p>
+<h3 id="应用程序类加载器"><a href="#应用程序类加载器" class="headerlink" title="应用程序类加载器"></a>应用程序类加载器</h3><p>Application ClassLoader负责去加载ClassPath环境变量所指定的类，其实可以大概理解为加载你写好的Java代码，然后这个类加载器帮我们把写好的代码加载到内存中运行。</p>
+<h3 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h3><p>除了以上的三种类加载器，我们还可以自定义类加载器，根据自己的需求加载类。</p>
+<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><p>JVM的类加载器是有亲子层级结构，启动类加载器是处于最上层的，扩展类加载器在第二层，第三层是应用程序类加载器，最后一层是自定义加载器。<br><img src="https://img-blog.csdnimg.cn/20210529161530422.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>双亲委派机制说的是，假设你的应用程序需要加载一个类，它会首先委派给自己的父类加载器去加载，最后到Bootstrap ClassLoader加载器。</p>
+<p>如果最上层的类加载器加载不了，他就会下推权利给下面的类加载去加载，一层层下来。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天分享了类加载过程还有类加载器的相关知识，主要以我的学习理解还有图来更加直观的理解这个知识点。</p>
+<p>希望以上的内容对你们有所帮助。</p>
+]]></content>
+      <categories>
+        <category>Java进阶</category>
+      </categories>
+      <tags>
+        <tag>JVM类加载</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM核心参数图解</title>
     <url>/2021/05/15/JVM%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0%E5%9B%BE%E8%A7%A3/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为一名Java开发工程师，基本上都要接触到JVM，实际开发中也许也会遇到JVM的相关问题，面试中肯定也会问到JVM的相关知识。所以今天这篇主要分享JVM的各个参数所代表的意思并且通过图解的方式帮助读者更加好理解。</p>

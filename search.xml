@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>阿里云日志配置告警</title>
+    <url>/2021/06/12/%E9%98%BF%E9%87%8C%E4%BA%91%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE%E5%91%8A%E8%AD%A6/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我所在的公司目前用的是ELK日志查询，但是用ELK都是出了问题我们开发人员上去查询对应的报错日志最后解决问题。但是出了问题我们开发人员要怎么知道的，只能通过业务人员反馈才能知道。所以我们后面就把日志服务迁移到阿里云日志服务上，可以查询、分析日志也可以配置相对应的告警功能。</p>
+<a id="more"></a>
+<h2 id="配置告警功能"><a href="#配置告警功能" class="headerlink" title="配置告警功能"></a>配置告警功能</h2><h3 id="一、创建用户和用户组"><a href="#一、创建用户和用户组" class="headerlink" title="一、创建用户和用户组"></a>一、创建用户和用户组</h3><p>用户和用户组的作用是告警通知的对象，下面是创建步骤。</p>
+<ol>
+<li>登录阿里云，选择<strong>日志服务</strong></li>
+<li>在Project区域中选择你想要配置的目标Project</li>
+<li>在左侧导航栏中选择<strong>告警</strong></li>
+<li>打开<strong>告警中心</strong>，选择<strong>告警管理</strong>&gt;<strong>用户管理</strong><br><img src="https://img-blog.csdnimg.cn/20210612124831564.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+</ol>
+<p>点击用户管理，开始创建用户：<br><img src="https://img-blog.csdnimg.cn/20210612124901249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>创建完用户之后，我们开始创建用户组，然后把用户添加到用户组内。<br><img src="https://img-blog.csdnimg.cn/2021061212491147.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="二、配置日志告警信息"><a href="#二、配置日志告警信息" class="headerlink" title="二、配置日志告警信息"></a>二、配置日志告警信息</h3><ol>
+<li>选择<strong>日志存储</strong>，在日志库中选择目标Logstore</li>
+<li>在页面右上角选择<strong>另存为告警</strong>&gt;<strong>新版告警（公测中）</strong><br><img src="https://img-blog.csdnimg.cn/20210612124926326.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+</ol>
+<p>在告警规则面板配置相对应的信息，然后点击确定</p>
+<p><img src="https://img-blog.csdnimg.cn/20210612124951941.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20210612124959902.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="三、查看告警触发记录"><a href="#三、查看告警触发记录" class="headerlink" title="三、查看告警触发记录"></a>三、查看告警触发记录</h3><ol>
+<li>在<strong>告警中心</strong>页面，选择<strong>告警管理</strong>&gt;<strong>监控规则中心</strong></li>
+<li>在<strong>告警监控规则最新评估状态</strong>区域，查看已执行的告警监控规则</li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/20210612125035328.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210612125043717.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>以上就是阿里云日志服务的告警配置过程，我演示的是告警到手机，正常应该是告警到相对应的群，然后@所有人。</p>
+<p><strong>PS：告警配置信息演示的是最简单的，正常配置告警信息都是要结合正则表达式和SQL分析一起做才能达到一个更佳的效果。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以前就用习惯ELK，这次迁移到阿里云日志服务，多少还是有点懵。还好阿里云有相关的文档可以供我学习，最后一步步搭建起来。写这篇的目的只是记录一下我的踩坑之路，作为笔记，方便以后遇到类似的问题可以查看。</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="https://help.aliyun.com/document_detail/209951.html?spm=a2c4g.11186623.6.1120.4d99f96fDyy3FI" target="_blank" rel="noopener">官方参考文档：阿里云日志服务</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>日志监控</category>
+      </categories>
+      <tags>
+        <tag>阿里云日志服务</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM的类加载过程</title>
     <url>/2021/05/29/JVM%E7%9A%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近来读了《深入理解JVM虚拟机》的部分内容，对JVM也慢慢有个整体的认识，今天就来分享一下我对JVM类加载过程的学习和理解。</p>

@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>阿里云oss图片上传</title>
+    <url>/2021/06/19/%E9%98%BF%E9%87%8C%E4%BA%91oss%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>上周接到一个新的需求，要在客户端上报图片信息，以前是存在七牛上，现在要全部转到阿里云的oss上，然后那周基本都在啃阿里云的官方文档，最后完成了这个需求，现在来分享一下Java开发的SpringBoot项目怎么引入oss并且使用还有我的踩坑经历。</p>
+<a id="more"></a>
+<h2 id="阿里云oss使用"><a href="#阿里云oss使用" class="headerlink" title="阿里云oss使用"></a>阿里云oss使用</h2><h3 id="1、先引入maven依赖"><a href="#1、先引入maven依赖" class="headerlink" title="1、先引入maven依赖"></a>1、先引入maven依赖</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.aliyun.oss&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;aliyun-sdk-oss&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.4.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="2、编写配置类获取ossClient对象"><a href="#2、编写配置类获取ossClient对象" class="headerlink" title="2、编写配置类获取ossClient对象"></a>2、编写配置类获取ossClient对象</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;aliyun.oss.endpoint&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String endpoint;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;aliyun.accessKeyId&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String accessKeyId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;aliyun.accessKeySecret&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String accessKeySecret;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> OSSClient <span class="title">ossClient</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> OSSClient(endpoint, accessKeyId, accessKeySecret);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>endpoint：你的endpoint，在阿里云oss控制台可以看到<br>accessKeyId：你的AccessKey，创建bucketName就可以看到<br>accessKeySecret：你的SecretKey，创建bucketName就可以看到</p>
+<h3 id="3、编写上传图片的代码"><a href="#3、编写上传图片的代码" class="headerlink" title="3、编写上传图片的代码"></a>3、编写上传图片的代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;aliyun.oss.bucketName&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String bucketName;</span><br><span class="line"></span><br><span class="line"><span class="comment">// urlPrefix: http://bucketName.endpoint/，bucketName喝endpoint在阿里云oss控制台都可以看到</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;aliyun.oss.urlPrefix&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String urlPrefix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] IMAGE_TYPE = <span class="keyword">new</span> String[]&#123;<span class="string">".jpg"</span>, <span class="string">".jpeg"</span>, <span class="string">".png"</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(FeedbackRequest data)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 阿里云oss图片上传</span></span><br><span class="line">    <span class="keyword">if</span> (data.getFeedbackImgs() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!data.getFeedbackImgs().isEmpty()) &#123;</span><br><span class="line">            String fileName = data.getFeedbackImgs().getOriginalFilename();</span><br><span class="line">            String filePath = <span class="keyword">this</span>.getFilePath(fileName);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">boolean</span> isImage = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">for</span> (String type : IMAGE_TYPE) &#123;</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.endsWithIgnoreCase(fileName, type)) &#123;</span><br><span class="line">                    isImage = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!isImage) &#123;</span><br><span class="line">                <span class="comment">//格式错误</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"格式错误，必须是图片格式"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                ossClient.putObject(bucketName, filePath, <span class="keyword">new</span> ByteArrayInputStream(data.getFeedbackImgs().getBytes()));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">                log.error(<span class="string">"阿里云oss出错"</span>, ex);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4、上传完到服务器查看图片"><a href="#4、上传完到服务器查看图片" class="headerlink" title="4、上传完到服务器查看图片"></a>4、上传完到服务器查看图片</h3><p>用阿里云oss提供的OSS浏览器，然后根据AccessKey和SecretKey就可以登陆上去查看图片信息<br><img src="https://img-blog.csdnimg.cn/20210619203729428.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzY4NjQxNQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="踩坑提示"><a href="#踩坑提示" class="headerlink" title="踩坑提示"></a>踩坑提示</h3><p>上传完图片会生成一个url链接，直接浏览器访问会报“You have no right to access this object because of bucket acl.”，这个是因为创建bucketName的时候RAM访问控制选择为公共读即可解决。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上就是上周经历的一次阿里云oss图片上传的经历，我已经把业务逻辑全部过滤掉，只剩下阿里云oss的主要代码和流程。在这里主要就是记录我工作上遇到的一些问题的一些记录，希望对你们有所帮助。</p>
+]]></content>
+      <categories>
+        <category>阿里云</category>
+      </categories>
+      <tags>
+        <tag>oss图片上传</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>阿里云日志配置告警</title>
     <url>/2021/06/12/%E9%98%BF%E9%87%8C%E4%BA%91%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE%E5%91%8A%E8%AD%A6/</url>
     <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我所在的公司目前用的是ELK日志查询，但是用ELK都是出了问题我们开发人员上去查询对应的报错日志最后解决问题。但是出了问题我们开发人员要怎么知道的，只能通过业务人员反馈才能知道。所以我们后面就把日志服务迁移到阿里云日志服务上，可以查询、分析日志也可以配置相对应的告警功能。</p>
@@ -34,10 +54,10 @@
 </ul>
 ]]></content>
       <categories>
-        <category>日志监控</category>
+        <category>阿里云</category>
       </categories>
       <tags>
-        <tag>阿里云日志服务</tag>
+        <tag>日志服务</tag>
       </tags>
   </entry>
   <entry>
